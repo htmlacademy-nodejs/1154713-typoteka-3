@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Юрий Туголуков](https://up.htmlacademy.ru/nodejs/3/user/1154713).
-* Наставник: `Неизвестно`.
+* Наставник: `Ruslan Malogulko`.
 
 ---
 
