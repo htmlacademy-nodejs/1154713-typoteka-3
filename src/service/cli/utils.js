@@ -1,6 +1,6 @@
 'use strict';
 
-const {writeFile} = require(`fs`);
+const {red} = require(`chalk`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
 
@@ -39,23 +39,11 @@ const getDate = () => {
   return `${formatValue(year)}-${formatValue(month)}-${formatValue(day)} ${formatValue(hours)}:${formatValue(minutes)}:${formatValue(seconds)}`;
 };
 
-const writeToFile = (outputPath, content) => {
-  writeFile(outputPath, content, (error) => {
-    if (error) {
-      console.log(`ОШИБКА записи в файл.`);
-      process.exit(1);
-    } else {
-      console.log(`Файл записан УСПЕШНО.`);
-      process.exit(0);
-    }
-  });
-};
-
 const checkGenerateCount = (generateCount) => {
   const argumentToNumber = Number(generateCount);
 
   if (!argumentToNumber || argumentToNumber === 0) {
-    console.log(`Некорректный аргумент для флага --generate.`);
+    console.log(red(`Некорректный аргумент для флага --generate.`));
     process.exit(1);
   }
 };
@@ -64,6 +52,5 @@ module.exports = {
   getTitle,
   getText,
   getDate,
-  writeToFile,
   checkGenerateCount,
 };
