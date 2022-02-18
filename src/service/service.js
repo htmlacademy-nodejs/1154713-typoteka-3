@@ -1,11 +1,11 @@
 'use strict';
 
-const { application } = require(`./cli`);
+const {application} = require(`./cli`);
 
 const USERS_APPLICATION_ARGUMENT = 2;
 const USERS_COMMAND_GENERATE_ARGUMENT = 3;
 
-const usersCommandArgument = process.argv[USERS_APPLICATION_ARGUMENT]?.replace(`--`, ``);
+const usersCommandArgument = process.argv[USERS_APPLICATION_ARGUMENT].replace(`--`, ``);
 const usersCommandGenerateArgument = process.argv[USERS_COMMAND_GENERATE_ARGUMENT];
 
 const applicationCommand = application[usersCommandArgument];
