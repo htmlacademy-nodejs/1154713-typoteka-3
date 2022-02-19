@@ -1,12 +1,34 @@
 'use strict';
 
-const {red} = require(`chalk`);
+const {promises: {readFile, writeFile}} = require(`fs`);
+const {red, green} = require(`chalk`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
 
 const getRangeRandomCount = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 
 const getTitle = (textData) => textData[getRangeRandomCount(0, textData.length - 1)];
+
+const getTextDataFromFile = async (pathToFile) => {
+  try {
+    const fileData = await readFile(pathToFile, `utf-8`);
+    return fileData.trim().split(`\r\n`);
+  } catch {
+    console.log(red(`Ошибка чтения файла: ${pathToFile}`));
+    return process.exit(1);
+  }
+};
+
+const writeToMockJSON = async (content) => {
+  try {
+    await writeFile(`../../mock.json`, JSON.stringify(content));
+    console.log(green(`Файл записан УСПЕШНО.`));
+    process.exit(0);
+  } catch {
+    console.log(red(`ОШИБКА записи в файл.`));
+    process.exit(1);
+  }
+};
 
 const getText = (textData, maxStringLimit, joinSymbol = ` `) => {
   const cicleCount = getRangeRandomCount(1, maxStringLimit);
@@ -50,6 +72,8 @@ const checkGenerateCount = (generateCount) => {
 
 module.exports = {
   getTitle,
+  getTextDataFromFile,
+  writeToMockJSON,
   getText,
   getDate,
   checkGenerateCount,

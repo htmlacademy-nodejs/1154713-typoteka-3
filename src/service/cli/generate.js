@@ -1,13 +1,17 @@
 'use strict';
 
-const {promises: {writeFile}} = require(`fs`);
-const {red, green} = require(`chalk`);
+const {red} = require(`chalk`);
 
-const {CATEGORIES, TEXT, TITLE, MAX_ANNOUNCE_STRING_COUNT} = require(`./consts`);
-const {getDate, getText, getTitle, checkGenerateCount} = require(`./utils`);
+const {MAX_ANNOUNCE_STRING_COUNT, TITLES_PATH, CATEGORIES_PATH, MAIN_TEXT_PATH} = require(`./consts`);
+const {getDate, getText, getTitle, getTextDataFromFile, checkGenerateCount, writeToMockJSON} = require(`./utils`);
 
 const generate = async (count) => {
   const result = [];
+  const textData = await Promise.all([
+    getTextDataFromFile(TITLES_PATH),
+    getTextDataFromFile(MAIN_TEXT_PATH),
+    getTextDataFromFile(CATEGORIES_PATH)
+  ]);
 
   if (count > 1000) {
     console.log(red(`Не больше 1000 публикаций`));
@@ -15,23 +19,16 @@ const generate = async (count) => {
   } else {
     for (let i = 0; i < count; i++) {
       result.push({
-        title: getTitle(TITLE),
-        announce: getText(TEXT, MAX_ANNOUNCE_STRING_COUNT),
-        fullText: getText(TEXT, TEXT.length),
+        title: getTitle(textData[0]),
+        announce: getText(textData[1], MAX_ANNOUNCE_STRING_COUNT),
+        fullText: getText(textData[1], textData[1].length),
         createdDate: getDate(),
-        сategory: getText(CATEGORIES, CATEGORIES.length, `,`).split(`,`),
+        сategory: getText(textData[2], textData[2].length, `,`).split(`,`),
       });
     }
   }
 
-  try {
-    await writeFile(`../../mock.json`, JSON.stringify(result));
-    console.log(green(`Файл записан УСПЕШНО.`));
-    process.exit(0);
-  } catch {
-    console.log(red(`ОШИБКА записи в файл.`));
-    process.exit(1);
-  }
+  writeToMockJSON(result);
 };
 
 module.exports = {
