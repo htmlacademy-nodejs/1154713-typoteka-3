@@ -1,5 +1,5 @@
 parserOptions:
-  ecmaVersion: 2020 #исправил на 2020, т.к. eslint ругался на optional chaining (?.)
+  ecmaVersion: 2020
 
 env:
   es6: true
