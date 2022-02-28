@@ -3,13 +3,13 @@
 const express = require(`express`);
 const {MY, ARTICLES} = require(`./consts`);
 
-const myRoutes = require(`./routes/my/myRoutes`);
-const articlesRoutes = require(`./routes/articles/articlesRoutes`);
+const myRoute = require(`./routes/my/myRoute`);
+const articlesRoute = require(`./routes/articles/articlesRoute`);
 
 const app = express();
 
-app.use(MY, myRoutes);
-app.use(ARTICLES, articlesRoutes);
+app.use(MY, myRoute);
+app.use(ARTICLES, articlesRoute);
 
 app.get(`/`, (_, res) => res.send(`/`));
 app.get(`/register`, (_, res) => res.send(`/register`));
