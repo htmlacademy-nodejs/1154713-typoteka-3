@@ -1,13 +1,12 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {ARTICLES} = require(`../../consts`);
 
 const articlesRoute = new Router();
 
-articlesRoute.get(`/add`, (_, res) => res.send(`${ARTICLES}/add`));
-articlesRoute.get(`/:id`, (req, res) => res.send(`${ARTICLES}/:id ${req.params.id}`));
-articlesRoute.get(`/edit/:id`, (req, res) => res.send(`${ARTICLES}/edit/:id ${req.params.id}`));
-articlesRoute.get(`/category/:id`, (req, res) => res.send(`${ARTICLES}/category/:id ${req.params.id}`));
+articlesRoute.get(`/edit/:id`, (_, res) => res.render(`post\\post-edit.pug`));
+articlesRoute.get(`/add`, (_, res) => res.render(`post\\post.pug`));
+articlesRoute.get(`/:id`, (_, res) => res.render(`post\\post-detail.pug`));
+articlesRoute.get(`/category/:id`, (_, res) => res.render(`main\\articles-by-category.pug`));
 
 module.exports = articlesRoute;
