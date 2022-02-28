@@ -22,10 +22,12 @@
   "devDependencies": {
     "eslint": "8.8.0",
     "eslint-config-htmlacademy": "0.6.0",
-    "nodemon": "2.0.15"
+    "nodemon": "2.0.15",
+    "pug-lint": "2.6.0"
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "express": "4.17.3"
+    "express": "4.17.3",
+    "pug": "3.0.2"
   }
 }
