@@ -3,9 +3,9 @@
 const {resolve} = require(`path`);
 const express = require(`express`);
 
-const myRoute = require(`./routes/my/myRoute`);
-const articlesRoute = require(`./routes/articles/articlesRoute`);
-const mainRoute = require(`./routes/main/mainRoute`);
+const myRouter = require(`./routes/my/my-router`);
+const articlesRouter = require(`./routes/articles/articles-router`);
+const mainRouter = require(`./routes/main/main-router`);
 
 const app = express();
 
@@ -14,8 +14,8 @@ app.set(`views`, resolve(__dirname, `templates`));
 
 app.use(express.static(resolve(__dirname, `public`)));
 
-app.use(`/`, mainRoute);
-app.use(`/my`, myRoute);
-app.use(`/articles`, articlesRoute);
+app.use(`/`, mainRouter);
+app.use(`/my`, myRouter);
+app.use(`/articles`, articlesRouter);
 
 app.listen(8080, () => console.log(`Front server started`));
