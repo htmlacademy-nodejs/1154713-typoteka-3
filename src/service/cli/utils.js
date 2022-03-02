@@ -2,7 +2,6 @@
 
 const {promises: {readFile, writeFile}} = require(`fs`);
 const {red, green} = require(`chalk`);
-const {ANSWER_ERROR} = require(`./consts`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
 
@@ -10,9 +9,9 @@ const getRangeRandomCount = (min, max) => Math.floor(min + Math.random() * (max 
 
 const getTitle = (textData) => textData[getRangeRandomCount(0, textData.length - 1)];
 
-const getDataFromFile = async (pathToFile, isTextFile = true) => {
+const getDataFromFile = async (pathToFile) => {
   const fileData = await readFile(pathToFile, `utf-8`);
-  return isTextFile ? fileData.trim().split(`\n`) : fileData;
+  return fileData.trim().split(`\n`);
 };
 
 const writeToMockJSON = async (content) => {
@@ -66,32 +65,6 @@ const checkGenerateCount = (generateCount) => {
   }
 };
 
-const getResponseErrorScenario = (responseObject) => {
-  responseObject.writeHead(ANSWER_ERROR, {
-    'Content-type': `text/plain`
-  });
-
-  responseObject.end(`Not found`);
-};
-
-const getHtmlPage = (contentData) => {
-  const listTags = contentData.map((item) => `<li>${item}</li>`).join(``);
-
-  return `
-  <!DOCTYPE html>
-  <html lang="ru">
-    <head>
-      <title>Typoteka</title>
-    </head>
-    <body>
-      <ul>
-      ${listTags}
-      </ul>
-    </body>
-  </html>
-  `;
-};
-
 module.exports = {
   getTitle,
   getDataFromFile,
@@ -99,6 +72,4 @@ module.exports = {
   getText,
   getDate,
   checkGenerateCount,
-  getResponseErrorScenario,
-  getHtmlPage,
 };

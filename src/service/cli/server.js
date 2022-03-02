@@ -1,35 +1,20 @@
 'use strict';
 
-const {createServer} = require(`http`);
-const {ANSWER_SUCCESS} = require(`./consts`);
-const {getDataFromFile, getResponseErrorScenario, getHtmlPage} = require(`./utils`);
+const express = require(`express`);
+const {ANSWER_ERROR} = require(`./consts`);
+const postRouter = require(`../routes/post-router`);
 
 const server = (port) => {
-  const httpServer = createServer(async ({url}, res) => {
-    switch (url) {
-      default:
-        getResponseErrorScenario(res);
-        break;
+  const app = express();
 
-      case `/`:
-        try {
-          const mockData = await getDataFromFile(`mock.json`, false);
-          const titles = JSON.parse(mockData).map(({title}) => title);
+  app.listen(port, () => console.log(`Service server started`));
+  app.on(`error`, ({message}) => console.log(`Ошибка ${message}`));
 
-          res.writeHead(ANSWER_SUCCESS, {
-            'Content-type': `text/html; charset=utf-8;`
-          });
-          res.end(getHtmlPage(titles));
-        } catch {
-          getResponseErrorScenario(res);
-        }
-        break;
-    }
-  });
+  app.use(express.json());
 
-  httpServer.listen(port, () => console.log(`Серевер запущен. Порт: ${port}`));
+  app.use(`/post`, postRouter);
 
-  httpServer.on(`error`, ({message}) => console.log(`Ошибка ${message}`));
+  app.use((_, res) => res.status(ANSWER_ERROR).send(`Not found`));
 };
 
 module.exports = {
