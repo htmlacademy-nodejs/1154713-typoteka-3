@@ -10,7 +10,7 @@ postRouter.get(`/`, async (_, res) => {
     const fileData = await readFile(`mock.json`);
     res.json(JSON.parse(fileData));
   } catch {
-    res.send([]);
+    res.json([]);
   }
 });
 
