@@ -1,18 +1,21 @@
 'use strict';
 
 const {red} = require(`chalk`);
+const {nanoid} = require(`nanoid`);
 
-const {MAX_ANNOUNCE_STRING_COUNT, TITLES_PATH, CATEGORIES_PATH, MAIN_TEXT_PATH} = require(`./consts`);
 const {getDate, getText, getTitle, getDataFromFile, checkGenerateCount, writeToMockJSON} = require(`./utils`);
+
+const MAX_ANNOUNCE_STRING_COUNT = 5;
 
 const generate = async (count) => {
   const result = [];
 
   try {
     const textData = await Promise.all([
-      getDataFromFile(TITLES_PATH),
-      getDataFromFile(MAIN_TEXT_PATH),
-      getDataFromFile(CATEGORIES_PATH)
+      getDataFromFile(`../../data/titles.txt`),
+      getDataFromFile(`../../data/sentences.txt`),
+      getDataFromFile(`../../data/categories.txt`),
+      getDataFromFile(`../../data/comments.txt`)
     ]);
 
     if (count > 1000) {
@@ -21,11 +24,13 @@ const generate = async (count) => {
     } else {
       for (let i = 0; i < count; i++) {
         result.push({
+          id: nanoid(6),
           title: getTitle(textData[0]),
-          announce: getText(textData[1], MAX_ANNOUNCE_STRING_COUNT),
-          fullText: getText(textData[1], textData[1].length),
+          announce: getText(textData[1], MAX_ANNOUNCE_STRING_COUNT).join(` `),
+          fullText: getText(textData[1], textData[1].length).join(` `),
           createdDate: getDate(),
-          сategory: getText(textData[2], textData[2].length, `,`).split(`,`),
+          сategory: getText(textData[2], textData[2].length),
+          comments: getText(textData[3], textData[3].length).map((item) => ({id: nanoid(6), text: item})),
         });
       }
     }

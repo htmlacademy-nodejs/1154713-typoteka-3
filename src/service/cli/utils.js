@@ -3,6 +3,8 @@
 const {promises: {readFile, writeFile}} = require(`fs`);
 const {red, green} = require(`chalk`);
 
+const {POST_REQUEST_BODY_ARGUMENTS, BODY_ARGUMENTS: {ANNOUNCE, CATEGORY, FULL_TEXT, TITLE}} = require(`./consts`);
+
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
 
 const getRangeRandomCount = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
@@ -11,7 +13,7 @@ const getTitle = (textData) => textData[getRangeRandomCount(0, textData.length -
 
 const getDataFromFile = async (pathToFile) => {
   const fileData = await readFile(pathToFile, `utf-8`);
-  return fileData.trim().split(`\n`);
+  return fileData.trim().split(/\r?\n/);
 };
 
 const writeToMockJSON = async (content) => {
@@ -25,7 +27,7 @@ const writeToMockJSON = async (content) => {
   }
 };
 
-const getText = (textData, maxStringLimit, joinSymbol = ` `) => {
+const getText = (textData, maxStringLimit) => {
   const cicleCount = getRangeRandomCount(1, maxStringLimit);
   const result = [];
 
@@ -34,7 +36,7 @@ const getText = (textData, maxStringLimit, joinSymbol = ` `) => {
     result.push(textData[randomStringCount]);
   }
 
-  return result.join(joinSymbol);
+  return result;
 };
 
 const getDate = () => {
@@ -65,6 +67,14 @@ const checkGenerateCount = (generateCount) => {
   }
 };
 
+const hasNeededBodyKeys = (keys) => {
+  if (!keys.length || keys.length !== POST_REQUEST_BODY_ARGUMENTS) {
+    return false;
+  }
+
+  return keys.every((item) => item === TITLE || item === ANNOUNCE || item === FULL_TEXT || item === CATEGORY);
+};
+
 module.exports = {
   getTitle,
   getDataFromFile,
@@ -72,4 +82,5 @@ module.exports = {
   getText,
   getDate,
   checkGenerateCount,
+  hasNeededBodyKeys,
 };

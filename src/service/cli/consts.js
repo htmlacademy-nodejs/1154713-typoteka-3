@@ -1,17 +1,22 @@
 'use strict';
 
-const MAX_ANNOUNCE_STRING_COUNT = 5;
-
-const TITLES_PATH = `../../data/titles.txt`;
-const MAIN_TEXT_PATH = `../../data/sentences.txt`;
-const CATEGORIES_PATH = `../../data/categories.txt`;
-
 const ANSWER_ERROR = 404;
+const SERVER_SERVICE_ERROR = 500;
+const ARGUMENT_ERROR = 400;
+
+const POST_REQUEST_BODY_ARGUMENTS = 4;
+
+const BODY_ARGUMENTS = {
+  TITLE: `title`,
+  ANNOUNCE: `announce`,
+  FULL_TEXT: `fullText`,
+  CATEGORY: `category`,
+};
 
 module.exports = {
-  MAX_ANNOUNCE_STRING_COUNT,
-  TITLES_PATH,
-  MAIN_TEXT_PATH,
-  CATEGORIES_PATH,
   ANSWER_ERROR,
+  SERVER_SERVICE_ERROR,
+  ARGUMENT_ERROR,
+  POST_REQUEST_BODY_ARGUMENTS,
+  BODY_ARGUMENTS,
 };

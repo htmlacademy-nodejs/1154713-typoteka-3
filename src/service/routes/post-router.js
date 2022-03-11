@@ -1,16 +1,16 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {promises: {readFile}} = require(`fs`);
+
+const {SERVER_SERVICE_ERROR} = require(`../cli/consts`);
 
 const postRouter = new Router();
 
-postRouter.get(`/`, async (_, res) => {
+postRouter.get(`/`, (req, res, next) => {
   try {
-    const fileData = await readFile(`mock.json`);
-    res.json(JSON.parse(fileData));
+    res.json(JSON.parse(req.mockData));
   } catch {
-    res.json([]);
+    next({status: SERVER_SERVICE_ERROR});
   }
 });
 
