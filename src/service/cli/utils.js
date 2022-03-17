@@ -3,7 +3,7 @@
 const {promises: {readFile, writeFile}} = require(`fs`);
 const {red, green} = require(`chalk`);
 
-const {POST_REQUEST_BODY_ARGUMENTS, BODY_ARGUMENTS: {ANNOUNCE, CATEGORY, FULL_TEXT, TITLE}} = require(`./consts`);
+const {POST_REQUEST_BODY_ARGUMENTS, BodyArguments: {Announce, Category, FullText, Title}} = require(`./consts`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
 
@@ -72,7 +72,7 @@ const hasNeededBodyKeys = (keys) => {
     return false;
   }
 
-  return keys.every((item) => item === TITLE || item === ANNOUNCE || item === FULL_TEXT || item === CATEGORY);
+  return keys.every((item) => item === Title || item === Announce || item === FullText || item === Category);
 };
 
 module.exports = {

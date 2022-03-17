@@ -6,11 +6,11 @@ const ARGUMENT_ERROR = 400;
 
 const POST_REQUEST_BODY_ARGUMENTS = 4;
 
-const BODY_ARGUMENTS = {
-  TITLE: `title`,
-  ANNOUNCE: `announce`,
-  FULL_TEXT: `fullText`,
-  CATEGORY: `category`,
+const BodyArguments = {
+  Title: `title`,
+  Announce: `announce`,
+  FullText: `fullText`,
+  Category: `category`,
 };
 
 module.exports = {
@@ -18,5 +18,5 @@ module.exports = {
   SERVER_SERVICE_ERROR,
   ARGUMENT_ERROR,
   POST_REQUEST_BODY_ARGUMENTS,
-  BODY_ARGUMENTS,
+  BodyArguments,
 };

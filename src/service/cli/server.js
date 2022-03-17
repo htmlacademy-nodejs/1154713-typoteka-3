@@ -1,11 +1,16 @@
 'use strict';
 
 const {promises: {readFile}} = require(`fs`);
+
 const express = require(`express`);
+
 const {red, green} = require(`chalk`);
 
-const postRouter = require(`../routes/post-router`);
-const apiRouter = require(`../routes/api-router`);
+const PostService = require(`../data-service/post`);
+const MainService = require(`../data-service/main`);
+
+const postApi = require(`../api/post`);
+const mainApi = require(`../api/main`);
 
 const {ANSWER_ERROR, SERVER_SERVICE_ERROR, ARGUMENT_ERROR} = require(`./consts`);
 const {getDataFromFile} = require(`./utils`);
@@ -16,20 +21,13 @@ const server = async (port) => {
     const categoriesData = await getDataFromFile(`./data/categories.txt`);
 
     const app = express();
+
     app.listen(port, () => console.log(green(`Service server started`)));
 
     app.use(express.json());
 
-    app.use(`/post`, (req, _, next) => {
-      req.mockData = fileData;
-      next();
-    }, postRouter);
-
-    app.use(`/api`, (req, _, next) => {
-      req.mockData = fileData;
-      req.categories = categoriesData;
-      next();
-    }, apiRouter);
+    postApi(app, new PostService(fileData));
+    mainApi(app, new MainService(fileData, categoriesData));
 
     app.use((_, res) => res.status(ANSWER_ERROR).send(`Not found`));
 
