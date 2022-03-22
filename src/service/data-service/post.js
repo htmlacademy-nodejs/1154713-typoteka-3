@@ -6,7 +6,7 @@ class PostService {
   }
 
   getAll() {
-    return JSON.parse(this._data);
+    return this._data;
   }
 }
 

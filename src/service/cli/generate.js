@@ -11,7 +11,7 @@ const generate = async (count) => {
   const result = [];
 
   try {
-    const textData = await Promise.all([
+    const [titles, sentences, categories, comments] = await Promise.all([
       getDataFromFile(`../../data/titles.txt`),
       getDataFromFile(`../../data/sentences.txt`),
       getDataFromFile(`../../data/categories.txt`),
@@ -25,12 +25,12 @@ const generate = async (count) => {
       for (let i = 0; i < count; i++) {
         result.push({
           id: nanoid(6),
-          title: getTitle(textData[0]),
-          announce: getText(textData[1], MAX_ANNOUNCE_STRING_COUNT).join(` `),
-          fullText: getText(textData[1], textData[1].length).join(` `),
+          title: getTitle(titles),
+          announce: getText(sentences, MAX_ANNOUNCE_STRING_COUNT).join(` `),
+          fullText: getText(sentences, sentences.length).join(` `),
           createdDate: getDate(),
-          сategory: getText(textData[2], textData[2].length),
-          comments: getText(textData[3], textData[3].length).map((item) => ({id: nanoid(6), text: item})),
+          сategory: getText(categories, categories.length),
+          comments: getText(comments, comments.length).map((item) => ({id: nanoid(6), text: item})),
         });
       }
     }

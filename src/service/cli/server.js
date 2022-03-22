@@ -26,13 +26,13 @@ const server = async (port) => {
 
     app.use(express.json());
 
-    postApi(app, new PostService(fileData));
-    mainApi(app, new MainService(fileData, categoriesData));
+    postApi(app, new PostService(JSON.parse(fileData)));
+    mainApi(app, new MainService(JSON.parse(fileData), categoriesData));
 
     app.use((_, res) => res.status(ANSWER_ERROR).send(`Not found`));
 
     app.use((error, _req, res, _next) => {
-      switch (error.status) {
+      switch (error.message) {
         case ANSWER_ERROR:
           return res.status(ANSWER_ERROR).send(`Not found`);
 

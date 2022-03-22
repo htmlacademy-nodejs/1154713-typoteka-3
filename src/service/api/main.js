@@ -14,7 +14,7 @@ const mainApi = (app, mainService) => {
     try {
       res.json(mainService.getAll());
     } catch {
-      next({status: SERVER_SERVICE_ERROR});
+      next(new Error(SERVER_SERVICE_ERROR));
     }
   });
 
@@ -23,7 +23,7 @@ const mainApi = (app, mainService) => {
     const result = mainService.find(articleId);
 
     if (!result) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result);
@@ -36,7 +36,7 @@ const mainApi = (app, mainService) => {
     const result = mainService.find(articleId);
 
     if (!result) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result.comments);
@@ -47,7 +47,7 @@ const mainApi = (app, mainService) => {
     const result = mainService.getSearchedData(query.title);
 
     if (!result.length) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result);
@@ -58,7 +58,7 @@ const mainApi = (app, mainService) => {
     const result = mainService.deleteArticle(articleId);
 
     if (!result) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result);
@@ -69,7 +69,7 @@ const mainApi = (app, mainService) => {
     const result = mainService.deleteComment(articleId, commentId);
 
     if (!result) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result);
@@ -79,13 +79,13 @@ const mainApi = (app, mainService) => {
     const {params: {articleId}, body} = req;
 
     if (!Object.keys(body).length) {
-      return next({status: ARGUMENT_ERROR});
+      return next(new Error(ARGUMENT_ERROR));
     }
 
     const result = mainService.editArticle(articleId, body);
 
     if (!result) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result);
@@ -96,7 +96,7 @@ const mainApi = (app, mainService) => {
     const bodyKeys = Object.keys(body);
 
     if (!hasNeededBodyKeys(bodyKeys) || !Array.isArray(body[Category])) {
-      return next({status: ARGUMENT_ERROR});
+      return next(new Error(ARGUMENT_ERROR));
     }
 
     return res.json(mainService.addNewArticle(body));
@@ -107,11 +107,11 @@ const mainApi = (app, mainService) => {
     const result = mainService.addNewComment(articleId, text);
 
     if (!text) {
-      return next({status: ARGUMENT_ERROR});
+      return next(new Error(ARGUMENT_ERROR));
     }
 
     if (!result) {
-      return next({status: ANSWER_ERROR});
+      return next(new Error(ANSWER_ERROR));
     }
 
     return res.json(result);

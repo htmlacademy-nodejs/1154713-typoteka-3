@@ -13,7 +13,7 @@ const postApi = (app, postService) => {
     try {
       res.json(postService.getAll());
     } catch {
-      next({status: SERVER_SERVICE_ERROR});
+      next(new Error(SERVER_SERVICE_ERROR));
     }
   });
 };

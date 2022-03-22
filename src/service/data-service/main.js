@@ -5,7 +5,7 @@ const {getDate} = require(`../cli/utils`);
 
 class MainService {
   constructor(fileData, categoriesData) {
-    this._data = JSON.parse(fileData);
+    this._data = fileData;
     this._categories = categoriesData;
   }
 
