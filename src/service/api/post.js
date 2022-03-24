@@ -6,7 +6,7 @@ const {SERVER_SERVICE_ERROR} = require(`../cli/consts`);
 
 const postRouter = new Router();
 
-const postApi = (app, postService) => {
+const postApi =  (app, postService) => {
   app.use(`/post`, postRouter);
 
   postRouter.get(`/`, (_, res, next) => {

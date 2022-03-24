@@ -15,14 +15,12 @@ const mainApi = require(`../api/main`);
 const {ANSWER_ERROR, SERVER_SERVICE_ERROR, ARGUMENT_ERROR} = require(`./consts`);
 const {getDataFromFile} = require(`./utils`);
 
-const server = async (port) => {
+const app = express();
+
+const createServer = async (port) => {
   try {
     const fileData = await readFile(`mock.json`);
     const categoriesData = await getDataFromFile(`./data/categories.txt`);
-
-    const app = express();
-
-    app.listen(port, () => console.log(green(`Service server started`)));
 
     app.use(express.json());
 
@@ -43,11 +41,14 @@ const server = async (port) => {
           return res.status(SERVER_SERVICE_ERROR).json([]);
       }
     });
+
+    app.listen(port, () => console.log(green(`Service server started`)));
   } catch ({message}) {
     console.log(red(`Ошибка ${message}`));
   }
 };
 
 module.exports = {
-  run: (port = 3000) => server(port),
+  run: (port = 3000) => createServer(port),
+  server: app,
 };

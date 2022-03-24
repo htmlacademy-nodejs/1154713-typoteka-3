@@ -2,8 +2,6 @@ const {TEST_CATAGORIES, TEST_DATA} = require(`./test-mocks`);
 
 const MainService = require(`./main`);
 
-
-
 describe(`Check simple get-methods for getting datas in API`, () => {
   it(`should return TEST_DATA array`, () => {
     const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);

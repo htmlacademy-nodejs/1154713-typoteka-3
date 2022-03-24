@@ -5,6 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "test": "jest",
+    "test:e2e": "jest ./src/service/cli/server.e2e.test.js",
     "eslint": "eslint --ext .js src/",
     "start": "nodemon ./src/service/service.js --server",
     "start-front-server": "nodemon ./src/express/express.js"
