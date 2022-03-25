@@ -4,9 +4,9 @@ const {Router} = require(`express`);
 
 const {SERVER_SERVICE_ERROR} = require(`../cli/consts`);
 
-const postRouter = new Router();
-
 const postApi =  (app, postService) => {
+  const postRouter = new Router();
+  
   app.use(`/post`, postRouter);
 
   postRouter.get(`/`, (_, res, next) => {

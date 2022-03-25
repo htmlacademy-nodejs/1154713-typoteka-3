@@ -5,9 +5,9 @@ const {Router} = require(`express`);
 const {SERVER_SERVICE_ERROR, ANSWER_ERROR, ARGUMENT_ERROR, BodyArguments: {Category}} = require(`../cli/consts`);
 const {hasNeededBodyKeys} = require(`../cli/utils`);
 
-const apiRouter = new Router();
-
 const mainApi = (app, mainService) => {
+  const apiRouter = new Router();
+
   app.use(`/api`, apiRouter);
 
   apiRouter.get(`/articles`, (_, res, next) => {
