@@ -1,7 +1,8 @@
 'use strict';
 
-const {red} = require(`chalk`);
 const {application} = require(`./cli`);
+
+const {getLogger} = require(`./lib/logger`);
 
 const USERS_APPLICATION_ARGUMENT = 2;
 const USERS_COMMAND_GENERATE_ARGUMENT = 3;
@@ -11,8 +12,10 @@ const usersCommandGenerateArgument = process.argv[USERS_COMMAND_GENERATE_ARGUMEN
 
 const applicationCommand = application[usersCommandArgument];
 
+const logger = getLogger(`service`);
+
 if (!applicationCommand) {
-  console.log(red(`Запуск приложения с несуществующим аргументом.`));
+  logger.error(`Запуск приложения с несуществующим аргументом.`);
   process.exit(1);
 }
 

@@ -1,13 +1,15 @@
 'use strict';
 
-const {red} = require(`chalk`);
 const {nanoid} = require(`nanoid`);
 
 const {getDate, getText, getTitle, getDataFromFile, checkGenerateCount, writeToMockJSON} = require(`./utils`);
+const {getLogger} = require(`../lib/logger`);
 
 const MAX_ANNOUNCE_STRING_COUNT = 5;
 
 const generate = async (count) => {
+  const logger = getLogger(`generate-function`);
+
   const result = [];
 
   try {
@@ -19,7 +21,7 @@ const generate = async (count) => {
     ]);
 
     if (count > 1000) {
-      console.log(red(`Не больше 1000 публикаций`));
+      logger.error(`Не больше 1000 публикаций`);
       process.exit();
     } else {
       for (let i = 0; i < count; i++) {
@@ -36,7 +38,7 @@ const generate = async (count) => {
     }
     writeToMockJSON(result);
   } catch (error) {
-    console.log(red(error.message));
+    logger.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };

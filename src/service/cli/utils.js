@@ -1,9 +1,9 @@
 'use strict';
 
 const {promises: {readFile, writeFile}} = require(`fs`);
-const {red, green} = require(`chalk`);
 
 const {POST_REQUEST_BODY_ARGUMENTS, BodyArguments: {Announce, Category, FullText, Title}} = require(`./consts`);
+const {getLogger} = require(`../lib/logger`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
 
@@ -17,12 +17,14 @@ const getDataFromFile = async (pathToFile) => {
 };
 
 const writeToMockJSON = async (content) => {
+  const logger = getLogger(`writeToMockJSON-function`);
+
   try {
     await writeFile(`../../mock.json`, JSON.stringify(content));
-    console.log(green(`Файл записан УСПЕШНО.`));
+    logger.info(`Файл записан УСПЕШНО.`);
     process.exit(0);
   } catch {
-    console.log(red(`ОШИБКА записи в файл.`));
+    logger.error(`ОШИБКА записи в файл.`);
     process.exit(1);
   }
 };
@@ -59,10 +61,12 @@ const getDate = () => {
 };
 
 const checkGenerateCount = (generateCount) => {
+  const logger = getLogger(`writeToMockJSON-function`);
+
   const argumentToNumber = Number(generateCount);
 
   if (!argumentToNumber || argumentToNumber === 0) {
-    console.log(red(`Некорректный аргумент для флага --generate.`));
+    logger.error(`Некорректный аргумент для флага --generate.`);
     process.exit(1);
   }
 };
