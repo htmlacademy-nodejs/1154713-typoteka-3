@@ -31,10 +31,14 @@ const generate = async (count) => {
           announce: getText(sentences, MAX_ANNOUNCE_STRING_COUNT).join(` `),
           fullText: getText(sentences, sentences.length).join(` `),
           createdDate: getDate(),
-          сategory: getText(categories, categories.length),
+          category: Array.from(new Set(getText(categories, categories.length))),
           comments: getText(comments, comments.length).map((item) => ({id: nanoid(6), text: item})),
         });
       }
+
+
+      console.log('RESULT', result);
+
     }
     writeToMockJSON(result);
   } catch (error) {
