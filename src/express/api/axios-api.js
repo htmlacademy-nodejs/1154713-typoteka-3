@@ -24,6 +24,10 @@ class AxiosApi {
     getAllCategories() {
         return this._load(`/api/categories`);
     }
+
+    setNewPost() {
+        
+    }
 }
 
 module.exports = AxiosApi;

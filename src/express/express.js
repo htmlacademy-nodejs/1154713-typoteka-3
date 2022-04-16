@@ -15,7 +15,9 @@ const app = express();
 app.set(`view engine`, `pug`);
 app.set(`views`, resolve(__dirname, `templates`));
 
+app.use(express.urlencoded({extended: false}));
 app.use(express.static(resolve(__dirname, `public`)));
+app.use(express.static(resolve(__dirname, `upload`)));
 
 app.use(`/`, mainRouter(axiosApi));
 app.use(`/my`, myRouter(axiosApi));
