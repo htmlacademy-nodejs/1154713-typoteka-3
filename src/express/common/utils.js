@@ -46,4 +46,22 @@ module.exports = {
         announce,
         commentsCount: comments.length,
     })),
+    getUsersRecordData: (allArticles) => allArticles.map(({createdDate, title}) => ({
+        title,
+        createdDate,
+    })),
+    getUpdatedCommentsData: (allArticles) => allArticles.reduce((result, {id, title, createdDate, comments}) => {
+        const currentPublication = {
+            id,
+            title,
+            createdDate,
+        };
+
+        comments.forEach(({text}) => result.push({
+            text,
+            ...currentPublication,
+        }));
+
+        return result;                
+    }, []),
 };

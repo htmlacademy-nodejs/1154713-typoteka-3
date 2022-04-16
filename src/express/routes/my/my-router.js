@@ -2,36 +2,25 @@
 
 const {Router} = require(`express`);
 
+const {getUsersRecordData, getUpdatedCommentsData} = require(`../../common/utils`);
+
 const myRouter = new Router();
-
-/*myRouter.get(`/comments`, (_, res) => res.render(`admin/comments.pug`));
-myRouter.get(`/`, (_, res) => res.render(`admin/my.pug`));
-myRouter.get(`/categories`, (_, res) => res.render(`admin/all-categories.pug`));
-
-module.exports = myRouter;*/
 
 module.exports = {
     myRouter: (api) => {
         myRouter.get(`/`, async (_, res) => {
-
-            console.log(await api.getAllArticles());
-            res.render(`admin/my.pug`);
+            const allArticles = await api.getAllArticles();
+            res.render(`admin/my.pug`, {
+                myData: getUsersRecordData(allArticles),
+            });
         });
-
-
 
         myRouter.get(`/comments`, async (_, res) => {
-
             const allArticles = await api.getAllArticles();
-
-            console.log(allArticles.map(({id, comments}) => ({
-                [id]: comments,
-            })));
-
-            res.render(`admin/comments.pug`);
+            res.render(`admin/comments.pug`, {
+                allPublicationCommentsData: getUpdatedCommentsData(allArticles),
+            });
         });
-
-
 
         myRouter.get(`/categories`, (_, res) => res.render(`admin/all-categories.pug`));
 
