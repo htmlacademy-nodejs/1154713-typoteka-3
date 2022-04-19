@@ -23,7 +23,7 @@ block page
       section
         .popup.popup--new-publication.popup--anti
           .new-publication
-            form(action='/articles/add', method='post')
+            form(action='/articles/add', method='post', enctype="multipart/form-data")
               .new-publication__header
                 h1 #{pageTitle}
                 .new-publication__date-form
@@ -50,7 +50,7 @@ block page
                     if category
                       each item, index in category
                         .new-publication__checkbox.new-publication__checkbox--auto
-                            input#checkbox-auto(type='checkbox', name='category-#{index}')
+                            input#checkbox-auto(type='checkbox', name='category')
                             label(for='checkbox-auto') #{item}
                     a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
                 .form__wrapper.form__wrapper--text

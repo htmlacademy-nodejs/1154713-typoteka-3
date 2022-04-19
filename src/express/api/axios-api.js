@@ -25,9 +25,14 @@ class AxiosApi {
         return this._load(`/api/categories`);
     }
 
-    setNewPost() {
-        
+    setNewPost(data) {
+        return this._load(`api/articles`, {
+            method: `POST`,
+            data
+        }); 
     }
+
+    
 }
 
 module.exports = AxiosApi;

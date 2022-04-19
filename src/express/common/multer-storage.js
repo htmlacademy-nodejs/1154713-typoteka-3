@@ -4,11 +4,9 @@ const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 
-const uploadDirAbsolute = path.resolve(__dirname, `../upload/img/`);
-
 const storage = multer.diskStorage({
-  destination: uploadDirAbsolute,
-  filename: (_, file, cb) => {
+  destination: path.resolve(__dirname, `../upload/img/`),
+  filename: (req, file, cb) => {
     const uniqueName = nanoid(10);
     const extension = file.originalname.split(`.`).pop();
     cb(null, `${uniqueName}.${extension}`);

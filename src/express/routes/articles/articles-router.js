@@ -29,46 +29,23 @@ module.exports = {
             });
         });
 
-        articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
+        // разобраться с категориями - см верстку из примера
 
-            // добавить обработку кнопки загрузок файлов
-            // орг загрузуку файлов
-            const {body, file} = req;
+        articlesRouter.post(`/add`, upload.single(`upload`), (req, res) => {
+          const {body, file} = req;
 
-            console.log('BODY', body);
-            console.log('FILE', file);
+          const offerData = {
+            type: body.action,
 
-
-            const offerData = {
-                picture: file ? file.filename : ``,
-                sum: body.price,
-                type: body.action,
-                description: body.comment,
-                title: body[`ticket-name`],
-                category: Array.isArray(body.category) ? body.category : [body.category],
-              };
-
-              // код offerData
-              /*async createOffer(data) {
-                return await this._load(`/offers`, {
-                  method: `POST`,
-                  data
-                });
-              }*/
-          
-              try {
-                /*await api.createOffer(`/offers`, offerData);
-                res.redirect(`/my`);*/
-
-                res.json(offerData);
+            title: body.title,
+            picture: file ? file.filename : ``,
+            category: body.category,
+            announcement: body.announcement,
+            fullText: body[`full-text`],
+          };
 
 
-              } catch (error) {
-                res.redirect(`back`);
-              }
-
-
-
+          res.json(offerData);
 
             
         });
