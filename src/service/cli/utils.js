@@ -2,7 +2,7 @@
 
 const {promises: {readFile, writeFile}} = require(`fs`);
 
-const {POST_REQUEST_BODY_ARGUMENTS, BodyArguments: {Announce, Category, FullText, Title}} = require(`./consts`);
+const {POST_REQUEST_BODY_ARGUMENTS, BodyArguments: {Announce, Category, FullText, Title, Photo, CreatedDate}} = require(`./consts`);
 const {getLogger} = require(`../lib/logger`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
@@ -76,7 +76,7 @@ const hasNeededBodyKeys = (keys) => {
     return false;
   }
 
-  return keys.every((item) => item === Title || item === Announce || item === FullText || item === Category);
+  return keys.every((item) => item === CreatedDate || item === Photo || item === Title || item === Announce || item === FullText || item === Category);
 };
 
 module.exports = {

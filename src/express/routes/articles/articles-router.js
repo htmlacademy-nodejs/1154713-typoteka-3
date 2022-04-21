@@ -23,31 +23,34 @@ module.exports = {
             });
         });
 
-        articlesRouter.get(`/add`, (_, res) => {
+        articlesRouter.get(`/add`, (req, res) => {
+            const {query: {postData}} = req;
+
             res.render(`post/post.pug`, {
+                ...(postData ? JSON.parse(postData) : {}),
                 pageTitle: 'Новая публикация',
             });
         });
 
-        // разобраться с категориями - см верстку из примера
-
-        articlesRouter.post(`/add`, upload.single(`upload`), (req, res) => {
+        articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
           const {body, file} = req;
 
           const offerData = {
-            type: body.action,
-
             title: body.title,
-            picture: file ? file.filename : ``,
-            category: body.category,
-            announcement: body.announcement,
+            photo: file ? file.filename : ``,
+            category: [],
+            announce: body.announce,
             fullText: body[`full-text`],
+            createdDate: body.date,
           };
 
-
-          res.json(offerData);
-
-            
+          try {
+            await api.setNewPost(offerData);
+            res.redirect(`/my`);
+          } catch {
+            const postData = encodeURIComponent(JSON.stringify(offerData));
+            res.redirect(`/articles/add?postData=${postData}`);
+          }
         });
 
         articlesRouter.get(`/:id`, (_, res) => res.render(`post/post-detail.pug`));

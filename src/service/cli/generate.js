@@ -33,6 +33,7 @@ const generate = async (count) => {
           createdDate: getDate(),
           category: Array.from(new Set(getText(categories, categories.length))),
           comments: getText(comments, comments.length).map((item) => ({id: nanoid(6), text: item})),
+          photo: ``, // пока пустое фото
         });
       }
 

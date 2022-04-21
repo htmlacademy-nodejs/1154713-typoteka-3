@@ -28,11 +28,16 @@ class AxiosApi {
     setNewPost(data) {
         return this._load(`api/articles`, {
             method: `POST`,
-            data
+            data,
         }); 
     }
 
-    
+    searchData(data) {
+        return this._load(`/api/search`, {
+            method: `GET`,
+            data,
+        });
+    }
 }
 
 module.exports = AxiosApi;

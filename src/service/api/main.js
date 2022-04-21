@@ -61,11 +61,16 @@ const mainApi = (app, mainService) => {
   });
 
   apiRouter.get(`/search`, (req, res, next) => {
-    const {query} = req;
+    const {body: {search}} = req;
+
+
+    console.log(`query~~~~~~~~~~~~~~`);
+    console.log(search);
+
 
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const result = mainService.getSearchedData(query.title);
+    const result = mainService.getSearchedData(search);
 
     if (!result.length) {
       return next(new Error(ANSWER_ERROR));

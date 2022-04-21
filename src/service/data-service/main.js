@@ -98,7 +98,6 @@ class MainService {
     this._data.push({
       ...bodyArticle,
       id: nanoid(6),
-      createDate: getDate(),
       comments: [],
     });
 
