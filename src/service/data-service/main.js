@@ -1,7 +1,6 @@
 'use strict';
 
 const {nanoid} = require(`nanoid`);
-const {getDate} = require(`../cli/utils`);
 
 class MainService {
   constructor(fileData, categoriesData) {
@@ -22,7 +21,7 @@ class MainService {
   }
 
   getSearchedData(textSearch) {
-    return this._data.filter(({title}) => title.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1);
+    return this._data.filter(({title}) => textSearch && title.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1);
   }
 
   deleteArticle(articleId) {

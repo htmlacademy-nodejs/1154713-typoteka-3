@@ -63,11 +63,6 @@ const mainApi = (app, mainService) => {
   apiRouter.get(`/search`, (req, res, next) => {
     const {body: {search}} = req;
 
-
-    console.log(`query~~~~~~~~~~~~~~`);
-    console.log(search);
-
-
     logger.debug(`Request on route ${req.originalUrl}`);
 
     const result = mainService.getSearchedData(search);

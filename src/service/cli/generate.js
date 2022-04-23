@@ -36,10 +36,6 @@ const generate = async (count) => {
           photo: ``, // пока пустое фото
         });
       }
-
-
-      console.log('RESULT', result);
-
     }
     writeToMockJSON(result);
   } catch (error) {

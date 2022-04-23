@@ -22,10 +22,19 @@ block page
     main
       section.search-page
         .search-page__wrapper
+          if searchData === 'not-found'
+            .search-page__wrapper--empty
           h1 Поиск
           .search.search-page__form
             form(action='/search', method='post')
               label
-                input(type='text', name='search', placeholder='Что ищем?')
+                input(type='text', name='search', value=searchValue, placeholder='Что ищем?')
               button.search__button.button.button--transparent(type='submit') Найти
+            if searchData !== 'not-found' && searchData.length
+              each item in searchData
+                .search__result
+                  time.search__date(datetime='2019-03-21T20:33') #{item.createdDate}
+                  a.search__link #{item.title}
+          if searchData === 'not-found'
+            p.search-page__empty Ничего не нашлось
     include ../partials/footer-page.pug
