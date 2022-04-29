@@ -26,7 +26,7 @@ block page
             .search-page__wrapper--empty
           h1 Поиск
           .search.search-page__form
-            form(action='/search', method='post')
+            form(action='/search', method='get')
               label
                 input(type='text', name='search', value=searchValue, placeholder='Что ищем?')
               button.search__button.button.button--transparent(type='submit') Найти

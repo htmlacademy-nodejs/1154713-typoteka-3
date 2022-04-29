@@ -3,26 +3,27 @@
 const {Router} = require(`express`);
 
 const {getUsersRecordData, getUpdatedCommentsData} = require(`../../common/utils`);
-
-const myRouter = new Router();
+const {getAllArticlesMiddleware} = require(`../../common/middlewares`);
 
 module.exports = {
   myRouter: (api) => {
-    myRouter.get(`/`, async (_, res) => {
-      const allArticles = await api.getAllArticles();
-      res.render(`admin/my.pug`, {
+    const myRouter = new Router();
+
+    myRouter.get(`/`, getAllArticlesMiddleware(api), (req, res) => {
+      const {allArticles} = req;
+      res.render(`admin/my`, {
         myData: getUsersRecordData(allArticles),
       });
     });
 
-    myRouter.get(`/comments`, async (_, res) => {
-      const allArticles = await api.getAllArticles();
-      res.render(`admin/comments.pug`, {
+    myRouter.get(`/comments`, getAllArticlesMiddleware(api), (req, res) => {
+      const {allArticles} = req;
+      res.render(`admin/comments`, {
         allPublicationCommentsData: getUpdatedCommentsData(allArticles),
       });
     });
 
-    myRouter.get(`/categories`, (_, res) => res.render(`admin/all-categories.pug`));
+    myRouter.get(`/categories`, (_, res) => res.render(`admin/all-categories`));
 
     return myRouter;
   },

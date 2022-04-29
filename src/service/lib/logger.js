@@ -11,7 +11,7 @@ const LOGGER = pino({
     colorize: false,
     mkdir: true
   } : false,
-}, LOG_LEVEL === `debug` ? pino.destination(`./api.log`) : process.stdout);
+}, LOG_LEVEL === `debug` ? pino.destination(`./logs/api.log`) : process.stdout);
 
 module.exports = {
   getLogger: (name) => LOGGER.child({

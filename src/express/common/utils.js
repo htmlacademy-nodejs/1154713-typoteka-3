@@ -64,5 +64,11 @@ module.exports = {
 
     return result;
   }, []),
-  getSearchedData: (searchData) => searchData && searchData === NOT_FOUND_FLAG ? NOT_FOUND_FLAG : JSON.parse(searchData ?? `{}`),
+  getResultData: (search, result) => {
+    if (search) {
+      return result ?? NOT_FOUND_FLAG;
+    }
+
+    return ``;
+  },
 };

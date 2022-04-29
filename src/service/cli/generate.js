@@ -1,5 +1,7 @@
 'use strict';
 
+const {resolve} = require(`path`);
+
 const {nanoid} = require(`nanoid`);
 
 const {getDate, getText, getTitle, getDataFromFile, checkGenerateCount, writeToMockJSON} = require(`./utils`);
@@ -14,10 +16,10 @@ const generate = async (count) => {
 
   try {
     const [titles, sentences, categories, comments] = await Promise.all([
-      getDataFromFile(`../../data/titles.txt`),
-      getDataFromFile(`../../data/sentences.txt`),
-      getDataFromFile(`../../data/categories.txt`),
-      getDataFromFile(`../../data/comments.txt`)
+      getDataFromFile(resolve(__dirname, `../../../data/titles.txt`)),
+      getDataFromFile(resolve(__dirname, `../../../data/sentences.txt`)),
+      getDataFromFile(resolve(__dirname, `../../../data/categories.txt`)),
+      getDataFromFile(resolve(__dirname, `../../../data/comments.txt`))
     ]);
 
     if (count > 1000) {
