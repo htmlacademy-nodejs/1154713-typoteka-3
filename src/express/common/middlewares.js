@@ -38,7 +38,7 @@ module.exports = {
   getSearchDataMiddleware: (api) => async (req, res, next) => {
     const {query: {search}} = req;
     try {
-      const result = await api.searchData({search});
+      const result = await api.getSearchData({search});
       req.result = result;
       next();
     } catch {

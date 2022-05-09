@@ -34,7 +34,7 @@ class AxiosApi {
     });
   }
 
-  searchData(data) {
+  getSearchData(data) {
     return this._load(`/api/search`, {
       method: `GET`,
       data,
