@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS users_publications;
 DROP TABLE IF EXISTS users_comments;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS comments;
-DROP TABLE IF EXISTS publications;
-DROP TABLE IF EXISTS publications_categories;
 DROP TABLE IF EXISTS publications_comments;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS publications_categories;
+DROP TABLE IF EXISTS publications;
 DROP TABLE IF EXISTS categories;
 
 CREATE TABLE roles
