@@ -17,7 +17,8 @@ CREATE TABLE roles
 CREATE TABLE comments
 (
 	id SERIAL PRIMARY KEY,
-  comment_text TEXT NOT NULL
+  comment_text TEXT NOT NULL,
+  data_comment TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
 );
 
 CREATE TABLE categories
