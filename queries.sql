@@ -42,7 +42,7 @@ SELECT
 FROM publications
 JOIN users_publications ON users_publications.publication_id = publications.id
 JOIN users ON users.id = users_publications.user_id
-JOIN publications_comments ON publications_comments.publication_id = publications.id
+LEFT JOIN publications_comments ON publications_comments.publication_id = publications.id
 GROUP BY
   publications.id,
   publications.title,
@@ -74,8 +74,8 @@ SELECT
 FROM publications
 JOIN users_publications ON users_publications.publication_id = publications.id
 JOIN users ON users.id = users_publications.user_id
-JOIN publications_comments ON publications_comments.publication_id = publications.id
-WHERE publications.id = 1
+LEFT JOIN publications_comments ON publications_comments.publication_id = publications.id
+WHERE publications.id = 4
 GROUP BY
   publications.id,
   publications.title,
