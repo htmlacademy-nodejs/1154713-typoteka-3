@@ -1,24 +1,14 @@
-DROP TABLE IF EXISTS users_publications;
-DROP TABLE IF EXISTS users_comments;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS publications_comments;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS publications_categories;
 DROP TABLE IF EXISTS publications;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS categories;
 
 CREATE TABLE roles
 (
 	id SERIAL PRIMARY KEY,
   user_role VARCHAR(20) UNIQUE NOT NULL
-);
-
-CREATE TABLE comments
-(
-	id SERIAL PRIMARY KEY,
-  comment_text TEXT NOT NULL,
-  data_comment TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
 );
 
 CREATE TABLE categories
@@ -37,6 +27,8 @@ CREATE TABLE users
   avatar TEXT,
   role_id INTEGER NOT NULL,
   FOREIGN KEY (role_id) REFERENCES roles (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TABLE publications
@@ -46,46 +38,26 @@ CREATE TABLE publications
   picture TEXT,
   full_text TEXT,
   title VARCHAR(250) NOT NULL,
-  announce VARCHAR(250) NOT NULL
-);
-
-CREATE TABLE users_publications
-(
+  announce VARCHAR(250) NOT NULL,
   user_id INTEGER NOT NULL,
-  publication_id INTEGER NOT NULL,
-  CONSTRAINT users_publications_primary_key PRIMARY KEY (user_id, publication_id),
   FOREIGN KEY (user_id) REFERENCES users (id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  FOREIGN KEY (publication_id) REFERENCES publications (id)
-    ON DELETE CASCADE
     ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
-CREATE TABLE users_comments
+CREATE TABLE comments
 (
-  user_id INTEGER NOT NULL,
-  comment_id INTEGER NOT NULL,
-  CONSTRAINT users_comments_primary_key PRIMARY KEY (user_id, comment_id),
+	id SERIAL PRIMARY KEY,
+  comment_text TEXT NOT NULL,
+  data_comment TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+  user_id INTEGER,
+  publication_id INTEGER,
   FOREIGN KEY (user_id) REFERENCES users (id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES comments (id)
-    ON DELETE CASCADE
     ON UPDATE CASCADE
-);
-
-CREATE TABLE publications_comments
-(
-  publication_id INTEGER NOT NULL,
-  comment_id INTEGER NOT NULL,
-  CONSTRAINT publications_comments_primary_key PRIMARY KEY (publication_id, comment_id),
+    ON DELETE SET NULL,
   FOREIGN KEY (publication_id) REFERENCES publications (id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES comments (id)
-    ON DELETE CASCADE
     ON UPDATE CASCADE
+    ON DELETE SET NULL
 );
 
 CREATE TABLE publications_categories

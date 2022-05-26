@@ -5,7 +5,7 @@ const {DataTypes, Model} = require(`sequelize`);
 class Comment extends Model {}
 
 module.exports = {
-  define: (instanceDB) => Comment.init({
+  defineComment: (instanceDB) => Comment.init({
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -5,7 +5,7 @@ const {DataTypes, Model} = require(`sequelize`);
 class Category extends Model {}
 
 module.exports = {
-  define: (instanceDB) => Category.init({
+  defineCategory: (instanceDB) => Category.init({
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
