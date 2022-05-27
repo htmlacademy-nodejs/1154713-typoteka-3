@@ -21,5 +21,6 @@ module.exports = {
     sequelize: instanceDB,
     modelName: `Category`,
     tableName: `categories`,
+    timestamps: false,
   }),
 };

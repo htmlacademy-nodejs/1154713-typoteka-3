@@ -29,9 +29,9 @@ SELECT
   publications.title,
   publications.announce,
   publications.publication_date,
-  concat(users.user_name, ' ', users.user_surname) as "author",
+  concat(users.user_name, ' ', users.user_surname) as "author_name",
   users.email,
-  count(publications_comments.publication_id) as "comments_count",
+  count(comments.publication_id) as "comments_count",
   (
 	  SELECT
 	  	string_agg(DISTINCT categories.category_name, ', ')
@@ -40,9 +40,8 @@ SELECT
 	  WHERE publications_categories.publication_id = publications.id
   ) as "in_categories"
 FROM publications
-JOIN users_publications ON users_publications.publication_id = publications.id
-JOIN users ON users.id = users_publications.user_id
-LEFT JOIN publications_comments ON publications_comments.publication_id = publications.id
+JOIN users ON users.id = publications.user_id
+LEFT JOIN comments ON comments.publication_id = publications.id
 GROUP BY
   publications.id,
   publications.title,
@@ -63,7 +62,7 @@ SELECT
   publications.picture,
   concat(users.user_name, ' ', users.user_surname) as "author",
   users.email,
-  count(publications_comments.publication_id) as "comments_count",
+  count(comments.publication_id) as "comments_count",
   (
 	  SELECT
 	  	string_agg(DISTINCT categories.category_name, ', ')
@@ -72,9 +71,8 @@ SELECT
 	  WHERE publications_categories.publication_id = publications.id
   ) as "in_categories"
 FROM publications
-JOIN users_publications ON users_publications.publication_id = publications.id
-JOIN users ON users.id = users_publications.user_id
-LEFT JOIN publications_comments ON publications_comments.publication_id = publications.id
+JOIN users ON users.id = publications.user_id
+LEFT JOIN comments ON comments.publication_id = publications.id
 WHERE publications.id = 4
 GROUP BY
   publications.id,
@@ -90,27 +88,25 @@ GROUP BY
 --получаем список из 5 свежих комментариев
 SELECT 
   comments.id as "comment_id",
-  publications_comments.publication_id,
+  comments.publication_id,
   concat(users.user_name, ' ', users.user_surname) as "author",
   comments.comment_text
 FROM comments
-JOIN publications_comments ON publications_comments.comment_id = comments.id
-JOIN users_comments ON users_comments.comment_id = comments.id
-JOIN users ON users.id = users_comments.user_id
+JOIN publications ON publications.id = comments.publication_id
+JOIN users ON users.id = comments.user_id
 ORDER BY comments.data_comment DESC
 LIMIT 5
 
 --получаем список комментариев для определённой публикации
 SELECT 
   comments.id as "comment_id",
-  publications_comments.publication_id,
+  comments.publication_id,
   concat(users.user_name, ' ', users.user_surname) as "author",
   comments.comment_text
 FROM comments
-JOIN publications_comments ON publications_comments.comment_id = comments.id
-JOIN users_comments ON users_comments.comment_id = comments.id
-JOIN users ON users.id = users_comments.user_id
-WHERE publications_comments.publication_id = 1
+JOIN publications ON publications.id = comments.publication_id
+JOIN users ON users.id = comments.user_id
+WHERE comments.publication_id = 1
 ORDER BY comments.data_comment DESC
 
 --обновляем заголовок определенной публикации

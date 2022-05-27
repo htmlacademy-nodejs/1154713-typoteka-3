@@ -25,10 +25,10 @@ CREATE TABLE users
   user_surname VARCHAR(255) NOT NULL,
   user_password VARCHAR(255) NOT NULL,
   avatar TEXT,
-  role_id INTEGER NOT NULL,
+  role_id INTEGER,
   FOREIGN KEY (role_id) REFERENCES roles (id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE SET NULL
 );
 
 CREATE TABLE publications
@@ -39,10 +39,10 @@ CREATE TABLE publications
   full_text TEXT,
   title VARCHAR(250) NOT NULL,
   announce VARCHAR(250) NOT NULL,
-  user_id INTEGER NOT NULL,
+  user_id INTEGER,
   FOREIGN KEY (user_id) REFERENCES users (id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE SET NULL
 );
 
 CREATE TABLE comments
@@ -74,3 +74,10 @@ CREATE TABLE publications_categories
 );
 
 CREATE INDEX ON publications(title);
+
+ALTER TABLE comments OWNER to yurj;
+ALTER TABLE publications_categories OWNER to yurj;
+ALTER TABLE publications OWNER to yurj;
+ALTER TABLE users OWNER to yurj;
+ALTER TABLE roles OWNER to yurj;
+ALTER TABLE categories OWNER to yurj;

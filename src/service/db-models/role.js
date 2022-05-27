@@ -22,5 +22,6 @@ module.exports = {
     sequelize: instanceDB,
     modelName: `Role`,
     tableName: `roles`,
+    timestamps: false,
   }),
 };

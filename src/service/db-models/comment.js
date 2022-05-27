@@ -21,9 +21,16 @@ module.exports = {
       type: DataTypes.DATE(0),
       allowNull: false,
     },
+    [`user_id`]: {
+      type: DataTypes.INTEGER,
+    },
+    [`publication_id`]: {
+      type: DataTypes.INTEGER,
+    },
   }, {
     sequelize: instanceDB,
     modelName: `Comment`,
     tableName: `comments`,
+    timestamps: false,
   }),
 };

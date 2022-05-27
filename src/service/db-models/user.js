@@ -40,5 +40,6 @@ module.exports = {
     sequelize: instanceDB,
     modelName: `User`,
     tableName: `users`,
+    timestamps: false,
   }),
 };

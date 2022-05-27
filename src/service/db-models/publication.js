@@ -30,9 +30,14 @@ module.exports = {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    [`user_id`]: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   }, {
     sequelize: instanceDB,
     modelName: `Publication`,
     tableName: `publications`,
+    timestamps: false,
   }),
 };
