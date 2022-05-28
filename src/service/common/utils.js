@@ -2,7 +2,6 @@
 
 const {promises: {readFile, writeFile}} = require(`fs`);
 
-const {POST_REQUEST_BODY_ARGUMENTS, BodyArguments: {Announce, Category, FullText, Title, Photo, CreatedDate}} = require(`./consts`);
 const {getLogger} = require(`../lib/logger`);
 
 const formatValue = (value) => String(value).length < 2 ? `0${value}` : String(value);
@@ -16,10 +15,16 @@ const getDataFromFile = async (pathToFile) => {
   return fileData.trim().split(/\r?\n/);
 };
 
+
+
+// del
 const writeToMockJSON = async (content) => {
   const logger = getLogger(`writeToMockJSON-function`);
 
   try {
+
+
+    // generate будет error
     await writeFile(`../../mock.json`, JSON.stringify(content));
     logger.info(`Файл записан УСПЕШНО.`);
     process.exit(0);
@@ -28,6 +33,9 @@ const writeToMockJSON = async (content) => {
     process.exit(1);
   }
 };
+
+
+
 
 const getText = (textData, maxStringLimit) => {
   const cicleCount = getRangeRandomCount(1, maxStringLimit);
@@ -71,12 +79,12 @@ const checkGenerateCount = (generateCount) => {
   }
 };
 
-const hasNeededBodyKeys = (keys) => {
-  if (!keys.length || keys.length !== POST_REQUEST_BODY_ARGUMENTS) {
+const hasNeededBodyKeys = (bodyKeys, neededKeys) => {
+  if (!bodyKeys.length || bodyKeys.length !== neededKeys.length) {
     return false;
   }
 
-  return keys.every((item) => item === CreatedDate || item === Photo || item === Title || item === Announce || item === FullText || item === Category);
+  return bodyKeys.every((bodyKey) => neededKeys.find((item) => item === bodyKey));
 };
 
 module.exports = {

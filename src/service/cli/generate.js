@@ -4,7 +4,7 @@ const {resolve} = require(`path`);
 
 const {nanoid} = require(`nanoid`);
 
-const {getDate, getText, getTitle, getDataFromFile, checkGenerateCount, writeToMockJSON} = require(`./utils`);
+const {getDate, getText, getTitle, getDataFromFile, checkGenerateCount, writeToMockJSON} = require(`../common/utils`);
 const {getLogger} = require(`../lib/logger`);
 
 const MAX_ANNOUNCE_STRING_COUNT = 5;

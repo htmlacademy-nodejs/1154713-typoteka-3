@@ -2,20 +2,17 @@
 
 const express = require(`express`);
 
-const PostService = require(`../data-service/post`);
 const MainService = require(`../data-service/main`);
 
-const postApi = require(`../api/post`);
 const mainApi = require(`../api/main`);
 
 const {getLogger} = require(`../lib/logger`);
 
-const {ANSWER_ERROR, ARGUMENT_ERROR, SERVER_SERVICE_ERROR} = require(`./consts`);
+const {ANSWER_ERROR, ARGUMENT_ERROR, SERVER_SERVICE_ERROR} = require(`../common/consts`);
 
 module.exports = {
-  getServerConfig: (mockData, categoriesData) => {
-    const postService = new PostService(mockData);
-    const mainService = new MainService(mockData, categoriesData);
+  getServerConfig: (dbModels) => {
+    const mainService = new MainService(dbModels);
 
     const logger = getLogger(`server-config`);
 
@@ -23,7 +20,6 @@ module.exports = {
 
     app.use(express.json());
 
-    postApi(app, postService);
     mainApi(app, mainService);
 
     app.use((_, res) => {

@@ -2,8 +2,19 @@
 
 const {Router} = require(`express`);
 
-const {SERVER_SERVICE_ERROR, ANSWER_ERROR, ARGUMENT_ERROR, BodyArguments: {Category}} = require(`../cli/consts`);
-const {hasNeededBodyKeys} = require(`../cli/utils`);
+const {
+  getAllPublicationsMiddleware,
+  getPublicationByIdMiddleware,
+  getAllCategoriesMiddleware,
+  setNewPublicationMiddleware,
+  updatePublicationMiddleware,
+  deletePublicationMiddleware,
+  getCommentsPublicationMiddleware,
+  deleteCommentMiddleware,
+  addNewCommentMiddleware,
+  getSearchedMiddleware,
+} = require(`../common/middlewares`);
+
 const {getLogger} = require(`../lib/logger`);
 
 const mainApi = (app, mainService) => {
@@ -12,150 +23,84 @@ const mainApi = (app, mainService) => {
   const apiRouter = new Router();
   app.use(`/api`, apiRouter);
 
-  apiRouter.get(`/articles`, (req, res, next) => {
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    try {
-      logger.info(`Status code is 200`);
-      res.status(200).json(mainService.getAll());
-    } catch {
-      next(new Error(SERVER_SERVICE_ERROR));
-    }
-  });
-
-  apiRouter.get(`/articles/:articleId`, (req, res, next) => {
-    const {params: {articleId}} = req;
-
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    const result = mainService.find(articleId);
-
-    if (!result) {
-      return next(new Error(ANSWER_ERROR));
-    }
-
-    logger.info(`Status code is 200`);
-    return res.status(200).json(result);
-  });
-
-  apiRouter.get(`/categories`, (req, res) => {
+  apiRouter.get(`/articles`, getAllPublicationsMiddleware(mainService), (req, res) => {
+    const {allPublications} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
     logger.info(`Status code is 200`);
-    res.status(200).send(mainService.getCategories());
+    res.status(200).json(allPublications);
   });
 
-  apiRouter.get(`/articles/:articleId/comments`, (req, res, next) => {
-    const {params: {articleId}} = req;
-
+  apiRouter.get(`/articles/:articleId`, getPublicationByIdMiddleware(mainService), (req, res) => {
+    const {publicationById} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const result = mainService.find(articleId);
-
-    if (!result) {
-      return next(new Error(ANSWER_ERROR));
-    }
-
     logger.info(`Status code is 200`);
-    return res.status(200).json(result.comments);
+    return res.status(200).json(publicationById);
   });
 
-  apiRouter.get(`/search`, (req, res, next) => {
-    const {body: {search}} = req;
-
+  apiRouter.get(`/categories`, getAllCategoriesMiddleware(mainService), (req, res) => {
+    const {allCategories} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const result = mainService.getSearchedData(search);
-
-    if (!result.length) {
-      return next(new Error(ANSWER_ERROR));
-    }
-
     logger.info(`Status code is 200`);
-    return res.status(200).json(result);
+    res.status(200).json(allCategories);
   });
 
-  apiRouter.delete(`/articles/:articleId`, (req, res, next) => {
-    const {params: {articleId}} = req;
-
+  apiRouter.post(`/articles`, setNewPublicationMiddleware(mainService), (req, res) => {
+    const {newPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const result = mainService.deleteArticle(articleId);
-
-    if (!result) {
-      return next(new Error(ANSWER_ERROR));
-    }
-
     logger.info(`Status code is 200`);
-    return res.status(200).json(result);
+    return res.status(200).json(newPublication);
   });
 
-  apiRouter.delete(`/articles/:articleId/comments/:commentId`, (req, res, next) => {
-    const {params: {articleId, commentId}} = req;
-
+  apiRouter.put(`/articles/:articleId`, updatePublicationMiddleware(mainService), (req, res) => {
+    const {updatedPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const result = mainService.deleteComment(articleId, commentId);
-
-    if (!result) {
-      return next(new Error(ANSWER_ERROR));
-    }
-
     logger.info(`Status code is 200`);
-    return res.status(200).json(result);
+    return res.status(200).json(updatedPublication);
   });
 
-  apiRouter.put(`/articles/:articleId`, (req, res, next) => {
-    const {params: {articleId}, body} = req;
-
+  apiRouter.delete(`/articles/:articleId`, deletePublicationMiddleware(mainService), (req, res) => {
+    const {deleteResult} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    if (!Object.keys(body).length) {
-      return next(new Error(ARGUMENT_ERROR));
-    }
-
-    const result = mainService.editArticle(articleId, body);
-
-    if (!result) {
-      return next(new Error(ANSWER_ERROR));
-    }
-
     logger.info(`Status code is 200`);
-    return res.status(200).json(result);
+    return res.status(200).json(deleteResult);
   });
 
-  apiRouter.post(`/articles`, (req, res, next) => {
-    const {body} = req;
-
+  apiRouter.get(`/articles/:articleId/comments`, getCommentsPublicationMiddleware(mainService), (req, res) => {
+    const {commentsPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const bodyKeys = Object.keys(body);
-
-    if (!hasNeededBodyKeys(bodyKeys) || !Array.isArray(body[Category])) {
-      return next(new Error(ARGUMENT_ERROR));
-    }
-
     logger.info(`Status code is 200`);
-    return res.status(200).json(mainService.addNewArticle(body));
+    return res.status(200).json(commentsPublication);
   });
 
-  apiRouter.post(`/articles/:articleId/comments`, (req, res, next) => {
-    const {params: {articleId}, body: {text}} = req;
-
+  apiRouter.delete(`/articles/:articleId/comments/:commentId`, deleteCommentMiddleware(mainService), (req, res) => {
+    const {deleteResult} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
-    const result = mainService.addNewComment(articleId, text);
+    logger.info(`Status code is 200`);
+    return res.status(200).json(deleteResult);
+  });
 
-    if (!text) {
-      return next(new Error(ARGUMENT_ERROR));
-    }
-
-    if (!result) {
-      return next(new Error(ANSWER_ERROR));
-    }
+  apiRouter.post(`/articles/:articleId/comments`, addNewCommentMiddleware(mainService), (req, res) => {
+    const {newComment} = req;
+    logger.debug(`Request on route ${req.originalUrl}`);
 
     logger.info(`Status code is 200`);
-    return res.status(200).json(result);
+    return res.status(200).json(newComment);
+  });
+
+  apiRouter.get(`/search`, getSearchedMiddleware(mainService), (req, res) => {
+    const {searchResult} = req;
+    logger.debug(`Request on route ${req.originalUrl}`);
+
+    logger.info(`Status code is 200`);
+    return res.status(200).json(searchResult);
   });
 };
 

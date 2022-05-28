@@ -3,7 +3,7 @@ const {promises: {readFile}} = require(`fs`);
 const request = require(`supertest`);
 
 const {getServerConfig} = require(`./server-config`);
-const {getDataFromFile} = require(`./utils`);
+const {getDataFromFile} = require(`../common/utils`);
 
 describe(`Test server REST API`, () => {
   let serverConfig;

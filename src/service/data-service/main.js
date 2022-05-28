@@ -1,132 +1,81 @@
 'use strict';
 
-const {nanoid} = require(`nanoid`);
+const {Op} = require(`sequelize`);
 
 class MainService {
-  constructor(fileData, categoriesData) {
-    this._data = fileData;
-    this._categories = categoriesData;
+  constructor(dbModels) {
+    const {Publication, Category, Comment} = dbModels;
+
+    this._publications = Publication;
+    this._categories = Category;
+    this._comments = Comment;
   }
 
-  getAll() {
-    return this._data;
+  async getAllPublications() {
+    return await this._publications.findAll({raw: true});
   }
 
-  find(articleId) {
-    return this._data.find(({id}) => id === articleId);
+  async getPublicationById(publicationId) {
+    return await this._publications.findByPk(publicationId);
   }
 
-  getCategories() {
-    return this._categories;
+  async getAllCategories() {
+    return await this._categories.findAll({raw: true});
   }
 
-  getSearchedData(textSearch) {
-    return this._data.filter(({title}) => textSearch && title.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1);
+  async setNewPublication(publicationBody) {
+    const recordResult = await this._publications.create(publicationBody);
+
+    return recordResult;
   }
 
-  deleteArticle(articleId) {
-    const item = this.find(articleId);
-
-    if (!item) {
-      return item;
-    }
-
-    const newData = this._data.filter(({id}) => id !== articleId);
-    this._data = newData;
-    return this._data;
-  }
-
-  deleteComment(articleId, commentId) {
-    const item = this.find(articleId);
-
-    if (!item) {
-      return item;
-    }
-
-    const hasComment = item.comments.find(({id}) => id === commentId);
-
-    if (!hasComment) {
-      return hasComment;
-    }
-
-    const changedComments = item.comments.filter(({id}) => id !== commentId);
-
-    const newData = this._data.map((element) => {
-      if (element.id === articleId) {
-        return {
-          ...element,
-          comments: changedComments,
-        };
+  async updatePublication(publicationId, publicationBody) {
+    return await this._publications.update(publicationBody, {
+      where: {
+        id: publicationId,
       }
-
-      return element;
     });
-
-    this._data = newData;
-
-    return this._data;
   }
 
-  editArticle(articleId, bodyArticle) {
-    const editedItem = this.find(articleId);
-
-    if (!editedItem) {
-      return editedItem;
-    }
-
-    for (let key in bodyArticle) {
-      if (bodyArticle.hasOwnProperty(key)) {
-        editedItem[key] = bodyArticle[key];
+  async deletePublication(publicationId) {
+    return await this._publications.destroy({
+      where: {
+        id: publicationId,
       }
-    }
-
-    const newData = this._data.map((oldItem) => {
-      if (oldItem.id === articleId) {
-        return editedItem;
-      }
-
-      return oldItem;
     });
-
-    this._data = newData;
-
-    return this._data;
   }
 
-  addNewArticle(bodyArticle) {
-    this._data.push({
-      ...bodyArticle,
-      id: nanoid(6),
-      comments: [],
+  async getCommentsPublication(publicationId) {
+    return await this._comments.findAll({
+      raw: true,
+      where: {
+        [`publication_id`]: publicationId,
+      },
     });
-
-    return this._data;
   }
 
-  addNewComment(articleId, commentText) {
-    const item = this.find(articleId);
-
-    if (!item) {
-      return item;
-    }
-
-    const newData = this._data.map((oldItem) => {
-      if (oldItem.id === articleId) {
-        return {
-          ...oldItem,
-          comments: [...oldItem.comments, {
-            id: nanoid(6),
-            text: commentText,
-          }],
-        };
+  async deleteComment(publicationId, commentId) {
+    return await this._comments.destroy({
+      where: {
+        id: commentId,
+        [`publication_id`]: publicationId,
       }
-
-      return oldItem;
     });
+  }
 
-    this._data = newData;
+  async addNewComment(body) {
+    return await this._comments.create(body);
+  }
 
-    return this._data;
+  async getSearchedData(textSearch) {
+    return await this._publications.findAll({
+      raw: true,
+      where: {
+        title: {
+          [Op.substring]: textSearch
+        },
+      }
+    });
   }
 }
 
