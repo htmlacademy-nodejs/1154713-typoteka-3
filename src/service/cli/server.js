@@ -7,11 +7,7 @@ const {define} = require(`../db-models/index`);
 
 
 
-// убрать generate ???
-// попр все что связанно с generate везде
-// замена generate на --filldb ???
 // попр обраб ошибок асинхр для мидлвар фронтового сервера
-// убр передачу лишних арг в конструктор сервиса
 // перепроверить все тесты + переписать их
 // пройтись по всем файлам удалить ненужное (утили, методы)
 
@@ -30,13 +26,6 @@ module.exports = {
       await db.sync();
 
       logger.info(`Connection to DB is OK`);
-
-
-
-      const fileData = await readFile(`mock.json`);
-      const categoriesData = await getDataFromFile(`./data/categories.txt`);
-
-
 
       const serverConfig = getServerConfig(dbModels);
 
