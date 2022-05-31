@@ -5,10 +5,22 @@ module.exports = {
     req.allArticles = await api.getAllArticles();
     next();
   },
+
+
+
+
+
   getAllCategoriesMiddleware: (api) => async (req, res, next) => {
     req.allCategories = await api.getAllCategories();
     next();
   },
+
+
+
+
+
+
+  
   getArticleMiddleware: (api) => async (req, res, next) => {
     const {params: {id}} = req;
 

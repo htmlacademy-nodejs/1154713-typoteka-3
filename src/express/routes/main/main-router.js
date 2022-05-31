@@ -20,8 +20,18 @@ module.exports = {
     mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
       const {allArticles, allCategories} = req;
 
+
+      console.log('ALL', allCategories);
+
+
+
       res.render(`main/main`, {
+
+
         themesData: getExistThemes(allCategories, allArticles),
+
+
+        
         mostCommented: getMostCommentedItems(allArticles),
         lastComments: getLastComments(allArticles),
         cardData: getCardData(allArticles),

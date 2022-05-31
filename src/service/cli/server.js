@@ -5,13 +5,6 @@ const {getLogger} = require(`../lib/logger`);
 const {createDBInstance} = require(`../api/db-connect`);
 const {define} = require(`../db-models/index`);
 
-
-
-// попр обраб ошибок асинхр для мидлвар фронтового сервера
-// перепроверить все тесты + переписать их
-// пройтись по всем файлам удалить ненужное (утили, методы)
-
-
 module.exports = {
   run: async (port = 3000) => {
     const logger = getLogger(`server`);

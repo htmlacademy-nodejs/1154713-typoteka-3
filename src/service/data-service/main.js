@@ -1,6 +1,6 @@
 'use strict';
 
-const {Op} = require(`sequelize`);
+const sequelize = require(`sequelize`);
 
 class MainService {
   constructor(dbModels) {
@@ -11,8 +11,50 @@ class MainService {
     this._comments = Comment;
   }
 
+
+
+
+
   async getAllPublications() {
-    return await this._publications.findAll({raw: true});
+
+    
+    //return await this._publications.findAll({raw: true});
+
+    return await this._publications.findAll({
+      raw: true,
+
+      attributes: {
+        include: [`categories.category_name`],
+
+
+        //include: [sequelize.fn(`string_agg`, sequelize.col(`categories.category_name`))],
+      },
+
+      
+      
+      include: [
+        {
+          model: this._categories,
+          as: `categories`,
+          through: {
+            attributes: [],
+          },
+
+          attributes: [],
+        }
+      ],
+
+      /*include: {
+        model: this._categories,
+      },*/
+
+
+
+    });
+
+
+
+
   }
 
   async getPublicationById(publicationId) {
@@ -72,7 +114,7 @@ class MainService {
       raw: true,
       where: {
         title: {
-          [Op.substring]: textSearch
+          [sequelize.Op.substring]: textSearch
         },
       }
     });
