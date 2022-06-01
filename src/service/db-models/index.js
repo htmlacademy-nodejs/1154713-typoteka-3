@@ -55,6 +55,9 @@ module.exports = {
     Publication.hasMany(Comment, {as: `comments-publication`, foreignKey: `publication_id`, onDelete: `SET NULL`, onUpdate: `CASCADE`});
     Comment.belongsTo(Publication, {foreignKey: `publication_id`});
 
+    User.hasMany(Publication, {foreignKey: `user_id`, onDelete: `SET NULL`, onUpdate: `CASCADE`});
+    Publication.belongsTo(User, {foreignKey: `user_id`});
+
 
 
 

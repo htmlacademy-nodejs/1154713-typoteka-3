@@ -19,21 +19,13 @@ class AxiosApi {
     return this._load(`/api/articles`);
   }
 
-
-
-
   getAllCategories() {
     return this._load(`/api/categories`);
   }
 
-
-
-
   getArticle(id) {
     return this._load(`api/articles/${id}`);
   }
-
-  
 
   setNewPost(data) {
     return this._load(`api/articles`, {

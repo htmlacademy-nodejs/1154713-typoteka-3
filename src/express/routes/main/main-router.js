@@ -16,27 +16,39 @@ module.exports = {
   mainRouter: (api) => {
     const mainRouter = new Router();
 
+
+
+
+    
     // главная страница
     mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
       const {allArticles, allCategories} = req;
 
 
-      console.log('ALL', allCategories);
+      console.log('getExistThemes', getExistThemes(allCategories, allArticles));
+      console.log('getMostCommentedItems', getMostCommentedItems(allArticles));
+      console.log('getLastComments', getLastComments(allArticles));
 
 
 
       res.render(`main/main`, {
-
-
         themesData: getExistThemes(allCategories, allArticles),
-
-
-        
         mostCommented: getMostCommentedItems(allArticles),
+
+
+
+
         lastComments: getLastComments(allArticles),
+
+
+
         cardData: getCardData(allArticles),
       });
     });
+
+
+
+
 
     // демо страниц авторизации\аутентификации
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));

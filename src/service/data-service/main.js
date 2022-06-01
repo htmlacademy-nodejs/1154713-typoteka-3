@@ -4,34 +4,33 @@ const sequelize = require(`sequelize`);
 
 class MainService {
   constructor(dbModels) {
-    const {Publication, Category, Comment} = dbModels;
+    const {Publication, Category, Comment, User} = dbModels;
 
     this._publications = Publication;
     this._categories = Category;
     this._comments = Comment;
+    this._user = User;
   }
 
-
-
-
-
   async getAllPublications() {
-
-    
-    //return await this._publications.findAll({raw: true});
-
     return await this._publications.findAll({
       raw: true,
-
+      group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {
-        include: [`categories.category_name`],
+        include: [
+          [
+            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+          ],
+          [
+            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`comments-publication.comment_text`))), `comments`
+          ],
 
-
-        //include: [sequelize.fn(`string_agg`, sequelize.col(`categories.category_name`))],
+          // оставить имя пользователя публикации ???
+          /*[
+            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `user`
+          ],*/
+        ],
       },
-
-      
-      
       include: [
         {
           model: this._categories,
@@ -39,22 +38,20 @@ class MainService {
           through: {
             attributes: [],
           },
-
           attributes: [],
-        }
+        },
+        {
+          model: this._comments,
+          as: `comments-publication`,
+          attributes: [],
+        },
+        /*{
+          model: this._user,
+          as: `User`,
+          attributes: [],
+        },*/
       ],
-
-      /*include: {
-        model: this._categories,
-      },*/
-
-
-
     });
-
-
-
-
   }
 
   async getPublicationById(publicationId) {
