@@ -5,7 +5,7 @@ const {Router} = require(`express`);
 const {
   getExistThemes,
   getMostCommentedItems,
-  getLastComments,
+  getLastComment,
   getCardData,
   getResultData,
 } = require(`../../common/utils`);
@@ -27,7 +27,7 @@ module.exports = {
 
       console.log('getExistThemes', getExistThemes(allCategories, allArticles));
       console.log('getMostCommentedItems', getMostCommentedItems(allArticles));
-      console.log('getLastComments', getLastComments(allArticles));
+      console.log('getLastComments', getLastComment(allArticles));
 
 
 
@@ -38,7 +38,7 @@ module.exports = {
 
 
 
-        lastComments: getLastComments(allArticles),
+        lastComments: getLastComment(allArticles),
 
 
 

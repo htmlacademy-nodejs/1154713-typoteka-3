@@ -13,7 +13,7 @@ class MainService {
   }
 
   async getAllPublications() {
-    return await this._publications.findAll({
+    const publicationsData = await this._publications.findAll({
       raw: true,
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {
@@ -24,11 +24,9 @@ class MainService {
           [
             sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`comments-publication.comment_text`))), `comments`
           ],
-
-          // оставить имя пользователя публикации ???
-          /*[
-            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `user`
-          ],*/
+          [
+            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
+          ],
         ],
       },
       include: [
@@ -45,14 +43,55 @@ class MainService {
           as: `comments-publication`,
           attributes: [],
         },
-        /*{
+        {
           model: this._user,
           as: `User`,
           attributes: [],
-        },*/
+        },
       ],
     });
+
+    const allPublicationsIds = publicationsData.map(({id}) => id);
+
+    const preparedCommentsData = allPublicationsIds.map((publicationId) =>
+      this._comments.findOne({
+        limit: 1,
+        order: [
+          [`data_comment`, `DESC`]
+        ],
+        group: [`Comment.id`, `User.user_name`, `User.user_surname`],
+        where: {
+          [`publication_id`]: publicationId,
+        },
+        include: [
+          {
+            model: this._user,
+            as: `User`,
+            attributes: [],
+          }
+        ],
+        attributes: {
+          include: [
+            [
+              sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
+            ]
+          ],
+        },
+      }));
+
+    const lastCommentsData = await Promise.all(preparedCommentsData);
+
+    return {
+      publicationsData,
+      lastCommentsData,
+    };
   }
+
+
+
+
+
+
 
   async getPublicationById(publicationId) {
     return await this._publications.findByPk(publicationId);

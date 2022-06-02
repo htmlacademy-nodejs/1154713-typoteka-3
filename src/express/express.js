@@ -9,6 +9,13 @@ const {mainRouter} = require(`./routes/main/main-router`);
 
 const AxiosApi = require(`./api/axios-api`);
 
+
+
+// см какие данные отрисовываются в шаблонах - добавить если нужно
+
+
+
+
 const axiosApi = new AxiosApi(`http://localhost:3000`, 1000);
 const app = express();
 

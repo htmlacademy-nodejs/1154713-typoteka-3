@@ -23,7 +23,7 @@ module.exports = {
     return themesData;
   },
   getMostCommentedItems: (allArticles) => allArticles.reduce((result, {announce, comments}) => {
-    if (comments.length > MIN_COMMENTS) {
+    if (comments.length >= MIN_COMMENTS) {
       result.push({
         announce,
         commentsCount: comments.length,
@@ -37,7 +37,7 @@ module.exports = {
 
 
   // usera последнего комментария в публикации
-  getLastComments: (allArticles) => allArticles.reduce((result, {user, comments}) => {
+  getLastComment: (allArticles) => allArticles.reduce((result, {user, comments}) => {
     const lastItem = comments[comments.length - 1];
 
     if (lastItem) {
@@ -61,6 +61,10 @@ module.exports = {
     announce,
     commentsCount: comments.length,
   })),
+
+
+
+
   getUsersRecordData: (allArticles) => allArticles.map(({createdDate, title}) => ({
     title,
     createdDate,
