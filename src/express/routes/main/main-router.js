@@ -5,7 +5,7 @@ const {Router} = require(`express`);
 const {
   getExistThemes,
   getMostCommentedItems,
-  getLastComment,
+  getLastComments,
   getCardData,
   getResultData,
 } = require(`../../common/utils`);
@@ -16,51 +16,44 @@ module.exports = {
   mainRouter: (api) => {
     const mainRouter = new Router();
 
-
-
-
-    
     // главная страница
     mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
-      const {allArticles, allCategories} = req;
-
-
-      console.log('getExistThemes', getExistThemes(allCategories, allArticles));
-      console.log('getMostCommentedItems', getMostCommentedItems(allArticles));
-      console.log('getLastComments', getLastComment(allArticles));
-
-
+      const {allArticles: {publicationsData, lastCommentsData}, allCategories} = req;
 
       res.render(`main/main`, {
-        themesData: getExistThemes(allCategories, allArticles),
-        mostCommented: getMostCommentedItems(allArticles),
-
-
-
-
-        lastComments: getLastComment(allArticles),
-
-
-
-        cardData: getCardData(allArticles),
+        themesData: getExistThemes(allCategories, publicationsData),
+        mostCommented: getMostCommentedItems(publicationsData),
+        lastComments: getLastComments(lastCommentsData),
+        cardData: getCardData(publicationsData),
       });
     });
-
-
-
-
 
     // демо страниц авторизации\аутентификации
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));
     mainRouter.get(`/login`, (_, res) => res.render(`auth/login`));
 
+
+
+
+
     mainRouter.get(`/search`, getSearchDataMiddleware(api), (req, res) => {
       const {query: {search}, result} = req;
+
+
+
+
+
+
+      
       res.render(`search/search`, {
         searchData: getResultData(search, result),
         searchValue: search,
       });
     });
+
+
+
+
 
     // демо страниц с ошибками
     mainRouter.get(`/404`, (_, res) => res.render(`errors/404`));

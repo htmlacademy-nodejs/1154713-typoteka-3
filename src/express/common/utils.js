@@ -31,32 +31,13 @@ module.exports = {
     }
     return result;
   }, []),
-
-
-
-
-
-  // usera последнего комментария в публикации
-  getLastComment: (allArticles) => allArticles.reduce((result, {user, comments}) => {
-    const lastItem = comments[comments.length - 1];
-
-    if (lastItem) {
-      result.push({
-        name: id,
-        comment: lastItem,
-      });
-    }
-
-    return result;
-  }, []),
-
-
-
-
-
-  getCardData: (allArticles) => allArticles.map(({category, createdDate, title, announce, comments}) => ({
-    category,
-    createdDate,
+  getLastComments: (lastCommentsData) => lastCommentsData.map(({comment_owner: commentOwner, comment_text: commentText}) => ({
+    name: commentOwner,
+    comment: commentText,
+  })),
+  getCardData: (allArticles) => allArticles.map(({categories, publication_date: publicationDate, title, announce, comments}) => ({
+    categories,
+    publicationDate,
     title,
     announce,
     commentsCount: comments.length,

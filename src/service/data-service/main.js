@@ -79,7 +79,7 @@ class MainService {
         },
       }));
 
-    const lastCommentsData = await Promise.all(preparedCommentsData);
+    const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);
 
     return {
       publicationsData,
@@ -145,16 +145,34 @@ class MainService {
     return await this._comments.create(body);
   }
 
+
+
+
+  // не работает lower ?
   async getSearchedData(textSearch) {
+
+
+
+
     return await this._publications.findAll({
       raw: true,
       where: {
+
+        //title: sequelize.where(sequelize.fn('LOWER', sequelize.col('title')), 'LIKE', '%' + textSearch.toLowerCase() + '%')
+
         title: {
-          [sequelize.Op.substring]: textSearch
+          [sequelize.Op.substring]: textSearch,
         },
+
+
       }
     });
   }
+
+
+
+
+
 }
 
 module.exports = MainService;
