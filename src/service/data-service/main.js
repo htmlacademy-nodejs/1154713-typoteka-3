@@ -148,31 +148,15 @@ class MainService {
 
 
 
-  // не работает lower ?
+  
   async getSearchedData(textSearch) {
-
-
-
-
     return await this._publications.findAll({
       raw: true,
       where: {
-
-        //title: sequelize.where(sequelize.fn('LOWER', sequelize.col('title')), 'LIKE', '%' + textSearch.toLowerCase() + '%')
-
-        title: {
-          [sequelize.Op.substring]: textSearch,
-        },
-
-
+        title: sequelize.where(sequelize.fn(`LOWER`, sequelize.col(`title`)), `LIKE`, `%${textSearch.toLowerCase()}%`),
       }
     });
   }
-
-
-
-
-
 }
 
 module.exports = MainService;

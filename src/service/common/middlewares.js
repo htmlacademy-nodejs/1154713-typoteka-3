@@ -115,7 +115,7 @@ module.exports = {
     }
   },
   getSearchedMiddleware: (service) => async (req, res, next) => {
-    const {query: {query: search}} = req;
+    const {body: {search}} = req;
 
     try {
       const result = await service.getSearchedData(search);

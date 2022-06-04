@@ -50,6 +50,12 @@ module.exports = {
     title,
     createdDate,
   })),
+
+
+
+
+
+  
   getUpdatedCommentsData: (allArticles) => allArticles.reduce((result, {id, title, createdDate, comments}) => {
     const currentPublication = {
       id,
@@ -64,6 +70,10 @@ module.exports = {
 
     return result;
   }, []),
+
+
+
+
   getResultData: (search, result) => {
     if (search) {
       return result ?? NOT_FOUND_FLAG;

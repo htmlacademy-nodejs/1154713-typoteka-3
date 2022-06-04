@@ -9,12 +9,26 @@ module.exports = {
   myRouter: (api) => {
     const myRouter = new Router();
 
+
+
+
     myRouter.get(`/`, getAllArticlesMiddleware(api), (req, res) => {
       const {allArticles} = req;
+
+
+      console.log('getUsersRecordData', getUsersRecordData(allArticles));
+
+
+
       res.render(`admin/my`, {
         myData: getUsersRecordData(allArticles),
       });
     });
+
+
+
+
+
 
     myRouter.get(`/comments`, getAllArticlesMiddleware(api), (req, res) => {
       const {allArticles} = req;

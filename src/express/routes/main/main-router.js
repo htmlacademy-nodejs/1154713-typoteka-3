@@ -32,28 +32,14 @@ module.exports = {
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));
     mainRouter.get(`/login`, (_, res) => res.render(`auth/login`));
 
-
-
-
-
     mainRouter.get(`/search`, getSearchDataMiddleware(api), (req, res) => {
       const {query: {search}, result} = req;
 
-
-
-
-
-
-      
       res.render(`search/search`, {
         searchData: getResultData(search, result),
         searchValue: search,
       });
     });
-
-
-
-
 
     // демо страниц с ошибками
     mainRouter.get(`/404`, (_, res) => res.render(`errors/404`));
