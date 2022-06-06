@@ -27,8 +27,8 @@ block page
             li.publication__list-item
               .publication__header
                 img.publication__list-image(src='/img/avatar-small-2.png', width='20', height='20', alt='Аватар пользователя')
-                b.publication__list-name #{item.id}
-                time.publication__item-time(datetime='2019-03-21T20:33') #{item.createdDate}
+                b.publication__list-name #{item.publicationOwner}
+                time.publication__item-time(datetime='2019-03-21T20:33') #{item.publicationDate}
               a.publication__item-text(href='#') #{item.title}
               p.publication__text-strong #{item.text}
               button.publication__button.button.button--close-item(type='button')

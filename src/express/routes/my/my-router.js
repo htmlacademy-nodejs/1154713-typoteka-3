@@ -3,41 +3,32 @@
 const {Router} = require(`express`);
 
 const {getUsersRecordData, getUpdatedCommentsData} = require(`../../common/utils`);
-const {getAllArticlesMiddleware} = require(`../../common/middlewares`);
+const {getAllArticlesMiddleware, getAllCategoriesMiddleware} = require(`../../common/middlewares`);
 
 module.exports = {
   myRouter: (api) => {
     const myRouter = new Router();
 
-
-
-
     myRouter.get(`/`, getAllArticlesMiddleware(api), (req, res) => {
-      const {allArticles} = req;
-
-
-      console.log('getUsersRecordData', getUsersRecordData(allArticles));
-
-
-
+      const {allArticles: {publicationsData}} = req;
       res.render(`admin/my`, {
-        myData: getUsersRecordData(allArticles),
+        myData: getUsersRecordData(publicationsData),
       });
     });
-
-
-
-
-
 
     myRouter.get(`/comments`, getAllArticlesMiddleware(api), (req, res) => {
-      const {allArticles} = req;
+      const {allArticles: {publicationsData}} = req;
       res.render(`admin/comments`, {
-        allPublicationCommentsData: getUpdatedCommentsData(allArticles),
+        allPublicationCommentsData: getUpdatedCommentsData(publicationsData),
       });
     });
 
-    myRouter.get(`/categories`, (_, res) => res.render(`admin/all-categories`));
+    myRouter.get(`/categories`, getAllCategoriesMiddleware(api), (req, res) => {
+      const {allCategories} = req;
+      res.render(`admin/all-categories`, {
+        allCategories,
+      });
+    });
 
     return myRouter;
   },

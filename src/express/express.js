@@ -27,12 +27,13 @@ app.use(express.static(resolve(__dirname, `public`)));
 app.use(express.static(resolve(__dirname, `upload`)));
 
 app.use(`/`, mainRouter(axiosApi));
-
-
 app.use(`/my`, myRouter(axiosApi));
 
 
 
 app.use(`/articles`, articlesRouter(axiosApi));
+
+
+
 
 app.listen(8080, () => console.log(`Front server started`));

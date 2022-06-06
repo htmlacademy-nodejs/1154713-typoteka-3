@@ -11,22 +11,31 @@ module.exports = {
     next();
   },
 
+
+
+
   getArticleMiddleware: (api) => async (req, res, next) => {
     const {params: {id}} = req;
 
     req.article = await api.getArticle(id);
     next();
   },
+
+
+
   setNewPostMiddleware: (api) => async (req, res, next) => {
     const {body, file} = req;
 
     const offerData = {
+      // пока хардкод user
+      [`user_id`]: 1,
       title: body.title,
-      photo: file ? file.filename : ``,
-      category: [],
+      picture: file ? file.filename : null,
+      // пока хардкод категории
+      categories: [`IT`],
       announce: body.announce,
-      fullText: body[`full-text`],
-      createdDate: body.date,
+      [`full_text`]: body[`full-text`],
+      [`publication_date`]: body.date,
     };
 
     try {
@@ -37,6 +46,9 @@ module.exports = {
       res.redirect(`/articles/add?postData=${postData}`);
     }
   },
+
+
+
   getSearchDataMiddleware: (api) => async (req, res, next) => {
     const {query: {search}} = req;
     try {

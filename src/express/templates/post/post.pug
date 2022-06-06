@@ -47,8 +47,8 @@ block page
                         input.visually-hidden(type='file', name='upload')
                         | Обзор
                   .new-publication__category-wrapper
-                    if category
-                      each item, index in category
+                    if categories && categories.length
+                      each item, index in categories
                         .new-publication__checkbox.new-publication__checkbox--auto
                             input#checkbox-auto(type='checkbox', name='category')
                             label(for='checkbox-auto') #{item}

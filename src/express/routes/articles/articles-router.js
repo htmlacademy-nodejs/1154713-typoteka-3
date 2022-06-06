@@ -12,14 +12,14 @@ module.exports = {
     const articlesRouter = new Router();
 
     articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
-      const {article} = req;
+      const {article: publication} = req;
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
-        title: article.title,
-        category: article.category,
-        announce: article.announce,
-        fullText: article.fullText,
+        title: publication.title,
+        announce: publication.announce,
+        fullText: publication.full_text,
+        categories: publication.categories,
       });
     });
 
@@ -32,8 +32,18 @@ module.exports = {
       });
     });
 
+
+
+
+
+    
     articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
 
+
+
+
+
+    // хардкоды
     articlesRouter.get(`/:id`, (_, res) => res.render(`post/post-detail`));
     articlesRouter.get(`/category/:id`, (_, res) => res.render(`main/articles-by-category`));
 

@@ -94,18 +94,75 @@ class MainService {
 
 
   async getPublicationById(publicationId) {
-    return await this._publications.findByPk(publicationId);
+    return await this._publications.findByPk(publicationId, {
+      raw: true,
+      group: [`Publication.id`],
+      attributes: {
+        include: [
+          [
+            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+          ],
+        ],
+      },
+      include: [
+        {
+          model: this._categories,
+          as: `categories`,
+          through: {
+            attributes: [],
+          },
+          attributes: [],
+        },
+      ],
+    });
   }
+
+
+
 
   async getAllCategories() {
     return await this._categories.findAll({raw: true});
   }
 
+
+
+
+
+
   async setNewPublication(publicationBody) {
+
+
+
+    console.log('PUB_BODY~~~~~~~~~~~~~~~~~~~', publicationBody);
+
+    /*PUB_BODY - must to be {
+      title: '1111',
+      picture: '',
+      
+      announce: '333',
+      full_text: '222',
+      publication_date: '2020-10-21'
+
+
+      categories: [],
+    }*/
+
+    // сдел нов запись в связующей таблице публикаций и категорий
+
     const recordResult = await this._publications.create(publicationBody);
+
+
+
+    console.log('SET~~~~~~!!!!!!!!!!', recordResult);
 
     return recordResult;
   }
+
+
+
+
+
+
 
   async updatePublication(publicationId, publicationBody) {
     return await this._publications.update(publicationBody, {

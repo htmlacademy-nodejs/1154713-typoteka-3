@@ -56,15 +56,15 @@ module.exports = {
 
 
   
-  getUpdatedCommentsData: (allArticles) => allArticles.reduce((result, {id, title, createdDate, comments}) => {
+  getUpdatedCommentsData: (allArticles) => allArticles.reduce((result, {publication_owner: publicationOwner, title, publication_date: publicationDate, comments}) => {
     const currentPublication = {
-      id,
+      publicationOwner,
       title,
-      createdDate,
+      publicationDate,
     };
 
-    comments.forEach(({text}) => result.push({
-      text,
+    comments.forEach((textComment) => result.push({
+      text: textComment,
       ...currentPublication,
     }));
 
