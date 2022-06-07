@@ -12,13 +12,13 @@ module.exports = {
     const articlesRouter = new Router();
 
     articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
-      const {article: publication} = req;
+      const {articleData: {publication}} = req;
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
         title: publication.title,
         announce: publication.announce,
-        fullText: publication.full_text,
+        [`full_text`]: publication.full_text,
         categories: publication.categories,
       });
     });
@@ -32,20 +32,39 @@ module.exports = {
       });
     });
 
-
-
-
-
-    
     articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
 
 
 
 
 
-    // хардкоды
-    articlesRouter.get(`/:id`, (_, res) => res.render(`post/post-detail`));
+    
+
+
+    articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
+      const {articleData: {publication, publicationComments, usedCategoriesData}} = req;
+
+      const pageData = {
+        publicationOwner: publication.publication_owner,
+        publicationDate: publication.publication_date,
+        title: publication.title,
+        categories: usedCategoriesData,
+        picture: publication.picture,
+        fullText: publication.full_text,
+        comments: publicationComments,
+      };
+
+      res.render(`post/post-detail`, pageData);
+    });
+
+
+
+    // хардкод
     articlesRouter.get(`/category/:id`, (_, res) => res.render(`main/articles-by-category`));
+
+
+
+
 
     return articlesRouter;
   },

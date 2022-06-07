@@ -63,6 +63,8 @@ module.exports = {
 
     Publication.belongsToMany(Category, {through: PublicationsCategories, as: `categories`, foreignKey: `publication_id`, otherKey: `category_id`, onDelete: `CASCADE`, onUpdate: `CASCADE`});
     Category.belongsToMany(Publication, {through: PublicationsCategories, as: `publications`, foreignKey: `category_id`, otherKey: `publication_id`, onDelete: `CASCADE`, onUpdate: `CASCADE`});
+
+    Category.hasMany(PublicationsCategories, {as: `categories-publications`, foreignKey: `category_id`, onDelete: `CASCADE`, onUpdate: `CASCADE`});
     
 
     //Publication.hasMany(PublicationsCategories, {onDelete: `CASCADE`, onUpdate: `CASCADE`});

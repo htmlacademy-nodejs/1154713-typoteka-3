@@ -17,7 +17,7 @@ module.exports = {
   getArticleMiddleware: (api) => async (req, res, next) => {
     const {params: {id}} = req;
 
-    req.article = await api.getArticle(id);
+    req.articleData = await api.getArticle(id);
     next();
   },
 
@@ -31,8 +31,8 @@ module.exports = {
       [`user_id`]: 1,
       title: body.title,
       picture: file ? file.filename : null,
-      // пока хардкод категории
-      categories: [`IT`],
+      // пока хардкод категорий
+      categories: [`IT`, `Без рамки`],
       announce: body.announce,
       [`full_text`]: body[`full-text`],
       [`publication_date`]: body.date,

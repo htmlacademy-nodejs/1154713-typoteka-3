@@ -4,12 +4,13 @@ const sequelize = require(`sequelize`);
 
 class MainService {
   constructor(dbModels) {
-    const {Publication, Category, Comment, User} = dbModels;
+    const {Publication, Category, Comment, User, PublicationsCategories} = dbModels;
 
     this._publications = Publication;
     this._categories = Category;
     this._comments = Comment;
     this._user = User;
+    this._publicationsCategories = PublicationsCategories;
   }
 
   async getAllPublications() {
@@ -94,13 +95,16 @@ class MainService {
 
 
   async getPublicationById(publicationId) {
-    return await this._publications.findByPk(publicationId, {
+    const publication = await this._publications.findByPk(publicationId, {
       raw: true,
-      group: [`Publication.id`],
+      group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {
         include: [
           [
             sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+          ],
+          [
+            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
           ],
         ],
       },
@@ -113,8 +117,62 @@ class MainService {
           },
           attributes: [],
         },
+        {
+          model: this._user,
+          as: `User`,
+          attributes: [],
+        },
       ],
     });
+
+    const publicationComments = await this._comments.findAll({
+      raw: true,
+      where: {
+        [`publication_id`]: publicationId,
+      },
+      include: [
+        {
+          model: this._user,
+          as: `User`,
+          attributes: [],
+        }
+      ],
+      attributes: {
+        include: [
+          [
+            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
+          ]
+        ],
+      },
+    });
+
+    const usedCategoriesData = await this._categories.findAll({
+      raw: true,
+      where: {
+        [`category_name`]: publication.categories,
+      },
+      group: [`Category.id`],
+      attributes: {
+        include: [
+          [
+            sequelize.fn(`count`, sequelize.col(`Category.id`)), `category_count`
+          ]
+        ],
+      },
+      include: [
+        {
+          model: this._publicationsCategories,
+          as: `categories-publications`,
+          attributes: [],
+        }
+      ],
+    });
+
+    return {
+      publication,
+      publicationComments,
+      usedCategoriesData,
+    };
   }
 
 
@@ -130,30 +188,23 @@ class MainService {
 
 
   async setNewPublication(publicationBody) {
-
-
-
-    console.log('PUB_BODY~~~~~~~~~~~~~~~~~~~', publicationBody);
-
-    /*PUB_BODY - must to be {
-      title: '1111',
-      picture: '',
-      
-      announce: '333',
-      full_text: '222',
-      publication_date: '2020-10-21'
-
-
-      categories: [],
-    }*/
-
-    // сдел нов запись в связующей таблице публикаций и категорий
-
     const recordResult = await this._publications.create(publicationBody);
 
+    const searchedCategories = await this._categories.findAll({
+      raw: true,
+      where: {
+        [`category_name`]: publicationBody.categories,
+      },
+    });
 
+    const recordId = recordResult.dataValues.id;
 
-    console.log('SET~~~~~~!!!!!!!!!!', recordResult);
+    const newPublicationsCategoriesRecords = searchedCategories.map(({id}) => ({
+      [`publication_id`]: recordId,
+      [`category_id`]: id,
+    }));
+
+    await this._publicationsCategories.bulkCreate(newPublicationsCategoriesRecords);
 
     return recordResult;
   }

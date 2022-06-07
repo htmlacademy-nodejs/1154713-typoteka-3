@@ -47,6 +47,9 @@ const mainApi = (app, mainService) => {
     res.status(200).json(allCategories);
   });
 
+
+
+
   apiRouter.post(`/articles`, setNewPublicationMiddleware(mainService), (req, res) => {
     const {newPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
@@ -54,6 +57,10 @@ const mainApi = (app, mainService) => {
     logger.info(`Status code is 200`);
     return res.status(200).json(newPublication);
   });
+
+
+
+
 
   apiRouter.put(`/articles/:articleId`, updatePublicationMiddleware(mainService), (req, res) => {
     const {updatedPublication} = req;
