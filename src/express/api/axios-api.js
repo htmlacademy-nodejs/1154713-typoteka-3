@@ -40,6 +40,10 @@ class AxiosApi {
       data,
     });
   }
+
+  getCategoryDataById(id) {
+    return this._load(`api/articles/category/${id}`);
+  }
 }
 
 module.exports = AxiosApi;

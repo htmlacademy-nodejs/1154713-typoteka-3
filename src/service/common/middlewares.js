@@ -130,4 +130,16 @@ module.exports = {
       next(new Error(SERVER_SERVICE_ERROR));
     }
   },
+  getCategoryDataById: (service) => async (req, res, next) => {
+    const {params: {categoryId}} = req;
+
+    try {
+      const categoryData = await service.getCategoryDataById(categoryId);
+
+      req.categoryData = categoryData;
+      next();
+    } catch {
+      next(new Error(SERVER_SERVICE_ERROR));
+    }
+  },
 };

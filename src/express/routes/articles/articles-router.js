@@ -3,7 +3,8 @@
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const storage = require(`../../common/multer-storage`);
-const {getArticleMiddleware, setNewPostMiddleware} = require(`../../common/middlewares`);
+const {getArticleMiddleware, setNewPostMiddleware, getAllArticlesMiddleware, getAllCategoriesMiddleware, getDataByCategoryMiddleware} = require(`../../common/middlewares`);
+const {getExistThemes, getCardData} = require(`../../common/utils`);
 
 const upload = multer({storage});
 
@@ -34,13 +35,6 @@ module.exports = {
 
     articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
 
-
-
-
-
-    
-
-
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication, publicationComments, usedCategoriesData}} = req;
 
@@ -59,8 +53,32 @@ module.exports = {
 
 
 
-    // хардкод
-    articlesRouter.get(`/category/:id`, (_, res) => res.render(`main/articles-by-category`));
+    
+    articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
+      const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName, publicationsInCategory}} = req;
+
+
+
+      
+      console.log('JKJKJKJKJK', getCardData(publicationsInCategory).map(item => item.categories));
+
+      
+      // в карточке только одна категория
+
+      const pageData = {
+        categoryName,
+        themesData: getExistThemes(allCategories, publicationsData),
+        cardData: getCardData(publicationsInCategory)
+      };
+
+
+      //console.log('DATA~~~~~~~~~~~', pageData);
+
+
+
+
+      res.render(`main/articles-by-category`, pageData);
+    });
 
 
 

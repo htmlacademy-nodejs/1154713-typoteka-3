@@ -9,13 +9,6 @@ const {mainRouter} = require(`./routes/main/main-router`);
 
 const AxiosApi = require(`./api/axios-api`);
 
-
-
-// см какие данные отрисовываются в шаблонах - добавить если нужно
-
-
-
-
 const axiosApi = new AxiosApi(`http://localhost:3000`, 1000);
 const app = express();
 
@@ -28,12 +21,6 @@ app.use(express.static(resolve(__dirname, `upload`)));
 
 app.use(`/`, mainRouter(axiosApi));
 app.use(`/my`, myRouter(axiosApi));
-
-
-
 app.use(`/articles`, articlesRouter(axiosApi));
-
-
-
 
 app.listen(8080, () => console.log(`Front server started`));

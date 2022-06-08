@@ -265,6 +265,71 @@ class MainService {
       }
     });
   }
+
+
+
+
+
+  async getCategoryDataById(categoryId) {
+    const categoryName = await this._categories.findByPk(categoryId);
+
+    const publicationsInCategory = await this._publications.findAll({
+      raw: true,
+
+
+      /*where: {
+        [`categories.id`]: categoryId,
+      },*/
+
+
+      group: [`Publication.id`, `User.user_name`, `User.user_surname`],
+      attributes: {
+        include: [
+          [
+            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+          ],
+          [
+            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`comments-publication.comment_text`))), `comments`
+          ],
+          [
+            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
+          ],
+        ],
+      },
+      include: [
+        {
+          model: this._categories,
+          as: `categories`,
+          through: {
+            attributes: [],
+
+            /*where: {
+              [`category_id`]: categoryId,
+            }*/
+          },
+          attributes: [],
+          /*where: {
+            [`id`]: categoryId,
+          },*/
+        },
+        {
+          model: this._comments,
+          as: `comments-publication`,
+          attributes: [],
+        },
+        {
+          model: this._user,
+          as: `User`,
+          attributes: [],
+        },
+      ],
+    });
+
+    return {
+      categoryName: categoryName[`category_name`],
+      publicationsInCategory,
+    };
+  }
 }
 
 module.exports = MainService;

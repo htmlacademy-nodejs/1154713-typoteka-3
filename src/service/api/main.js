@@ -13,6 +13,7 @@ const {
   deleteCommentMiddleware,
   addNewCommentMiddleware,
   getSearchedMiddleware,
+  getCategoryDataById,
 } = require(`../common/middlewares`);
 
 const {getLogger} = require(`../lib/logger`);
@@ -47,9 +48,6 @@ const mainApi = (app, mainService) => {
     res.status(200).json(allCategories);
   });
 
-
-
-
   apiRouter.post(`/articles`, setNewPublicationMiddleware(mainService), (req, res) => {
     const {newPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
@@ -57,10 +55,6 @@ const mainApi = (app, mainService) => {
     logger.info(`Status code is 200`);
     return res.status(200).json(newPublication);
   });
-
-
-
-
 
   apiRouter.put(`/articles/:articleId`, updatePublicationMiddleware(mainService), (req, res) => {
     const {updatedPublication} = req;
@@ -100,6 +94,14 @@ const mainApi = (app, mainService) => {
 
     logger.info(`Status code is 200`);
     return res.status(200).json(newComment);
+  });
+
+  apiRouter.get(`/articles/category/:categoryId`, getCategoryDataById(mainService), (req, res) => {
+    const {categoryData} = req;
+    logger.debug(`Request on route ${req.originalUrl}`);
+
+    logger.info(`Status code is 200`);
+    return res.status(200).json(categoryData);
   });
 
   apiRouter.get(`/search`, getSearchedMiddleware(mainService), (req, res) => {
