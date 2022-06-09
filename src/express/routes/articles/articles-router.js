@@ -51,38 +51,27 @@ module.exports = {
       res.render(`post/post-detail`, pageData);
     });
 
-
-
-    
     articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName, publicationsInCategory}} = req;
 
+      const filteredCardData = getCardData(publicationsInCategory).reduce((result, data) => {
+        const searchedCategory = data.categories.find((item) => item === categoryName);
 
+        if (searchedCategory) {
+          result.push(data);
+        }
 
-      
-      console.log('JKJKJKJKJK', getCardData(publicationsInCategory).map(item => item.categories));
-
-      
-      // в карточке только одна категория
+        return result;
+      }, []);
 
       const pageData = {
         categoryName,
         themesData: getExistThemes(allCategories, publicationsData),
-        cardData: getCardData(publicationsInCategory)
+        cardData: filteredCardData,
       };
-
-
-      //console.log('DATA~~~~~~~~~~~', pageData);
-
-
-
 
       res.render(`main/articles-by-category`, pageData);
     });
-
-
-
-
 
     return articlesRouter;
   },

@@ -88,12 +88,6 @@ class MainService {
     };
   }
 
-
-
-
-
-
-
   async getPublicationById(publicationId) {
     const publication = await this._publications.findByPk(publicationId, {
       raw: true,
@@ -175,17 +169,9 @@ class MainService {
     };
   }
 
-
-
-
   async getAllCategories() {
     return await this._categories.findAll({raw: true});
   }
-
-
-
-
-
 
   async setNewPublication(publicationBody) {
     const recordResult = await this._publications.create(publicationBody);
@@ -208,12 +194,6 @@ class MainService {
 
     return recordResult;
   }
-
-
-
-
-
-
 
   async updatePublication(publicationId, publicationBody) {
     return await this._publications.update(publicationBody, {
@@ -253,10 +233,6 @@ class MainService {
     return await this._comments.create(body);
   }
 
-
-
-
-  
   async getSearchedData(textSearch) {
     return await this._publications.findAll({
       raw: true,
@@ -266,22 +242,11 @@ class MainService {
     });
   }
 
-
-
-
-
   async getCategoryDataById(categoryId) {
     const categoryName = await this._categories.findByPk(categoryId);
 
     const publicationsInCategory = await this._publications.findAll({
       raw: true,
-
-
-      /*where: {
-        [`categories.id`]: categoryId,
-      },*/
-
-
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {
         include: [
@@ -302,15 +267,8 @@ class MainService {
           as: `categories`,
           through: {
             attributes: [],
-
-            /*where: {
-              [`category_id`]: categoryId,
-            }*/
           },
           attributes: [],
-          /*where: {
-            [`id`]: categoryId,
-          },*/
         },
         {
           model: this._comments,

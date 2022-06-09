@@ -42,20 +42,10 @@ module.exports = {
     announce,
     commentsCount: comments.length,
   })),
-
-
-
-
   getUsersRecordData: (allArticles) => allArticles.map(({createdDate, title}) => ({
     title,
     createdDate,
   })),
-
-
-
-
-
-  
   getUpdatedCommentsData: (allArticles) => allArticles.reduce((result, {publication_owner: publicationOwner, title, publication_date: publicationDate, comments}) => {
     const currentPublication = {
       publicationOwner,
@@ -70,10 +60,6 @@ module.exports = {
 
     return result;
   }, []),
-
-
-
-
   getResultData: (search, result) => {
     if (search) {
       return result ?? NOT_FOUND_FLAG;
