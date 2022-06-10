@@ -20,7 +20,7 @@ module.exports = {
 
       logger.info(`Connection to DB is OK`);
 
-      const serverConfig = getServerConfig(dbModels);
+      const {app: serverConfig} = getServerConfig(dbModels);
 
       serverConfig.listen(port, () => logger.info(`Server started...`));
     } catch ({message}) {

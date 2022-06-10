@@ -5,6 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "test": "jest",
+    "test:data-service": "jest ./src/service/data-service/main.test.js",
     "test:e2e": "jest ./src/service/cli/server.e2e.test.js",
     "eslint": "eslint --ext .js src/",
     "start": "cross-env LOG_LEVEL=error nodemon -r dotenv/config ./src/service/service.js --server",
@@ -29,6 +30,7 @@
     "nodemon": "2.0.15",
     "pino-pretty": "7.5.4",
     "pug-lint": "2.6.0",
+    "sqlite3": "5.0.8",
     "supertest": "6.2.2"
   },
   "dependencies": {

@@ -43,6 +43,9 @@ module.exports = {
       }
     });
 
-    return app;
+    return {
+      app,
+      mainService,
+    };
   },
 };
