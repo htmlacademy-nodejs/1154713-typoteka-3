@@ -7,6 +7,11 @@ const {hasNeededBodyKeys} = require(`./utils`);
 module.exports = {
   getAllPublicationsMiddleware: (service) => async (req, res, next) => {
     try {
+
+
+      req.test = await service.getPagingAllPublications();
+
+
       req.allPublications = await service.getAllPublications();
       next();
     } catch {

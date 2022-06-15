@@ -25,7 +25,17 @@ const mainApi = (app, mainService) => {
   app.use(`/api`, apiRouter);
 
   apiRouter.get(`/articles`, getAllPublicationsMiddleware(mainService), (req, res) => {
-    const {allPublications} = req;
+    
+    
+    
+    const {allPublications, test} = req;
+
+
+
+    console.log('TEST~~~~~~~~~~~~~~~~~~~', test);
+
+
+
     logger.debug(`Request on route ${req.originalUrl}`);
 
     logger.info(`Status code is 200`);
