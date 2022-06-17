@@ -18,13 +18,10 @@ class MainService {
 
 
   async getPagingAllPublications() {
-
-
-    const pagingData = await this._publications.findAndCountAll({
+    const {count, rows} = await this._publications.findAndCountAll({
       raw: true,
       limit: 2,
       offset: 0,
-      distinct: true,
       subQuery: false,
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {
@@ -62,47 +59,9 @@ class MainService {
       ],
     });
 
-
-
-    /*const allPublicationsIds = publicationsData.map(({id}) => id);
-
-
-
-    const preparedCommentsData = allPublicationsIds.map((publicationId) =>
-      this._comments.findOne({
-        limit: 1,
-        order: [
-          [`data_comment`, `DESC`]
-        ],
-        group: [`Comment.id`, `User.user_name`, `User.user_surname`],
-        where: {
-          [`publication_id`]: publicationId,
-        },
-        include: [
-          {
-            model: this._user,
-            as: `User`,
-            attributes: [],
-          }
-        ],
-        attributes: {
-          include: [
-            [
-              sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
-            ]
-          ],
-        },
-      }));
-
-
-
-    const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);*/
-
-
-
     return {
-      pagingData,
-      //lastCommentsData,
+      countAll: count.length,
+      publications: rows,
     };
   }
   

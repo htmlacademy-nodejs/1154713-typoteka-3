@@ -10,7 +10,7 @@ const {
   getResultData,
 } = require(`../../common/utils`);
 
-const {getAllArticlesMiddleware, getAllCategoriesMiddleware, getSearchDataMiddleware} = require(`../../common/middlewares`);
+const {getAllArticlesMiddleware, getAllCategoriesMiddleware, getSearchDataMiddleware, setPageData} = require(`../../common/middlewares`);
 
 module.exports = {
   mainRouter: (api) => {
@@ -27,6 +27,15 @@ module.exports = {
         cardData: getCardData(publicationsData),
       });
     });
+
+
+    // в шаблоне будет массив кнопок, каждая - будет submit, этот submit обраб в post
+    //articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
+    
+    mainRouter.post(`/`, setPageData(api), (_, res) => res.redirect(`/`));
+
+
+
 
     // демо страниц авторизации\аутентификации
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));

@@ -5,13 +5,26 @@ const {SERVER_SERVICE_ERROR, ANSWER_ERROR, ARGUMENT_ERROR, BODY_ARGUMENTS, COMME
 const {hasNeededBodyKeys} = require(`./utils`);
 
 module.exports = {
+  getPagingAllPublicationsMiddleware: (service) => async (req, res, next) => {
+    
+    
+    
+    const {params: {pageNumber}} = req;
+
+
+    console.log('PAGE_NUMBER~~~~~~~~~~~~~~~~~~~~', pageNumber);
+
+
+
+    try {
+      req.publicationsWithPaginaton = await service.getPagingAllPublications();
+      next();
+    } catch {
+      next(new Error(SERVER_SERVICE_ERROR));
+    }
+  },
   getAllPublicationsMiddleware: (service) => async (req, res, next) => {
     try {
-
-
-      req.test = await service.getPagingAllPublications();
-
-
       req.allPublications = await service.getAllPublications();
       next();
     } catch {
