@@ -6,8 +6,21 @@ const {hasNeededBodyKeys} = require(`./utils`);
 
 module.exports = {
   getAllPublicationsMiddleware: (service) => async (req, res, next) => {
+    
+    const {body: {pageNumber}} = req;
+
+
+    console.log('PAG~~~~~~!!!!!!!!!!!!!!!!!!', {
+      p: req.params,
+      q: req.query,
+      b: req.body,
+    });
+
+
+
+
     try {
-      req.allPublications = await service.getAllPublications();
+      req.allPublications = await service.getAllPublications(Number(pageNumber));
       next();
     } catch {
       next(new Error(SERVER_SERVICE_ERROR));

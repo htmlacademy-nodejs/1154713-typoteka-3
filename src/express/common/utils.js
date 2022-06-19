@@ -67,6 +67,11 @@ module.exports = {
 
     return ``;
   },
+
+
+  
+  
+  
   getPages: (publicationsCount, currentPage) => {
     const result = [];
 

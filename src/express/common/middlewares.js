@@ -2,7 +2,10 @@
 
 module.exports = {
   getAllArticlesMiddleware: (api) => async (req, res, next) => {
-    req.allArticles = await api.getAllArticles();
+    const {query: {pageNumber}} = req;
+    req.allArticles = await api.getAllArticles({
+      pageNumber: pageNumber ?? 1,
+    });
     next();
   },
   getAllCategoriesMiddleware: (api) => async (req, res, next) => {
