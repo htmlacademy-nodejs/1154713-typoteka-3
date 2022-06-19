@@ -15,25 +15,6 @@ module.exports = {
     req.articleData = await api.getArticle(id);
     next();
   },
-
-
-  setPageData: (api) => async (req, res, next) => {
-    const {body: {pageNumber}} = req;
-
-    console.log('BODYACHAKA~~~~~~~~~~~~~~', pageNumber);
-
-    try {
-      //await api.setNewPost(offerData);
-      next();
-    } catch {
-      //const postData = encodeURIComponent(JSON.stringify(offerData));
-      //res.redirect(`/articles/add?postData=${postData}`);
-    }
-  },
-
-
-
-
   setNewPostMiddleware: (api) => async (req, res, next) => {
     const {body, file} = req;
 

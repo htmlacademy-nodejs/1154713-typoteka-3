@@ -8,6 +8,7 @@ const {
   getLastComments,
   getCardData,
   getResultData,
+  getPages,
 } = require(`../../common/utils`);
 
 const {getAllArticlesMiddleware, getAllCategoriesMiddleware, getSearchDataMiddleware, setPageData} = require(`../../common/middlewares`);
@@ -18,21 +19,67 @@ module.exports = {
 
     // главная страница
     mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
-      const {allArticles: {publicationsData, lastCommentsData}, allCategories} = req;
+      const {
+        allArticles: {
+          publicationsData,
+          lastCommentsData,
+          publicationsCount
+        },
+        allCategories,
+        query: {
+          pageNumber,
+        },
+      } = req;
+
+      console.log('REQ~~~~~~~~~~~~~~~~~~', pageNumber);
+
+
+      // см где еще может быть пагинация и проверить эти места
+      console.log('COUNT~~~~~~~~~~~~~~~', publicationsCount);
+
+      console.log('PAG~~~~~~~~~~~~~~~~~~', getPages(publicationsCount, pageNumber));
+      
+      
+      /*ul.preview__pagination.pagination
+            li
+              a.pagination__button.button.button--backwards.button--disabled(href='#', aria-label='Страница назад') Назад
+            li.pagination__item.pagination__item--active
+              a 1
+            li.pagination__item
+              a
+                input.button(name='pageNumber', value=2, type='submit')
+            li.pagination__item
+              a 3
+            li.pagination__item
+              a(href='#') 4
+            li.pagination__item
+              a(href='#') 5
+            li
+              a.pagination__button.button.button--forward(href='#', aria-label='Страница вперед') Вперед*/
+
+
+              /*li
+              a.pagination__button.button.button--backwards(href='?pageNumber=prev') Назад
+            each page in pages
+              li.pagination__item
+                a.button(href=`?pageNumber=${page + 1}`) #{page + 1}
+            li
+              a.pagination__button.button.button--forward(href='?pageNumber=next') Вперед*/
+
 
       res.render(`main/main`, {
         themesData: getExistThemes(allCategories, publicationsData),
         mostCommented: getMostCommentedItems(publicationsData),
         lastComments: getLastComments(lastCommentsData),
         cardData: getCardData(publicationsData),
+
+
+        pages: getPages(publicationsCount, pageNumber ?? 1),
+
+        currentPage: pageNumber ?? 1,
+
       });
     });
-
-
-    // в шаблоне будет массив кнопок, каждая - будет submit, этот submit обраб в post
-    //articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
-    
-    mainRouter.post(`/`, setPageData(api), (_, res) => res.redirect(`/`));
 
 
 

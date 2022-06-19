@@ -2,8 +2,12 @@
 
 const sequelize = require(`sequelize`);
 
-class MainService {
+const BaseUtils = require(`./base-utils`);
+
+class MainService extends BaseUtils {
   constructor(dbModels) {
+    super();
+
     const {Publication, Category, Comment, User, PublicationsCategories} = dbModels;
 
     this._publications = Publication;
@@ -13,99 +17,27 @@ class MainService {
     this._publicationsCategories = PublicationsCategories;
   }
 
-
-
-
-
-  async getPagingAllPublications() {
-    const {count, rows} = await this._publications.findAndCountAll({
-      raw: true,
-      limit: 2,
-      offset: 0,
-      subQuery: false,
-      group: [`Publication.id`, `User.user_name`, `User.user_surname`],
-      attributes: {
-        include: [
-          [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
-          ],
-          [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`comments-publication.comment_text`))), `comments`
-          ],
-          [
-            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
-          ],
-        ],
-      },
-      include: [
-        {
-          model: this._categories,
-          as: `categories`,
-          through: {
-            attributes: [],
-          },
-          attributes: [],
-        },
-        {
-          model: this._comments,
-          as: `comments-publication`,
-          attributes: [],
-        },
-        {
-          model: this._user,
-          as: `User`,
-          attributes: [],
-        },
-      ],
-    });
-
-    return {
-      countAll: count.length,
-      publications: rows,
-    };
-  }
-  
-
-
-
-
-  async getAllPublications() {
+  async getAllPublications(pageNumber = 0) {
+    const publicationsCount = await this._publications.count();
     const publicationsData = await this._publications.findAll({
       raw: true,
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {
-        include: [
-          [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
-          ],
-          [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`comments-publication.comment_text`))), `comments`
-          ],
-          [
-            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
-          ],
-        ],
+        include: this.getIncludeAttributes(sequelize),
       },
-      include: [
-        {
-          model: this._categories,
-          as: `categories`,
-          through: {
-            attributes: [],
-          },
-          attributes: [],
-        },
-        {
-          model: this._comments,
-          as: `comments-publication`,
-          attributes: [],
-        },
-        {
-          model: this._user,
-          as: `User`,
-          attributes: [],
-        },
-      ],
+      include: this.getIncludeModels(),
+    });
+
+    const {rows: paginationData} = await this._publications.findAndCountAll({
+      raw: true,
+      limit: 8,
+      offset: this.getOffsetNumber(publicationsCount, pageNumber),
+      subQuery: false,
+      group: [`Publication.id`, `User.user_name`, `User.user_surname`],
+      attributes: {
+        include: this.getIncludeAttributes(sequelize),
+      },
+      include: this.getIncludeModels(),
     });
 
     const allPublicationsIds = publicationsData.map(({id}) => id);
@@ -139,14 +71,12 @@ class MainService {
     const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);
 
     return {
+      publicationsCount,
+      paginationData,
       publicationsData,
       lastCommentsData,
     };
   }
-
-
-
-
 
   async getPublicationById(publicationId) {
     const publication = await this._publications.findByPk(publicationId, {
@@ -303,49 +233,10 @@ class MainService {
   }
 
   async getCategoryDataById(categoryId) {
-    const categoryName = await this._categories.findByPk(categoryId);
-
-    const publicationsInCategory = await this._publications.findAll({
-      raw: true,
-      group: [`Publication.id`, `User.user_name`, `User.user_surname`],
-      attributes: {
-        include: [
-          [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
-          ],
-          [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`comments-publication.comment_text`))), `comments`
-          ],
-          [
-            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
-          ],
-        ],
-      },
-      include: [
-        {
-          model: this._categories,
-          as: `categories`,
-          through: {
-            attributes: [],
-          },
-          attributes: [],
-        },
-        {
-          model: this._comments,
-          as: `comments-publication`,
-          attributes: [],
-        },
-        {
-          model: this._user,
-          as: `User`,
-          attributes: [],
-        },
-      ],
-    });
+    const {category_name: categoryName} = await this._categories.findByPk(categoryId);
 
     return {
-      categoryName: categoryName[`category_name`],
-      publicationsInCategory,
+      categoryName,
     };
   }
 }

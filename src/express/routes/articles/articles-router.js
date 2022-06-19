@@ -52,9 +52,9 @@ module.exports = {
     });
 
     articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
-      const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName, publicationsInCategory}} = req;
+      const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}} = req;
 
-      const filteredCardData = getCardData(publicationsInCategory).reduce((result, data) => {
+      const filteredCardData = getCardData(publicationsData).reduce((result, data) => {
         const searchedCategory = data.categories.find((item) => item === categoryName);
 
         if (searchedCategory) {

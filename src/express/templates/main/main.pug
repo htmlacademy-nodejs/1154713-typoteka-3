@@ -67,21 +67,17 @@ block page
                 |  
                 b.preview__comment-count #{item.commentsCount}
       .preview__toggle-wrapper
-        form(action='/', method='post')
+        form(action='/', method='post', id='paginationForm', style='display: flex; justify-content: center')
           ul.preview__pagination.pagination
             li
-              a.pagination__button.button.button--backwards.button--disabled(href='#', aria-label='Страница назад') Назад
-            li.pagination__item.pagination__item--active
-              a 1
-            li.pagination__item
-              a
-                input.button(name='pageNumber', value=2, type='submit')
-            li.pagination__item
-              a 3
-            li.pagination__item
-              a(href='#') 4
-            li.pagination__item
-              a(href='#') 5
+              a.pagination__button.button.button--backwards(href='?pageNumber=prev') Назад
+            each page in pages
+              if page == currentPage
+                li.pagination__item.pagination__item--active
+                  a.button(href=`?pageNumber=${page}`) #{page}
+              else
+                li.pagination__item
+                  a.button(href=`?pageNumber=${page}`) #{page}
             li
-              a.pagination__button.button.button--forward(href='#', aria-label='Страница вперед') Вперед
+              a.pagination__button.button.button--forward(href='?pageNumber=next') Вперед
     include ../partials/footer-page.pug

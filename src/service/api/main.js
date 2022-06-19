@@ -14,7 +14,6 @@ const {
   addNewCommentMiddleware,
   getSearchedMiddleware,
   getCategoryDataById,
-  getPagingAllPublicationsMiddleware,
 } = require(`../common/middlewares`);
 
 const {getLogger} = require(`../lib/logger`);
@@ -25,24 +24,8 @@ const mainApi = (app, mainService) => {
   const apiRouter = new Router();
   app.use(`/api`, apiRouter);
 
-
-
-  //apiRouter.get(`/articles/:pageNumber`, );
-
-
-
-
-  apiRouter.get(`/articles`, getPagingAllPublicationsMiddleware(mainService), getAllPublicationsMiddleware(mainService), (req, res) => {
-    
-    
-    
-    const {allPublications, publicationsWithPaginaton} = req;
-
-
-
-    console.log('TEST~~~~~~~~~~~~~~~~~~~', publicationsWithPaginaton);
-
-
+  apiRouter.get(`/articles`, getAllPublicationsMiddleware(mainService), (req, res) => {
+    const {allPublications} = req;
 
     logger.debug(`Request on route ${req.originalUrl}`);
 
