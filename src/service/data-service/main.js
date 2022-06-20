@@ -18,19 +18,7 @@ class MainService extends BaseUtils {
   }
 
   async getAllPublications(pageNumber = 0) {
-
-
-    console.log('IN_SERV~~~~~~~~~~~~~~~~~~~~', pageNumber);
-
-
     const publicationsCount = await this._publications.count();
-
-
-
-    console.log('SSSSSSSSSSS~~~~~~~~~~~~~~', this.getOffsetNumber(publicationsCount, pageNumber));
-
-
-
 
     const publicationsData = await this._publications.findAll({
       raw: true,
@@ -44,12 +32,7 @@ class MainService extends BaseUtils {
     const {rows: paginationData} = await this._publications.findAndCountAll({
       raw: true,
       limit: 8,
-
-
       offset: this.getOffsetNumber(publicationsCount, pageNumber),
-      
-      
-      
       subQuery: false,
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
       attributes: {

@@ -15,34 +15,12 @@ class AxiosApi {
     return response.data;
   }
 
-  /*getSearchData(data) {
-    return this._load(`/api/search`, {
-      method: `GET`,
-      data,
-    });
-  }*/
-
-
-
   getAllArticles(pageNumber) {
     return this._load(`/api/articles`, {
       method: `GET`,
       data: pageNumber,
     });
   }
-
-
-
-
-  /*getAllArticles(pageNumber) {
-
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', pageNumber);
-
-    return this._load(`/api/articles`);
-  }*/
-
-
-
 
   getAllCategories() {
     return this._load(`/api/categories`);

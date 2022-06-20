@@ -77,7 +77,7 @@ block page
             each page, index in pages
               if page == currentPage
                 li.pagination__item.pagination__item--active
-                  a.button(href=`?pageNumber=${page}`) #{page}
+                  a.button #{page}
               else
                 li.pagination__item
                   a.button(href=`?pageNumber=${page}`) #{page}

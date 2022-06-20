@@ -67,23 +67,13 @@ module.exports = {
 
     return ``;
   },
-
-
-  
-  
-  
-  getPages: (publicationsCount, currentPage) => {
+  getPages: (publicationsCount) => {
     const result = [];
-
     const pagesCount = Math.ceil(publicationsCount / 8);
-
-    // доработать с учетом стр а не кол-ва публикаций
 
     for (let pageNumber = 1; pageNumber < pagesCount + 1; pageNumber++) {
       result.push(pageNumber);
     }
-
-
 
     return result;
   },

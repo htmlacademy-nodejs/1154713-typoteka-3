@@ -24,9 +24,7 @@ module.exports = {
           publicationsData,
           lastCommentsData,
           publicationsCount,
-
-
-          paginationData
+          paginationData,
         },
         allCategories,
         query: {
@@ -34,27 +32,15 @@ module.exports = {
         },
       } = req;
 
-      console.log('REQ~~~~~~~~~~~~~~~~~~', paginationData);
-
-
-      
-
       res.render(`main/main`, {
         themesData: getExistThemes(allCategories, publicationsData),
         mostCommented: getMostCommentedItems(publicationsData),
         lastComments: getLastComments(lastCommentsData),
         cardData: getCardData(paginationData),
-
-
-        pages: getPages(publicationsCount, pageNumber ?? 1),
-
+        pages: getPages(publicationsCount),
         currentPage: pageNumber ?? 1,
-
       });
     });
-
-
-
 
     // демо страниц авторизации\аутентификации
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));
