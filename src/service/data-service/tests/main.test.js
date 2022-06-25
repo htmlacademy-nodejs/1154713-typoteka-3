@@ -1,19 +1,64 @@
-const {serverConfig: {app, mainService}, mockDB, dbModels: {Category}} = require(`./mock-db-server`);
-const {TEST_CATAGORIES} = require(`./mock-data`);
+const Sequelize = require(`sequelize`);
+
+const {define} = require(`../../db-models/index`);
+const {getServerConfig} = require(`../../cli/server-config`);
 
 
-// TODO: переделать тесты
+
+
+
+
+
+//const {serverConfig: {app, mainService}, mockDB, dbModels: {Category, Publication}} = require(`./mock-db-server`);
+const {CATAGORIES_MOCK, PUBLICATIONS_MOCK} = require(`./mock-data`);
+
+
+
+// del data dir ???
+
+
 
 describe(`Check service methods`, () => {
   let serverInstance;
   
+
+
+  // ошибка с примари кей null
   beforeAll(async () => {
+
+
+    const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
+    const dbModels = define(mockDB);
+
+    const {app, mainService} = getServerConfig(dbModels);
+
     await mockDB.authenticate();
+
     await mockDB.sync({force: true});
 
-    await Category.bulkCreate(TEST_CATAGORIES.map((category) => ({[`category_name`]: category})));
+
+    const {Category, Publication} = dbModels;
+
+    await Category.bulkCreate(CATAGORIES_MOCK.map((category) => ({[`category_name`]: category})));
+
+    try {
+      await Publication.bulkCreate(PUBLICATIONS_MOCK.map(({date, picture, fullText, title, announce, userId}) => ({
+        [`publication_date`]: date,
+        picture,
+        [`full_text`]: fullText,
+        title,
+        announce,
+        [`user_id`]: userId,
+      })));
+    } catch (err) {
+      console.log('ERRRRRRRRRRR', err);
+    }
+
+    
 
 
+
+    
     
 
     
@@ -27,7 +72,7 @@ describe(`Check service methods`, () => {
   /*it(`should return all categories`, async () => {
     const allCategories = (await mainService.getAllCategories());
 
-    const testedData = TEST_CATAGORIES.map((item, index) => ({
+    const testedData = CATAGORIES_MOCK.map((item, index) => ({
       id: index + 1,
       [`category_name`]: item,
     }));
@@ -35,131 +80,49 @@ describe(`Check service methods`, () => {
     expect(allCategories).toEqual(expect.arrayContaining(testedData));
   });*/
 
+  /*it(`should return category by id === 1`, async () => {
+    const categoryById = (await mainService.getCategoryDataById(1));
 
-
-
-  /*it(`should return TEST_CATAGORIES array`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.getCategories()).toEqual(TEST_CATAGORIES);
+    expect(categoryById.categoryName).toEqual(CATAGORIES_MOCK[0]);
   });*/
 
 
 
 
+
+
+  
+
+
+  it(`should return all publications data`, async () => {
+    // getAllPublications
+
+
+
+    
+
+
+
+
+
+    expect(true).toEqual(true);
+
+
+    //expect(1).toEqual(1);
+
+  });
+
+
+
+
+
+
+
+
+  /*it(`should return searched data`, async () => {
+    
+  });*/
+
+
   
 });
-
-/*describe(`Check find method API`, () => {
-  it(`should find data with id: OkuBh5`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.find(`OkuBh5`)).toEqual(TEST_DATA[2]);
-  });
-
-  it(`should return undefined for unnecessary id`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.find(`111`)).toBeUndefined();
-  });
-});
-
-describe(`Check getSearchedData method API`, () => {
-  it(`should return array with items, who includes in title text: 'достигнуть'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.getSearchedData(`достигнуть`)).toEqual([TEST_DATA[0]]);
-  });
-
-  it(`should return array with items, who includes in title text: 'ДосТИгнутЬ'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.getSearchedData(`ДосТИгнутЬ`)).toEqual([TEST_DATA[0]]);
-  });
-
-  it(`should return array with items, who includes in title text: 'как'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.getSearchedData(`как`)).toEqual([TEST_DATA[0], TEST_DATA[1]]);
-  });
-
-  it(`should return empty array with items, who includes in title text: 'TEZD'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.getSearchedData(`TEZD`)).toEqual([]);
-  });
-});
-
-describe(`Check deleteArticle method API`, () => {
-  it(`should return array without item with id: 'PHfSY9'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.deleteArticle(`PHfSY9`)).toEqual([TEST_DATA[1], TEST_DATA[2]]);
-  });
-});
-
-describe(`Check deleteComment method API`, () => {
-  it(`should return first TEST_DATA item, without comment with id: lUC2nW in comments`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-    const deletedCommentItem = mainService.deleteComment(`PHfSY9`, `lUC2nW`);
-
-    expect(deletedCommentItem[0].comments).toEqual(
-      expect.not.arrayContaining([{
-        id:"lUC2nW",
-        text: "Мне не нравится ваш стиль. Ощущение, что вы меня поучаете.",
-      }]),
-    )
-  });
-});
-
-describe(`Check editArticle method API`, () => {
-  it(`should return TEST_DATA with edited first item title contain text 'test done'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    expect(mainService.editArticle(`PHfSY9`, {
-      title: `test done`,
-    })[0].title).toBe(`test done`);
-  });
-
-  it(`should return TEST_DATA with edited first item title contain text 'test done' and item announce contain text 'ok'`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    const newData = mainService.editArticle(`PHfSY9`, {
-      title: `test done`,
-      announce: `ok`,
-    });
-
-    const newTitle = newData[0].title;
-    const newAnnounce = newData[0].announce;
-
-    expect(newTitle).toBe(`test done`);
-    expect(newAnnounce).toBe(`ok`);
-  });
-});
-
-describe(`Check addNewArticle method API`, () => {
-  it(`should return new TEST_DATA witn new item by array index 3`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-
-    const newData = mainService.addNewArticle({
-      title: `title`,
-      announce: `announce`,
-      fullText: `fullText`,
-      сategory: [`сategory`],
-    });
-
-    expect(newData[3]).toHaveProperty(`title`, `title`);
-    expect(newData[3]).toHaveProperty(`announce`, `announce`);
-    expect(newData[3]).toHaveProperty(`fullText`, `fullText`);
-    expect(newData[3]).toHaveProperty(`сategory`, [`сategory`]);
-  });
-});
-
-describe(`Check addNewComment method API`, () => {
-  it(`should return new TEST_DATA with new comment in first item`, () => {
-    const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
-    const newData = mainService.addNewComment(`PHfSY9`, `new comment`);
-
-    expect(newData[0].comments[2].text).toBe(`new comment`);
-  });
-});*/
