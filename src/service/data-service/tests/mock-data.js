@@ -1,6 +1,11 @@
 'use strict';
 
+
+
 const TEST_CATAGORIES = [`Деревья`, `За жизнь`, `Без рамки`, `Разное`, `IT`, `Музыка`];
+
+
+
 
 const TEST_DATA = [
   {
@@ -53,5 +58,8 @@ const TEST_DATA = [
 
 module.exports = {
   TEST_CATAGORIES,
+
+
+  
   TEST_DATA,
 };

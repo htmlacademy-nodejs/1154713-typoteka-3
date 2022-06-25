@@ -67,23 +67,22 @@ block page
                 |  
                 b.preview__comment-count #{item.commentsCount}
       .preview__toggle-wrapper
-        form(action='/', method='post', id='paginationForm', style='display: flex; justify-content: center')
-          ul.preview__pagination.pagination
-            li
-              if currentPage == 1
-                a.pagination__button.button.button--backwards.button--disabled(href=`?pageNumber=${Number(currentPage) - 1}`) Назад
-              else
-                a.pagination__button.button.button--backwards(href=`?pageNumber=${Number(currentPage) - 1}`) Назад
-            each page, index in pages
-              if page == currentPage
-                li.pagination__item.pagination__item--active
-                  a.button #{page}
-              else
-                li.pagination__item
-                  a.button(href=`?pageNumber=${page}`) #{page}
-            li
-              if currentPage == pages.length
-                a.pagination__button.button.button--forward.button--disabled(href=`?pageNumber=${Number(currentPage) + 1}`) Вперед
-              else
-                a.pagination__button.button.button--forward(href=`?pageNumber=${Number(currentPage) + 1}`) Вперед
+        ul.preview__pagination.pagination
+          li
+            if currentPage == 1
+              a.pagination__button.button.button--backwards.button--disabled(href=`?pageNumber=${Number(currentPage) - 1}`) Назад
+            else
+              a.pagination__button.button.button--backwards(href=`?pageNumber=${Number(currentPage) - 1}`) Назад
+          each page, index in pages
+            if page == currentPage
+              li.pagination__item.pagination__item--active
+                a.button #{page}
+            else
+              li.pagination__item
+                a.button(href=`?pageNumber=${page}`) #{page}
+          li
+            if currentPage == pages.length
+              a.pagination__button.button.button--forward.button--disabled(href=`?pageNumber=${Number(currentPage) + 1}`) Вперед
+            else
+              a.pagination__button.button.button--forward(href=`?pageNumber=${Number(currentPage) + 1}`) Вперед
     include ../partials/footer-page.pug

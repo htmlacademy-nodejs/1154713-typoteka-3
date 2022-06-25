@@ -1,13 +1,21 @@
-const {serverConfig: {app, mainService}, mockDB} = require(`./mock-db-server`);
+const {serverConfig: {app, mainService}, mockDB, dbModels: {Category}} = require(`./mock-db-server`);
+const {TEST_CATAGORIES} = require(`./mock-data`);
+
 
 // TODO: переделать тесты
 
-describe(`Check simple get-methods for getting datas in API`, () => {
+describe(`Check service methods`, () => {
   let serverInstance;
   
   beforeAll(async () => {
     await mockDB.authenticate();
-    await mockDB.sync();
+    await mockDB.sync({force: true});
+
+    await Category.bulkCreate(TEST_CATAGORIES.map((category) => ({[`category_name`]: category})));
+
+
+    
+
     
     serverInstance = app.listen(3000);
   });
@@ -16,17 +24,30 @@ describe(`Check simple get-methods for getting datas in API`, () => {
     await serverInstance.close();
   });
   
-  it(`should return TEST_DATA array`, () => {
-    //expect(mainService.getAll()).toEqual(TEST_DATA);
+  /*it(`should return all categories`, async () => {
+    const allCategories = (await mainService.getAllCategories());
 
-    expect(true).toEqual(true);
-  });
+    const testedData = TEST_CATAGORIES.map((item, index) => ({
+      id: index + 1,
+      [`category_name`]: item,
+    }));
+
+    expect(allCategories).toEqual(expect.arrayContaining(testedData));
+  });*/
+
+
+
 
   /*it(`should return TEST_CATAGORIES array`, () => {
     const mainService = new MainService(TEST_DATA, TEST_CATAGORIES);
 
     expect(mainService.getCategories()).toEqual(TEST_CATAGORIES);
   });*/
+
+
+
+
+  
 });
 
 /*describe(`Check find method API`, () => {
