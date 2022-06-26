@@ -1,5 +1,7 @@
 'use strict';
 
+const {DB_TYPE} = process.env;
+
 const sequelize = require(`sequelize`);
 
 const BaseUtils = require(`./base-utils`);
@@ -20,6 +22,22 @@ class MainService extends BaseUtils {
   async getAllPublications(pageNumber = 0) {
     const publicationsCount = await this._publications.count();
 
+
+    try {
+      await this._publications.findAll({
+        raw: true,
+        group: [`Publication.id`, `User.user_name`, `User.user_surname`],
+        attributes: {
+          include: this.getIncludeAttributes(sequelize),
+        },
+        include: this.getIncludeModels(),
+      });
+    } catch (e) {
+      console.log('EEEEEEEEEEEEEEEEEEEE~~~~~~~~~~~~~~~~~~~~~', e);
+    }
+
+    
+
     const publicationsData = await this._publications.findAll({
       raw: true,
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
@@ -29,7 +47,10 @@ class MainService extends BaseUtils {
       include: this.getIncludeModels(),
     });
 
-    const {rows: paginationData} = await this._publications.findAndCountAll({
+    
+    
+
+    /*const {rows: paginationData} = await this._publications.findAndCountAll({
       raw: true,
       limit: 8,
       offset: this.getOffsetNumber(publicationsCount, pageNumber),
@@ -69,13 +90,13 @@ class MainService extends BaseUtils {
         },
       }));
 
-    const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);
+    const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);*/
 
     return {
       publicationsCount,
-      paginationData,
+      //paginationData,
       publicationsData,
-      lastCommentsData,
+      //lastCommentsData,
     };
   }
 

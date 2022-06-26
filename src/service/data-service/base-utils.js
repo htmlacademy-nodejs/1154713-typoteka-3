@@ -1,5 +1,7 @@
 'use strict';
 
+const {DB_TYPE} = process.env;
+
 class BaseUtils {
   getOffsetNumber(totalCount, page) {
     const limit = 8;
@@ -51,3 +53,4 @@ class BaseUtils {
 }
 
 module.exports = BaseUtils;
+
