@@ -40,14 +40,18 @@ class BaseUtils {
   getIncludeAttributes(sequilizeLib) {
     return [
       [
-        sequilizeLib.fn(`array_agg`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`categories.category_name`))), `categories`
+        //sequilizeLib.fn(`array_agg`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`categories.category_name`))), `categories`
+        sequilizeLib.literal(`${
+          sequilizeLib.fn(`group_concat`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`categories.category_name`)))
+        } separator |`), `categories`
       ],
-      [
-        sequilizeLib.fn(`array_agg`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`comments-publication.comment_text`))), `comments`
-      ],
-      [
+      /*[
+        //sequilizeLib.fn(`array_agg`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`comments-publication.comment_text`))), `comments`
+        sequilizeLib.fn(`json_array`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`comments-publication.comment_text`))), `comments`
+      ],*/
+      /*[
         sequilizeLib.fn(`concat`, sequilizeLib.col(`User.user_name`), ` `, sequilizeLib.col(`User.user_surname`)), `publication_owner`
-      ],
+      ],*/
     ];
   }
 }

@@ -22,22 +22,6 @@ class MainService extends BaseUtils {
   async getAllPublications(pageNumber = 0) {
     const publicationsCount = await this._publications.count();
 
-
-    try {
-      await this._publications.findAll({
-        raw: true,
-        group: [`Publication.id`, `User.user_name`, `User.user_surname`],
-        attributes: {
-          include: this.getIncludeAttributes(sequelize),
-        },
-        include: this.getIncludeModels(),
-      });
-    } catch (e) {
-      console.log('EEEEEEEEEEEEEEEEEEEE~~~~~~~~~~~~~~~~~~~~~', e);
-    }
-
-    
-
     const publicationsData = await this._publications.findAll({
       raw: true,
       group: [`Publication.id`, `User.user_name`, `User.user_surname`],
@@ -47,10 +31,7 @@ class MainService extends BaseUtils {
       include: this.getIncludeModels(),
     });
 
-    
-    
-
-    /*const {rows: paginationData} = await this._publications.findAndCountAll({
+    const {rows: paginationData} = await this._publications.findAndCountAll({
       raw: true,
       limit: 8,
       offset: this.getOffsetNumber(publicationsCount, pageNumber),
@@ -81,22 +62,22 @@ class MainService extends BaseUtils {
             attributes: [],
           }
         ],
-        attributes: {
+        /*attributes: {
           include: [
             [
               sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
             ]
           ],
-        },
+        },*/
       }));
 
-    const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);*/
+    const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);
 
     return {
       publicationsCount,
-      //paginationData,
+      paginationData,
       publicationsData,
-      //lastCommentsData,
+      lastCommentsData,
     };
   }
 
@@ -107,11 +88,12 @@ class MainService extends BaseUtils {
       attributes: {
         include: [
           [
-            sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+            //sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+            sequelize.fn(`json_array`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
           ],
-          [
+          /*[
             sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
-          ],
+          ],*/
         ],
       },
       include: [
@@ -143,13 +125,13 @@ class MainService extends BaseUtils {
           attributes: [],
         }
       ],
-      attributes: {
+      /*attributes: {
         include: [
           [
             sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
           ]
         ],
-      },
+      },*/
     });
 
     const usedCategoriesData = await this._categories.findAll({

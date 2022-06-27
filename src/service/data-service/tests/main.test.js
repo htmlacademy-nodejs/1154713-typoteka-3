@@ -8,8 +8,6 @@ const {CATAGORIES_MOCK, PUBLICATIONS_MOCK, ROLES_MOCK, USERS_MOCK, COMMENTS_MOCK
 describe(`Check service methods`, () => {
   let serverInstance;
 
-
-
   const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
 
 
@@ -21,14 +19,13 @@ describe(`Check service methods`, () => {
     title: 'Ёлки. История деревьев',
     announce: 'Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем.',
     user_id: 1,
-    categories: 'Без рамки,Деревья,За жизнь',
-    comments: 'Согласен с автором!,Это где ж такие красоты?',
+    categories: 'Без рамки,Деревья,За жизнь', - должен быть массив
+    comments: 'Согласен с автором!,Это где ж такие красоты?',  - должен быть массив
     publication_owner: 'Vasya Vasya'
   },*/
 
   // менял concat, array_agg
 
-  // не раб сервис - 500 на api/articles
 
   const dbModels = define(mockDB);
   const {app, mainService} = getServerConfig(dbModels);
@@ -46,7 +43,7 @@ describe(`Check service methods`, () => {
     await Comment.bulkCreate(COMMENTS_MOCK.map((comment) => comment));
     await PublicationsCategories.bulkCreate(PUBLICATIONS_CATEGORIES_MOCK.map((connection) => connection));
 
-    serverInstance = app.listen(3000);
+    serverInstance = app.listen(5000);
   });
 
   afterAll(async () => {
