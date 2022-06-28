@@ -158,6 +158,73 @@ const PUBLICATIONS_CATEGORIES_MOCK = [
   }
 ];
 
+const FIRST_UPDATED_PUBLICATION = {
+  id: 1,
+  [`publication_date`]: `1999-01-11 21:00:00.000 +00:00`,
+  picture: null,
+  [`full_text`]: `Ёлки — это не просто красивое дерево. Это прочная древесина.`,
+  title: `Ёлки. История деревьев`,
+  announce: `Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем.`,
+  [`user_id`]: 1,
+  [`publication_owner`]: `Vasya Vasya`,
+  categories: [`Без рамки`, `Деревья`, `За жизнь`],
+  comments: [`Согласен с автором!`, `Это где ж такие красоты?`],
+};
+
+const FIRST_PUBLICATION_BY_ID = {
+  id: 1,
+  [`publication_date`]: `1999-01-11 21:00:00.000 +00:00`,
+  picture: null,
+  [`full_text`]: `Ёлки — это не просто красивое дерево. Это прочная древесина.`,
+  title: `Ёлки. История деревьев`,
+  announce: `Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем.`,
+  [`user_id`]: 1,
+  categories: `Деревья|За жизнь|Без рамки`,
+  [`publication_owner`]: `Vasya Vasya`
+};
+
+const COMMENTS_FIRST_PUBLICATION_BY_ID = {
+  id: 1,
+  [`comment_text`]: `Это где ж такие красоты?`,
+  [`data_comment`]: `2000-11-11 19:33:00.000 +00:00`,
+  [`user_id`]: 1,
+  [`publication_id`]: 1,
+  [`comment_owner`]: `Vasya Vasya`,
+};
+
+const USED_CATEGORIES_FIRST_PUBLICATION_BY_ID = [
+  {id: 1, [`category_name`]: `Деревья`, [`category_count`]: 2},
+  {id: 2, [`category_name`]: `За жизнь`, [`category_count`]: 1},
+  {id: 3, [`category_name`]: `Без рамки`, [`category_count`]: 2}
+];
+
+const NEW_PUBLICATION = {
+  [`user_id`]: 1,
+  title: `Тест`,
+  picture: null,
+  categories: [`IT`, `Без рамки`],
+  announce: `Анонс`,
+  [`full_text`]: `Полный текст`,
+  [`publication_date`]: `2020-10-21`,
+};
+
+const FINDED_COMMENTS_PUBLICATION = [
+  {
+    id: 1,
+    [`comment_text`]: `Это где ж такие красоты?`,
+    [`data_comment`]: `2000-11-11 19:33:00.000 +00:00`,
+    [`user_id`]: 1,
+    [`publication_id`]: 1
+  },
+  {
+    id: 3,
+    [`comment_text`]: `Согласен с автором!`,
+    [`data_comment`]: `1999-11-11 08:33:00.000 +00:00`,
+    [`user_id`]: 2,
+    [`publication_id`]: 1
+  }
+];
+
 module.exports = {
   CATAGORIES_MOCK,
   PUBLICATIONS_MOCK,
@@ -165,4 +232,10 @@ module.exports = {
   USERS_MOCK,
   COMMENTS_MOCK,
   PUBLICATIONS_CATEGORIES_MOCK,
+  FIRST_UPDATED_PUBLICATION,
+  FIRST_PUBLICATION_BY_ID,
+  COMMENTS_FIRST_PUBLICATION_BY_ID,
+  USED_CATEGORIES_FIRST_PUBLICATION_BY_ID,
+  NEW_PUBLICATION,
+  FINDED_COMMENTS_PUBLICATION,
 };

@@ -37,21 +37,29 @@ class BaseUtils {
     ];
   }
 
-  getIncludeAttributes(sequilizeLib) {
+  getIncludeAttributes(sequelizeLib) {
     return [
       [
-        //sequilizeLib.fn(`array_agg`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`categories.category_name`))), `categories`
-        sequilizeLib.literal(`${
-          sequilizeLib.fn(`group_concat`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`categories.category_name`)))
-        } separator |`), `categories`
+        (
+          DB_TYPE
+            ? sequelizeLib.fn(`array_agg`, sequelizeLib.fn(`DISTINCT`, sequelizeLib.col(`categories.category_name`)))
+            : sequelizeLib.fn(`group_concat`, sequelizeLib.col(`categories.category_name`), `|`)
+        ), `categories`
       ],
-      /*[
-        //sequilizeLib.fn(`array_agg`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`comments-publication.comment_text`))), `comments`
-        sequilizeLib.fn(`json_array`, sequilizeLib.fn(`DISTINCT`, sequilizeLib.col(`comments-publication.comment_text`))), `comments`
-      ],*/
-      /*[
-        sequilizeLib.fn(`concat`, sequilizeLib.col(`User.user_name`), ` `, sequilizeLib.col(`User.user_surname`)), `publication_owner`
-      ],*/
+      [
+        (
+          DB_TYPE
+            ? sequelizeLib.fn(`array_agg`, sequelizeLib.fn(`DISTINCT`, sequelizeLib.col(`comments-publication.comment_text`)))
+            : sequelizeLib.fn(`group_concat`, sequelizeLib.col(`comments-publication.comment_text`), `|`)
+        ), `comments`
+      ],
+      [
+        (
+          DB_TYPE
+            ? sequelizeLib.fn(`concat`, sequelizeLib.col(`User.user_name`), ` `, sequelizeLib.col(`User.user_surname`))
+            : sequelizeLib.literal(`User.user_name || ' ' || User.user_surname`)
+        ), `publication_owner`
+      ],
     ];
   }
 }

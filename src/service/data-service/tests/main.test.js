@@ -3,29 +3,26 @@ const Sequelize = require(`sequelize`);
 const {define} = require(`../../db-models/index`);
 const {getServerConfig} = require(`../../cli/server-config`);
 
-const {CATAGORIES_MOCK, PUBLICATIONS_MOCK, ROLES_MOCK, USERS_MOCK, COMMENTS_MOCK, PUBLICATIONS_CATEGORIES_MOCK} = require(`./mock-data`);
+const {
+  CATAGORIES_MOCK,
+  PUBLICATIONS_MOCK,
+  ROLES_MOCK,
+  USERS_MOCK,
+  COMMENTS_MOCK,
+  PUBLICATIONS_CATEGORIES_MOCK,
+  FIRST_UPDATED_PUBLICATION,
+  FIRST_PUBLICATION_BY_ID,
+  COMMENTS_FIRST_PUBLICATION_BY_ID,
+  USED_CATEGORIES_FIRST_PUBLICATION_BY_ID,
+  NEW_PUBLICATION,
+  FINDED_COMMENTS_PUBLICATION,
+} = require(`./mock-data`);
+const { getUpdatedData, getUpdatedArrayData } = require("./test-utils");
 
 describe(`Check service methods`, () => {
   let serverInstance;
 
   const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-
-
-  /*{
-    id: 1,
-    publication_date: '1999-01-11 21:00:00.000 +00:00',
-    picture: null,
-    full_text: 'Ёлки — это не просто красивое дерево. Это прочная древесина.',
-    title: 'Ёлки. История деревьев',
-    announce: 'Процессор заслуживает особого внимания. Он обязательно понравится геймерам со стажем.',
-    user_id: 1,
-    categories: 'Без рамки,Деревья,За жизнь', - должен быть массив
-    comments: 'Согласен с автором!,Это где ж такие красоты?',  - должен быть массив
-    publication_owner: 'Vasya Vasya'
-  },*/
-
-  // менял concat, array_agg
-
 
   const dbModels = define(mockDB);
   const {app, mainService} = getServerConfig(dbModels);
@@ -67,25 +64,78 @@ describe(`Check service methods`, () => {
     expect(categoryById.categoryName).toEqual(CATAGORIES_MOCK[0]);
   });*/
 
-  it(`should return all publications data`, async () => {
-    // getAllPublications
+  /*it(`should return all publications data`, async () => {
+    const {publicationsCount, publicationsData, paginationData, lastCommentsData} = await mainService.getAllPublications();
 
-    try {
-      const allPublicationsData = await mainService.getAllPublications();
-      console.log('ALLLLL~~~~~~~~', allPublicationsData);
-    } catch (e) {
-      console.log('BIBIBIBIBI~~~~', e);
-    }
-    
+    const updatedPublicationsData = getUpdatedData(publicationsData);
+    const updatedPaginationData = getUpdatedData(paginationData);
 
+    const lastCommentFirstElement = {
+      id: 1,
+      comment_text: 'Это где ж такие красоты?',
+      data_comment: lastCommentsData[0].dataValues[`data_comment`],
+      user_id: 1,
+      publication_id: 1,
+      comment_owner: 'Vasya Vasya',
+    };
 
-
-    
-
+    expect(publicationsCount).toEqual(4);
+    expect(updatedPublicationsData[0]).toEqual(FIRST_UPDATED_PUBLICATION);
+    expect(updatedPaginationData[0]).toEqual(FIRST_UPDATED_PUBLICATION);
+    expect(lastCommentsData[0].dataValues).toEqual(lastCommentFirstElement);
+  });*/
   
+  /*it(`should return publication by id`, async () => {
+    const {publication, publicationComments, usedCategoriesData} = await mainService.getPublicationById(1);
 
-    expect(true).toEqual(true);
+    expect(publication).toEqual(FIRST_PUBLICATION_BY_ID);
+    expect(publicationComments[0]).toEqual(COMMENTS_FIRST_PUBLICATION_BY_ID);
+    expect(usedCategoriesData).toEqual(USED_CATEGORIES_FIRST_PUBLICATION_BY_ID);
+  });*/
 
+  /*it(`should return new setted publication`, async () => {
+    await mainService.setNewPublication(NEW_PUBLICATION);
 
-  });  
+    const {publicationsData} = await mainService.getAllPublications();
+
+    const newPublication = publicationsData.find(({title}) => title === `Тест`);
+    const {id, publication_date, categories, comments, publication_owner} = newPublication;
+
+    const updatedPublication = {
+      ...NEW_PUBLICATION,
+      id,
+      publication_date,
+      categories,
+      comments,
+      publication_owner,
+    };
+
+    expect(newPublication).toEqual(updatedPublication);
+  });*/
+
+  /*it(`should return updated publication`, async () => {
+    await mainService.updatePublication(1, {title: `Test`});
+
+    const {publication: {title}} = await mainService.getPublicationById(1);
+
+    expect(title).toEqual(`Test`);
+  });*/
+  
+  /*it(`should delete publication`, async () => {
+    await mainService.deletePublication(1);
+
+    const {publicationsData} = await mainService.getAllPublications();
+    const searchResult = publicationsData.find(({id}) => id === 1);
+
+    expect(searchResult).toBeUndefined();
+  });*/
+
+  /*it(`should return all comments for publication`, async () => {
+    const result = await mainService.getCommentsPublication(1);
+
+    expect(result).toEqual(FINDED_COMMENTS_PUBLICATION);
+  });*/
+  
+  
+  it(``); 
 });

@@ -67,7 +67,7 @@ block page
                 |  
                 b.preview__comment-count #{item.commentsCount}
       .preview__toggle-wrapper
-        ul.preview__pagination.pagination
+        ul.preview__pagination.pagination(style=`display: flex; justify-content: center`)
           li
             if currentPage == 1
               a.pagination__button.button.button--backwards.button--disabled(href=`?pageNumber=${Number(currentPage) - 1}`) Назад

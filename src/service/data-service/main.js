@@ -62,13 +62,17 @@ class MainService extends BaseUtils {
             attributes: [],
           }
         ],
-        /*attributes: {
+        attributes: {
           include: [
             [
-              sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
+              (
+                DB_TYPE
+                  ? sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`))
+                  : sequelize.literal(`User.user_name || ' ' || User.user_surname`)
+              ), `comment_owner`
             ]
           ],
-        },*/
+        },
       }));
 
     const lastCommentsData = (await Promise.all(preparedCommentsData)).filter((item) => item);
@@ -88,12 +92,19 @@ class MainService extends BaseUtils {
       attributes: {
         include: [
           [
-            //sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
-            sequelize.fn(`json_array`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`))), `categories`
+            (
+              DB_TYPE
+                ? sequelize.fn(`array_agg`, sequelize.fn(`DISTINCT`, sequelize.col(`categories.category_name`)))
+                : sequelize.fn(`group_concat`, sequelize.col(`categories.category_name`), `|`)
+            ), `categories`
           ],
-          /*[
-            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `publication_owner`
-          ],*/
+          [
+            (
+              DB_TYPE
+                ? sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`))
+                : sequelize.literal(`User.user_name || ' ' || User.user_surname`)
+            ), `publication_owner`
+          ],
         ],
       },
       include: [
@@ -125,19 +136,23 @@ class MainService extends BaseUtils {
           attributes: [],
         }
       ],
-      /*attributes: {
+      attributes: {
         include: [
           [
-            sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`)), `comment_owner`
+            (
+              DB_TYPE
+                ? sequelize.fn(`concat`, sequelize.col(`User.user_name`), ` `, sequelize.col(`User.user_surname`))
+                : sequelize.literal(`User.user_name || ' ' || User.user_surname`)
+            ), `comment_owner`
           ]
         ],
-      },*/
+      },
     });
 
     const usedCategoriesData = await this._categories.findAll({
       raw: true,
       where: {
-        [`category_name`]: publication.categories,
+        [`category_name`]: DB_TYPE ? publication.categories : Array.from(new Set(publication.categories.split(`|`))),
       },
       group: [`Category.id`],
       attributes: {
