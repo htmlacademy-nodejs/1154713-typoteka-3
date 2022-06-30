@@ -57,6 +57,9 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(newPublication);
   });
 
+
+
+
   apiRouter.put(`/articles/:articleId`, updatePublicationMiddleware(mainService), (req, res) => {
     const {updatedPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
@@ -64,6 +67,9 @@ const mainApi = (app, mainService) => {
     logger.info(`Status code is 200`);
     return res.status(200).json(updatedPublication);
   });
+
+
+
 
   apiRouter.delete(`/articles/:articleId`, deletePublicationMiddleware(mainService), (req, res) => {
     const {deleteResult} = req;
@@ -73,6 +79,9 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(deleteResult);
   });
 
+
+
+
   apiRouter.get(`/articles/:articleId/comments`, getCommentsPublicationMiddleware(mainService), (req, res) => {
     const {commentsPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
@@ -80,6 +89,8 @@ const mainApi = (app, mainService) => {
     logger.info(`Status code is 200`);
     return res.status(200).json(commentsPublication);
   });
+
+
 
   apiRouter.delete(`/articles/:articleId/comments/:commentId`, deleteCommentMiddleware(mainService), (req, res) => {
     const {deleteResult} = req;
@@ -89,6 +100,9 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(deleteResult);
   });
 
+
+
+
   apiRouter.post(`/articles/:articleId/comments`, addNewCommentMiddleware(mainService), (req, res) => {
     const {newComment} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
@@ -97,6 +111,9 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(newComment);
   });
 
+
+
+
   apiRouter.get(`/articles/category/:categoryId`, getCategoryDataById(mainService), (req, res) => {
     const {categoryData} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
@@ -104,6 +121,9 @@ const mainApi = (app, mainService) => {
     logger.info(`Status code is 200`);
     return res.status(200).json(categoryData);
   });
+
+
+
 
   apiRouter.get(`/search`, getSearchedMiddleware(mainService), (req, res) => {
     const {searchResult} = req;

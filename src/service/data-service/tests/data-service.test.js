@@ -17,19 +17,12 @@ const {
   NEW_PUBLICATION,
   FINDED_COMMENTS_PUBLICATION,
 } = require(`./mock-data`);
-const { getUpdatedData, getUpdatedArrayData } = require("./test-utils");
+const { getUpdatedData } = require("./test-utils");
 
 describe(`Check service methods`, () => {
   let serverInstance;
 
-  const mockDB = new Sequelize(`sqlite::memory:`, {
-    define: {
-      charset: 'utf8',
-      collate: 'utf8_general_ci', 
-      timestamps: true
-    },
-    logging: false
-  });
+  const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
 
   const dbModels = define(mockDB);
   const {app, mainService} = getServerConfig(dbModels);
@@ -55,7 +48,7 @@ describe(`Check service methods`, () => {
   });
   
   it(`should return all categories`, async () => {
-    const allCategories = (await mainService.getAllCategories());
+    const allCategories = await mainService.getAllCategories();
 
     const testedData = CATAGORIES_MOCK.map((item, index) => ({
       id: index + 1,

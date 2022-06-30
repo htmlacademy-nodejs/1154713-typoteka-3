@@ -10,7 +10,8 @@ const BODY_ARGUMENTS = [
   `full_text`,
   `title`,
   `announce`,
-  `user_id`
+  `user_id`,
+  `categories`,
 ];
 
 const COMMENT_ARGUMENTS = [

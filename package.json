@@ -5,7 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "test": "jest",
-    "test:data-service": "jest ./src/service/data-service/tests/main.test.js",
+    "test:data-service": "jest ./src/service/data-service/tests/data-service.test.js",
     "test:e2e": "jest ./src/service/cli/server.e2e.test.js",
     "eslint": "eslint --ext .js src/",
     "start": "cross-env LOG_LEVEL=error nodemon -r dotenv/config ./src/service/service.js --server",
