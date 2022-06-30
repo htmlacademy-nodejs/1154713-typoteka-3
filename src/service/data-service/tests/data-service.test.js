@@ -59,7 +59,7 @@ describe(`Check service methods`, () => {
   });
 
   it(`should return category by id === 1`, async () => {
-    const categoryById = (await mainService.getCategoryDataById(1));
+    const categoryById = await mainService.getCategoryDataById(1);
 
     expect(categoryById.categoryName).toEqual(CATAGORIES_MOCK[0]);
   });

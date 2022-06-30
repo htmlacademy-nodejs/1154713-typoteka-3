@@ -16,6 +16,7 @@ const {
   COMMENTS_FIRST_PUBLICATION_BY_ID,
   USED_CATEGORIES_FIRST_PUBLICATION_BY_ID,
   NEW_PUBLICATION,
+  FINDED_COMMENTS_PUBLICATION,
 } = require(`../data-service/tests/mock-data`);
 
 const {getUpdatedData} = require(`../data-service/tests/test-utils`);
@@ -125,47 +126,83 @@ describe(`Test server REST API`, () => {
     expect(newPublication).toEqual(updatedPublication);
   });*/ 
 
+  /*it(`should return status 200 & updated publication for put request /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({title: `Test`});
 
+    expect(statusCode).toBe(200);
 
+    const {body: {publication: {title}}} = await request(serverInstance).get(`/api/articles/1`);
 
-
-
-
-
-
-  /*it(`should return comments without id lUC2nW in item id PHfSY9 by delete api /api/articles/PHfSY9/comments/lUC2nW`, async () => {
-    const {body} = await request(serverConfig).delete(`/api/articles/PHfSY9/comments/lUC2nW`);
-    const item = body.find(({id}) => id === `PHfSY9`);
-    expect(item.comments.find(({id}) => id === `lUC2nW`)).toBeUndefined();
-  });
-
-  it(`should return item with id PHfSY9 with edited title, who contains text '111' by put api /api/articles/PHfSY9`, async () => {
-    const {body} = await request(serverConfig).put(`/api/articles/PHfSY9`).send({
-      title: `111`,
-    });
-    expect(body.find(({id}) => id === `PHfSY9`).title).toBe(`111`);
-  });
-
-  it(`should return 400 error with no sended arguments in put api /api/articles/PHfSY9`, async () => {
-    const {statusCode} = await request(serverConfig).put(`/api/articles/PHfSY9`).send({});
-    expect(statusCode).toBe(400);
-  });
-
-  it(`should return items with new item by post api /api/articles`, async () => {
-    const {body} = await request(serverConfig).post(`/api/articles`).send({
-      title: `111`,
-      announce: `111`,
-      fullText: `111`,
-      category: [`111`],
-    });
-
-    const item = body.find(({title}) => title === `111`);
-
-    expect(item).toHaveProperty(`title`, `111`);
-    expect(item).toHaveProperty(`announce`, `111`);
-    expect(item).toHaveProperty(`fullText`, `111`);
-    expect(item).toHaveProperty(`category`, [`111`]);
+    expect(title).toEqual(`Test`);
   });*/
+
+  /*it(`should return status 200 & delete publication for delete request /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).delete(`/api/articles/1`);
+
+    expect(statusCode).toBe(200);
+
+    const {body: {publicationsData}} = await request(serverInstance).get(`/api/articles`);
+
+    const searchResult = publicationsData.find(({id}) => id === 1);
+
+    expect(searchResult).toBeUndefined();
+  });*/
+
+  /*it(`should return status 200 & all comments for publication for get request /api/articles/:articleId/comments`, async () => {
+    const {statusCode, body} = await request(serverInstance).get(`/api/articles/1/comments`);
+
+    expect(statusCode).toBe(200);
+    expect(body).toEqual(FINDED_COMMENTS_PUBLICATION);
+  });*/
+
+  /*it(`should return status 200 & delete comment of publication for delete request api/articles/:articleId/comments/:commentId`, async () => {
+    const {body: publicationComments} = await request(serverInstance).get(`/api/articles/1/comments`);
+
+    const firstCommentText = publicationComments[0][`comment_text`];
+
+    const {statusCode} = await request(serverInstance).delete(`/api/articles/1/comments/1`);
+
+    expect(statusCode).toBe(200);
+
+    const {body: afterDeletePublicationComments} = await request(serverInstance).get(`/api/articles/1/comments`);
+
+    const hasDeletedComment = afterDeletePublicationComments.find(({comment_text}) => comment_text === firstCommentText);
+
+    expect(hasDeletedComment).toBeUndefined();
+  });*/
+
+  /*it(`should return status 200 & add new comment of publication for post request api/articles/:articleId/comments`, async () => {
+    const {statusCode} = await request(serverInstance).post(`/api/articles/1/comments`).send({
+      comment_text: `Test`,
+      data_comment: `2022-11-11`,
+      user_id: 1,
+      publication_id: 1,
+    });
+
+    expect(statusCode).toBe(200);
+
+    const {body: publicationComments} = await request(serverInstance).get(`/api/articles/1/comments`);
+
+    const searchedNewPublicationText = Boolean(publicationComments.find(({comment_text}) => comment_text === `Test`));
+
+    expect(searchedNewPublicationText).toEqual(true);
+  });*/
+
+  /*it(`should return status 200 & get category for get request api/articles/category/:categoryId`, async () => {
+    const {statusCode, body: categoryById} = await request(serverInstance).get(`/api/articles/category/1`);
+
+    expect(statusCode).toBe(200);
+    expect(categoryById.categoryName).toEqual(CATAGORIES_MOCK[0]);
+  });*/
+
+
+  
+  // добавить проверку на др statusCode - см github
+
+
+
+
+
 
   
 });
