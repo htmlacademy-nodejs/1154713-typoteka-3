@@ -49,7 +49,7 @@ describe(`Test server REST API`, () => {
     await serverInstance.close();
   });
 
-  /*it(`should return status 200 & data for get request /api/articles`, async () => {
+  it(`should return status 200 & data for get request /api/articles`, async () => {
     const {
       body: {publicationsCount, publicationsData, paginationData, lastCommentsData},
       statusCode
@@ -73,9 +73,9 @@ describe(`Test server REST API`, () => {
     expect(updatedPublicationsData[0]).toEqual(FIRST_UPDATED_PUBLICATION);
     expect(updatedPaginationData[0]).toEqual(FIRST_UPDATED_PUBLICATION);
     expect(lastCommentsData[0]).toEqual(lastCommentFirstElement);
-  });*/
+  });
 
-  /*it(`should return status 200 & data for get request /articles/:articleId`, async () => {
+  it(`should return status 200 & data for get request /articles/:articleId`, async () => {
     const {
       body: {publication, publicationComments, usedCategoriesData},
       statusCode
@@ -86,9 +86,9 @@ describe(`Test server REST API`, () => {
     expect(publication).toEqual(FIRST_PUBLICATION_BY_ID);
     expect(publicationComments[0]).toEqual(COMMENTS_FIRST_PUBLICATION_BY_ID);
     expect(usedCategoriesData).toEqual(USED_CATEGORIES_FIRST_PUBLICATION_BY_ID);
-  });*/
+  });
 
-  /*it(`should return status 200 & data for get request /categories`, async () => {
+  it(`should return status 200 & data for get request /categories`, async () => {
     const {
       body: allCategories,
       statusCode
@@ -102,9 +102,9 @@ describe(`Test server REST API`, () => {
     expect(statusCode).toBe(200);
 
     expect(allCategories).toEqual(expect.arrayContaining(testedData));
-  });*/
+  });
 
-  /*it(`should return status 200 & new publication for post request /api/articles`, async () => {
+  it(`should return status 200 & new publication for post request /api/articles`, async () => {
     const {statusCode} = await request(serverInstance).post(`/api/articles`).send(NEW_PUBLICATION);
 
     expect(statusCode).toBe(200);
@@ -124,9 +124,9 @@ describe(`Test server REST API`, () => {
     };
 
     expect(newPublication).toEqual(updatedPublication);
-  });*/ 
+  });
 
-  /*it(`should return status 200 & updated publication for put request /api/articles/:articleId`, async () => {
+  it(`should return status 200 & updated publication for put request /api/articles/:articleId`, async () => {
     const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({title: `Test`});
 
     expect(statusCode).toBe(200);
@@ -134,9 +134,9 @@ describe(`Test server REST API`, () => {
     const {body: {publication: {title}}} = await request(serverInstance).get(`/api/articles/1`);
 
     expect(title).toEqual(`Test`);
-  });*/
+  });
 
-  /*it(`should return status 200 & delete publication for delete request /api/articles/:articleId`, async () => {
+  it(`should return status 200 & delete publication for delete request /api/articles/:articleId`, async () => {
     const {statusCode} = await request(serverInstance).delete(`/api/articles/1`);
 
     expect(statusCode).toBe(200);
@@ -146,16 +146,16 @@ describe(`Test server REST API`, () => {
     const searchResult = publicationsData.find(({id}) => id === 1);
 
     expect(searchResult).toBeUndefined();
-  });*/
+  });
 
-  /*it(`should return status 200 & all comments for publication for get request /api/articles/:articleId/comments`, async () => {
+  it(`should return status 200 & all comments for publication for get request /api/articles/:articleId/comments`, async () => {
     const {statusCode, body} = await request(serverInstance).get(`/api/articles/1/comments`);
 
     expect(statusCode).toBe(200);
     expect(body).toEqual(FINDED_COMMENTS_PUBLICATION);
-  });*/
+  });
 
-  /*it(`should return status 200 & delete comment of publication for delete request api/articles/:articleId/comments/:commentId`, async () => {
+  it(`should return status 200 & delete comment of publication for delete request api/articles/:articleId/comments/:commentId`, async () => {
     const {body: publicationComments} = await request(serverInstance).get(`/api/articles/1/comments`);
 
     const firstCommentText = publicationComments[0][`comment_text`];
@@ -169,9 +169,9 @@ describe(`Test server REST API`, () => {
     const hasDeletedComment = afterDeletePublicationComments.find(({comment_text}) => comment_text === firstCommentText);
 
     expect(hasDeletedComment).toBeUndefined();
-  });*/
+  });
 
-  /*it(`should return status 200 & add new comment of publication for post request api/articles/:articleId/comments`, async () => {
+  it(`should return status 200 & add new comment of publication for post request api/articles/:articleId/comments`, async () => {
     const {statusCode} = await request(serverInstance).post(`/api/articles/1/comments`).send({
       comment_text: `Test`,
       data_comment: `2022-11-11`,
@@ -186,23 +186,22 @@ describe(`Test server REST API`, () => {
     const searchedNewPublicationText = Boolean(publicationComments.find(({comment_text}) => comment_text === `Test`));
 
     expect(searchedNewPublicationText).toEqual(true);
-  });*/
+  });
 
-  /*it(`should return status 200 & get category for get request api/articles/category/:categoryId`, async () => {
+  it(`should return status 200 & get category for get request api/articles/category/:categoryId`, async () => {
     const {statusCode, body: categoryById} = await request(serverInstance).get(`/api/articles/category/1`);
 
     expect(statusCode).toBe(200);
     expect(categoryById.categoryName).toEqual(CATAGORIES_MOCK[0]);
-  });*/
+  });
 
+  it(`should return status 404 by unecessary id for get request /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).get(`/api/articles/111`);
+    expect(statusCode).toBe(404);
+  });
 
-  
-  // добавить проверку на др statusCode - см github
-
-
-
-
-
-
-  
+  it(`should return status 400 by no sended arguments for put request /api/articles/1`, async () => {
+    const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({});
+    expect(statusCode).toBe(400);
+  });
 });

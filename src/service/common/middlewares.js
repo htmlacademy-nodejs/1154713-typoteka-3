@@ -21,14 +21,10 @@ module.exports = {
     try {
       const result = await service.getPublicationById(articleId);
 
-      if (!result) {
-        next(new Error(ANSWER_ERROR));
-      }
-
       req.publicationById = result;
       next();
     } catch {
-      next(new Error(SERVER_SERVICE_ERROR));
+      next(new Error(ANSWER_ERROR));
     }
   },
   getAllCategoriesMiddleware: (service) => async (req, res, next) => {
