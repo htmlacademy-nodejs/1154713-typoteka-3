@@ -1,12 +1,5 @@
 'use strict';
 
-
-
-
-// убр самопал проверки, перевести все на joi
-
-
-
 const {application} = require(`./cli`);
 
 const {getLogger} = require(`./lib/logger`);
