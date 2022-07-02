@@ -77,4 +77,13 @@ module.exports = {
 
     return result;
   },
+  getPostCommentErrorQuery: (commentErrorMessage) => {
+    if (!commentErrorMessage) {
+      return ``;
+    }
+
+    const encodedErrorMessage = encodeURIComponent(JSON.stringify(commentErrorMessage));
+
+    return `?errorMessage=${encodedErrorMessage}`;
+  },
 };

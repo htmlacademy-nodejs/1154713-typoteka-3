@@ -62,18 +62,11 @@ module.exports = {
 
     try {
       await api.setNewComment(id, body);
-    } catch (e) {
-
-
-      // вовзр здесь и для сервиса по ошибке (2 со статусом 400), далле орг обработку на стороне рендера приложения
-
-      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-
-
-      return res.status(400).json([]);
+      req.commentErrorMessage = ``;
+    } catch ({response: {data: errorMessage}}) {
+      req.commentErrorMessage = errorMessage;
     }
 
-    
     next();
   },
 };

@@ -85,9 +85,6 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(commentsPublication);
   });
 
-
-
-
   apiRouter.post(`/articles/:articleId/comments`,
       commentValidationMiddleware(commentValidationScheme),
       addNewCommentMiddleware(mainService),
@@ -99,10 +96,6 @@ const mainApi = (app, mainService) => {
         return res.status(200).json(newComment);
       }
   );
-
-
-
-
 
   apiRouter.delete(`/articles/:articleId/comments/:commentId`, deleteCommentMiddleware(mainService), (req, res) => {
     const {deleteResult} = req;

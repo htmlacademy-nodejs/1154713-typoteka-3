@@ -2,13 +2,15 @@
 
 const Joi = require(`joi`);
 
-const {COMMENT_ERROR} = require(`../consts`);
+const {COMMENT_LENGTH_ERROR, COMMENT_EMPTY_ERROR} = require(`../consts`);
 
 module.exports = Joi.object({
-  message: Joi.string()
+  message: Joi
+    .string()
     .min(20)
     .required()
     .messages({
-      minStringError: COMMENT_ERROR,
+      [`string.min`]: COMMENT_LENGTH_ERROR,
+      [`string.empty`]: COMMENT_EMPTY_ERROR,
     }),
 });

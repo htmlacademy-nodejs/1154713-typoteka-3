@@ -11,7 +11,7 @@ const {
   getDataByCategoryMiddleware,
   setNewCommentMiddleware
 } = require(`../../common/middlewares`);
-const {getExistThemes, getCardData} = require(`../../common/utils`);
+const {getExistThemes, getCardData, getPostCommentErrorQuery} = require(`../../common/utils`);
 
 const upload = multer({storage});
 
@@ -44,13 +44,15 @@ module.exports = {
 
 
 
-
-
-
+    // провер все тесты потом
+    // hasNeededBodyKeys и проч проверки полей переданных - удалить и заменить на joi
     // в комментах выводится кривое время
+    // как рендерить ошибку валидации см шаблон post-user-2
 
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}} = req;
+      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorMessage}} = req;
+
+      const validationErrorMessage = errorMessage ? JSON.parse(errorMessage) : ``;
 
       const pageData = {
         id,
@@ -61,20 +63,16 @@ module.exports = {
         picture: publication.picture,
         fullText: publication.full_text,
         comments: publicationComments,
+        validationErrorMessage,
       };
 
       res.render(`post/post-detail`, pageData);
     });
 
     articlesRouter.post(`/:id/comments`, setNewCommentMiddleware(api), (req, res) => {
+      const {commentErrorMessage} = req;
 
-      
-
-      //console.log(1111111111111111111111);
-
-
-      res.redirect(`/articles/${req.params.id}`);
-
+      res.redirect(`/articles/${req.params.id}${getPostCommentErrorQuery(commentErrorMessage)}`);
     });
 
 

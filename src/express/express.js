@@ -23,12 +23,4 @@ app.use(`/`, mainRouter(axiosApi));
 app.use(`/my`, myRouter(axiosApi));
 app.use(`/articles`, articlesRouter(axiosApi));
 
-
-/*app.use((error, _req, res, _next) => {
-  
-  console.log(`eRRRRRR`);
-
-  return res.status(400).send(`hyi`);
-});*/
-
 app.listen(8080, () => console.log(`Front server started`));
