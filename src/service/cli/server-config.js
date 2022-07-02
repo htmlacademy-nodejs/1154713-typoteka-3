@@ -15,7 +15,6 @@ module.exports = {
     const mainService = new MainService(dbModels);
 
     const logger = getLogger(`server-config`);
-
     const app = express();
 
     app.use(express.json());

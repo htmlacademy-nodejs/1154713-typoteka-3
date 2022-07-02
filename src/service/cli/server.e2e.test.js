@@ -172,11 +172,9 @@ describe(`Test server REST API`, () => {
   });
 
   it(`should return status 200 & add new comment of publication for post request api/articles/:articleId/comments`, async () => {
+
     const {statusCode} = await request(serverInstance).post(`/api/articles/1/comments`).send({
-      comment_text: `Test`,
-      data_comment: `2022-11-11`,
-      user_id: 1,
-      publication_id: 1,
+      message: 'Test'
     });
 
     expect(statusCode).toBe(200);

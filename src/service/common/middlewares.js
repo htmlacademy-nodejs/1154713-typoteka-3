@@ -96,17 +96,21 @@ module.exports = {
   addNewCommentMiddleware: (service) => async (req, res, next) => {
     const {params: {articleId}, body} = req;
 
-    const preparedBody = {
-      ...body,
+    const commentData = {
+      [`comment_text`]: body.message,
       [`publication_id`]: articleId,
+      // хардкод
+      [`user_id`]: 1,
+      // хардкод
+      [`data_comment`]: `2022-11-01`,
     };
 
-    if (!hasNeededBodyKeys(Object.keys(preparedBody), COMMENT_ARGUMENTS)) {
+    if (!hasNeededBodyKeys(Object.keys(commentData), COMMENT_ARGUMENTS)) {
       next(new Error(ARGUMENT_ERROR));
     }
 
     try {
-      req.newComment = await service.addNewComment(preparedBody);
+      req.newComment = await service.addNewComment(commentData);
       next();
     } catch {
       next(new Error(SERVER_SERVICE_ERROR));

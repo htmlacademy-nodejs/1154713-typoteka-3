@@ -3,7 +3,14 @@
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const storage = require(`../../common/multer-storage`);
-const {getArticleMiddleware, setNewPostMiddleware, getAllArticlesMiddleware, getAllCategoriesMiddleware, getDataByCategoryMiddleware} = require(`../../common/middlewares`);
+const {
+  getArticleMiddleware,
+  setNewPostMiddleware,
+  getAllArticlesMiddleware,
+  getAllCategoriesMiddleware,
+  getDataByCategoryMiddleware,
+  setNewCommentMiddleware
+} = require(`../../common/middlewares`);
 const {getExistThemes, getCardData} = require(`../../common/utils`);
 
 const upload = multer({storage});
@@ -35,10 +42,18 @@ module.exports = {
 
     articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
 
+
+
+
+
+
+    // в комментах выводится кривое время
+
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication, publicationComments, usedCategoriesData}} = req;
+      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}} = req;
 
       const pageData = {
+        id,
         publicationOwner: publication.publication_owner,
         publicationDate: publication.publication_date,
         title: publication.title,
@@ -50,6 +65,22 @@ module.exports = {
 
       res.render(`post/post-detail`, pageData);
     });
+
+    articlesRouter.post(`/:id/comments`, setNewCommentMiddleware(api), (req, res) => {
+
+      
+
+      //console.log(1111111111111111111111);
+
+
+      res.redirect(`/articles/${req.params.id}`);
+
+    });
+
+
+
+
+
 
     articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}} = req;

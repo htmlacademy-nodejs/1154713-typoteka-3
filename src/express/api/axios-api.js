@@ -27,11 +27,11 @@ class AxiosApi {
   }
 
   getArticle(id) {
-    return this._load(`api/articles/${id}`);
+    return this._load(`/api/articles/${id}`);
   }
 
   setNewPost(data) {
-    return this._load(`api/articles`, {
+    return this._load(`/api/articles`, {
       method: `POST`,
       data,
     });
@@ -45,7 +45,14 @@ class AxiosApi {
   }
 
   getCategoryDataById(id) {
-    return this._load(`api/articles/category/${id}`);
+    return this._load(`/api/articles/category/${id}`);
+  }
+
+  setNewComment(id, data) {
+    return this._load(`/api/articles/${id}/comments`, {
+      method: `POST`,
+      data,
+    });
   }
 }
 

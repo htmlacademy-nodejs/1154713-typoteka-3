@@ -57,4 +57,23 @@ module.exports = {
     req.selectionByCategory = await api.getCategoryDataById(id);
     next();
   },
+  setNewCommentMiddleware: (api) => async (req, res, next) => {
+    const {params: {id}, body} = req;
+
+    try {
+      await api.setNewComment(id, body);
+    } catch (e) {
+
+
+      // вовзр здесь и для сервиса по ошибке (2 со статусом 400), далле орг обработку на стороне рендера приложения
+
+      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
+
+      return res.status(400).json([]);
+    }
+
+    
+    next();
+  },
 };
