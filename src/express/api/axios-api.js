@@ -54,6 +54,13 @@ class AxiosApi {
       data,
     });
   }
+
+  updatePublication(id, data) {
+    return this._load(`/api/articles/${id}`, {
+      method: `PUT`,
+      data,
+    });
+  }
 }
 
 module.exports = AxiosApi;

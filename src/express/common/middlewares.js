@@ -69,4 +69,33 @@ module.exports = {
 
     next();
   },
+  updatePublicationMiddleware: (api) => async (req, res, next) => {
+    const {params: {id}, body, file} = req;
+
+    const offerData = {
+      // пока хардкод user
+      [`user_id`]: 1,
+      title: body.title,
+      picture: file ? file.filename : null,
+      // пока хардкод категорий
+      categories: [`IT`, `Без рамки`],
+      announce: body.announce,
+      [`full_text`]: body[`full-text`],
+      [`publication_date`]: body.date,
+    };
+
+    console.log('FFFF~~~~~~~~~~~~', file);
+    console.log('BBBBB~~~~~~~~~~~~~~', body);
+    console.log('IDIDIDI~~~~~~~~~~~~~~', id);
+
+
+    try {
+      await api.updatePublication(id, offerData);
+      //req.commentErrorMessage = ``;
+    } catch /*({response: {data: errorMessage}})*/ {
+      //req.commentErrorMessage = errorMessage;
+    }
+
+    next();
+  },
 };

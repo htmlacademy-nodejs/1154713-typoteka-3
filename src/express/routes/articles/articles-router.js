@@ -9,18 +9,32 @@ const {
   getAllArticlesMiddleware,
   getAllCategoriesMiddleware,
   getDataByCategoryMiddleware,
-  setNewCommentMiddleware
+  setNewCommentMiddleware,
+  updatePublicationMiddleware,
 } = require(`../../common/middlewares`);
 const {getExistThemes, getCardData, getPostCommentErrorQuery} = require(`../../common/utils`);
 
 const upload = multer({storage});
 
+
+
+// провер все тесты потом
+// hasNeededBodyKeys и проч проверки полей переданных - удалить и заменить на joi
+// в комментах выводится кривое время
+// как рендерить ошибку валидации см шаблон post-user-2
+
+
+
+
 module.exports = {
   articlesRouter: (api) => {
     const articlesRouter = new Router();
 
+
+
+    
     articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication}} = req;
+      const {articleData: {publication}, params: {id}} = req;
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
@@ -28,8 +42,21 @@ module.exports = {
         announce: publication.announce,
         [`full_text`]: publication.full_text,
         categories: publication.categories,
+        isEditPage: true,
+        id,
       });
     });
+
+    articlesRouter.post(`/edit/:id`, upload.single(`upload`), updatePublicationMiddleware(api), (req, res) => {
+
+      
+      res.send('hyi');
+
+      //res.redirect(`/articles/edit/${req.params.id}`);
+    });
+
+
+
 
     articlesRouter.get(`/add`, (req, res) => {
       const {query: {postData}} = req;
@@ -44,10 +71,7 @@ module.exports = {
 
 
 
-    // провер все тесты потом
-    // hasNeededBodyKeys и проч проверки полей переданных - удалить и заменить на joi
-    // в комментах выводится кривое время
-    // как рендерить ошибку валидации см шаблон post-user-2
+    
 
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorMessage}} = req;
