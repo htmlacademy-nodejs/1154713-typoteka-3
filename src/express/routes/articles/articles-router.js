@@ -12,14 +12,14 @@ const {
   setNewCommentMiddleware,
   updatePublicationMiddleware,
 } = require(`../../common/middlewares`);
-const {getExistThemes, getCardData, getPostCommentErrorQuery} = require(`../../common/utils`);
+const {getExistThemes, getCardData} = require(`../../common/utils`);
 
 const upload = multer({storage});
 
 
 
 // провер все тесты потом
-// hasNeededBodyKeys и проч проверки полей переданных - удалить и заменить на joi
+// самодел проверки полей переданных удалить и заменить на joi
 // в комментах выводится кривое время
 // как рендерить ошибку валидации см шаблон post-user-2
 
@@ -34,7 +34,13 @@ module.exports = {
 
     
     articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication}, params: {id}} = req;
+      const {articleData: {publication}, params: {id}, query: {errorData}} = req;
+
+      const validationError = errorData ? JSON.parse(errorData) : ``;
+
+
+      console.log('VVVVVVVVVVVVVVV~~~~~~~~~~~~~', validationError);
+
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
@@ -44,16 +50,12 @@ module.exports = {
         categories: publication.categories,
         isEditPage: true,
         id,
+        validationError,
       });
     });
 
-    articlesRouter.post(`/edit/:id`, upload.single(`upload`), updatePublicationMiddleware(api), (req, res) => {
-
-      
-      res.send('hyi');
-
-      //res.redirect(`/articles/edit/${req.params.id}`);
-    });
+    articlesRouter.post(`/edit/:id`, upload.single(`upload`), updatePublicationMiddleware(api), (req, res) =>
+      res.redirect(`/articles/edit/${req.params.id}?errorData=${req.errorData}`));
 
 
 
@@ -74,9 +76,9 @@ module.exports = {
     
 
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorMessage}} = req;
+      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorData}} = req;
 
-      const validationErrorMessage = errorMessage ? JSON.parse(errorMessage) : ``;
+      const validationError = errorData ? JSON.parse(errorData) : ``;
 
       const pageData = {
         id,
@@ -87,17 +89,14 @@ module.exports = {
         picture: publication.picture,
         fullText: publication.full_text,
         comments: publicationComments,
-        validationErrorMessage,
+        validationError,
       };
 
       res.render(`post/post-detail`, pageData);
     });
 
-    articlesRouter.post(`/:id/comments`, setNewCommentMiddleware(api), (req, res) => {
-      const {commentErrorMessage} = req;
-
-      res.redirect(`/articles/${req.params.id}${getPostCommentErrorQuery(commentErrorMessage)}`);
-    });
+    articlesRouter.post(`/:id/comments`, setNewCommentMiddleware(api), (req, res) =>
+      res.redirect(`/articles/${req.params.id}?errorData=${req.errorData}`));
 
 
 

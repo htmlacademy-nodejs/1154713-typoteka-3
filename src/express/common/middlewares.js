@@ -62,15 +62,18 @@ module.exports = {
 
     try {
       await api.setNewComment(id, body);
-      req.commentErrorMessage = ``;
+      req.errorData = ``;
     } catch ({response: {data: errorMessage}}) {
-      req.commentErrorMessage = errorMessage;
+      req.errorData = errorMessage;
     }
 
     next();
   },
   updatePublicationMiddleware: (api) => async (req, res, next) => {
     const {params: {id}, body, file} = req;
+
+
+
 
     const offerData = {
       // пока хардкод user
@@ -84,6 +87,22 @@ module.exports = {
       [`publication_date`]: body.date,
     };
 
+
+
+    /*const offerData = {
+      // пока хардкод user
+      [`user_id`]: 1,
+      title: '',
+      picture: 'sss.ff',
+      // пока хардкод категорий
+      categories: [],
+      announce: '',
+      [`full_text`]: '',
+      [`publication_date`]: '',
+    };*/
+
+
+
     console.log('FFFF~~~~~~~~~~~~', file);
     console.log('BBBBB~~~~~~~~~~~~~~', body);
     console.log('IDIDIDI~~~~~~~~~~~~~~', id);
@@ -91,9 +110,17 @@ module.exports = {
 
     try {
       await api.updatePublication(id, offerData);
-      //req.commentErrorMessage = ``;
-    } catch /*({response: {data: errorMessage}})*/ {
-      //req.commentErrorMessage = errorMessage;
+      req.errorData = ``;
+    } catch ({response: {data}}) {
+
+      const errorsMessageData = data.map(({message, context: {key}}) => ({
+        key,
+        message,
+      }));
+
+      const errorData = encodeURIComponent(JSON.stringify(errorsMessageData));
+
+      req.errorData = errorData;
     }
 
     next();

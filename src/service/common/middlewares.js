@@ -1,8 +1,6 @@
 'use strict';
 
-const {SERVER_SERVICE_ERROR, ANSWER_ERROR, ARGUMENT_ERROR, BODY_ARGUMENTS, COMMENT_ARGUMENTS} = require(`./consts`);
-
-const {hasNeededBodyKeys} = require(`./utils`);
+const {SERVER_SERVICE_ERROR, ANSWER_ERROR, ARGUMENT_ERROR, COMMENT_ARGUMENTS} = require(`./consts`);
 
 module.exports = {
   getAllPublicationsMiddleware: (service) => async (req, res, next) => {
@@ -38,10 +36,6 @@ module.exports = {
   setNewPublicationMiddleware: (service) => async (req, res, next) => {
     const {body} = req;
 
-    if (!hasNeededBodyKeys(Object.keys(body), BODY_ARGUMENTS)) {
-      next(new Error(ARGUMENT_ERROR));
-    }
-
     try {
       req.newPublication = await service.setNewPublication(body);
       next();
@@ -51,10 +45,6 @@ module.exports = {
   },
   updatePublicationMiddleware: (service) => async (req, res, next) => {
     const {params: {articleId}, body} = req;
-
-    if (!Object.keys(body).length) {
-      next(new Error(ARGUMENT_ERROR));
-    }
 
     try {
       req.updatedPublication = await service.updatePublication(articleId, body);
@@ -104,10 +94,6 @@ module.exports = {
       // хардкод
       [`data_comment`]: `2022-11-01`,
     };
-
-    if (!hasNeededBodyKeys(Object.keys(commentData), COMMENT_ARGUMENTS)) {
-      next(new Error(ARGUMENT_ERROR));
-    }
 
     try {
       req.newComment = await service.addNewComment(commentData);
