@@ -15,6 +15,7 @@ module.exports = {
 
     next();
   },
+
   publicationValidationMiddleware: (scheme) => async (req, res, next) => {
     const {body} = req;
 

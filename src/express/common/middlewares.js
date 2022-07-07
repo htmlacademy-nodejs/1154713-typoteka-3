@@ -21,7 +21,7 @@ module.exports = {
   setNewPostMiddleware: (api) => async (req, res, next) => {
     const {body, file} = req;
 
-    const offerData = {
+    /*const offerData = {
       // пока хардкод user
       [`user_id`]: 1,
       title: body.title,
@@ -31,15 +31,56 @@ module.exports = {
       announce: body.announce,
       [`full_text`]: body[`full-text`],
       [`publication_date`]: body.date,
+    };*/
+
+
+
+    const offerData = {
+      // пока хардкод user
+      [`user_id`]: 1,
+      title: '',
+      picture: 'sss.ff',
+      // пока хардкод категорий
+      categories: [],
+      announce: '',
+      [`full_text`]: '',
+      [`publication_date`]: '',
     };
+
+
+    /*try {
+      await api.updatePublication(id, offerData);
+      req.errorData = ``;
+    } catch ({response: {data}}) {
+
+      const errorsMessageData = data.map(({message, context: {key}}) => ({
+        key,
+        message,
+      }));
+
+      const errorData = encodeURIComponent(JSON.stringify(errorsMessageData));
+
+      req.errorData = errorData;
+    }*/
+
+
+
 
     try {
       await api.setNewPost(offerData);
-      next();
+      req.errorData = ``;
     } catch {
+
+
+      // обраб ошибку joi
+
+
       const postData = encodeURIComponent(JSON.stringify(offerData));
       res.redirect(`/articles/add?postData=${postData}`);
     }
+
+
+    next();
   },
   getSearchDataMiddleware: (api) => async (req, res, next) => {
     const {query: {search}} = req;
@@ -57,6 +98,9 @@ module.exports = {
     req.selectionByCategory = await api.getCategoryDataById(id);
     next();
   },
+
+
+
   setNewCommentMiddleware: (api) => async (req, res, next) => {
     const {params: {id}, body} = req;
 
@@ -64,14 +108,23 @@ module.exports = {
       await api.setNewComment(id, body);
       req.errorData = ``;
     } catch ({response: {data: errorMessage}}) {
-      req.errorData = errorMessage;
+
+      const errorData = {
+        bodyMessage: body.message,
+        errorMessage,
+      };
+
+      req.errorData = encodeURIComponent(JSON.stringify(errorData));
     }
 
     next();
   },
-  updatePublicationMiddleware: (api) => async (req, res, next) => {
-    const {params: {id}, body, file} = req;
 
+
+
+
+  checkPublicationMiddleware: (api) => async (req, res, next) => {
+    const {params: {id}, body, file} = req;
 
 
 
@@ -119,7 +172,6 @@ module.exports = {
       }));
 
       const errorData = encodeURIComponent(JSON.stringify(errorsMessageData));
-
       req.errorData = errorData;
     }
 

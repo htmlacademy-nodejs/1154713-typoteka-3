@@ -1,6 +1,6 @@
 'use strict';
 
-const {SERVER_SERVICE_ERROR, ANSWER_ERROR, ARGUMENT_ERROR, COMMENT_ARGUMENTS} = require(`./consts`);
+const {SERVER_SERVICE_ERROR, ANSWER_ERROR} = require(`./consts`);
 
 module.exports = {
   getAllPublicationsMiddleware: (service) => async (req, res, next) => {

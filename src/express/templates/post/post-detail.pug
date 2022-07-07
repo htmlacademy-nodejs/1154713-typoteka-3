@@ -57,6 +57,6 @@ block page
                 .comments__avatar.avatar
                   img(src='/img/avatar-2.png', alt='аватар пользователя')
                 label
-                  textarea(rows='1', type='text', name='message', placeholder='Присоединиться к обсуждению')
+                  textarea(rows='1', type='text', name='message', value=message, placeholder='Присоединиться к обсуждению')
                 button.comments__button.button.button--colored(type='submit') Опубликовать
     include ../partials/footer-page.pug

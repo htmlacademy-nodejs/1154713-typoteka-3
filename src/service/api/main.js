@@ -57,13 +57,24 @@ const mainApi = (app, mainService) => {
     res.status(200).json(allCategories);
   });
 
-  apiRouter.post(`/articles`, setNewPublicationMiddleware(mainService), (req, res) => {
-    const {newPublication} = req;
-    logger.debug(`Request on route ${req.originalUrl}`);
 
-    logger.info(`Status code is 200`);
-    return res.status(200).json(newPublication);
-  });
+
+
+
+  apiRouter.post(`/articles`,
+
+
+
+
+      setNewPublicationMiddleware(mainService),
+
+      (req, res) => {
+        const {newPublication} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
+
+        logger.info(`Status code is 200`);
+        return res.status(200).json(newPublication);
+      });
 
 
 
@@ -108,6 +119,9 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(commentsPublication);
   });
 
+
+
+
   apiRouter.post(`/articles/:articleId/comments`,
       commentValidationMiddleware(commentValidationScheme),
       addNewCommentMiddleware(mainService),
@@ -119,6 +133,10 @@ const mainApi = (app, mainService) => {
         return res.status(200).json(newComment);
       }
   );
+
+
+
+
 
   apiRouter.delete(`/articles/:articleId/comments/:commentId`, deleteCommentMiddleware(mainService), (req, res) => {
     const {deleteResult} = req;

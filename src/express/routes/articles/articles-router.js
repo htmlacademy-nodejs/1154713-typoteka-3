@@ -10,7 +10,7 @@ const {
   getAllCategoriesMiddleware,
   getDataByCategoryMiddleware,
   setNewCommentMiddleware,
-  updatePublicationMiddleware,
+  checkPublicationMiddleware,
 } = require(`../../common/middlewares`);
 const {getExistThemes, getCardData} = require(`../../common/utils`);
 
@@ -23,7 +23,7 @@ const upload = multer({storage});
 // в комментах выводится кривое время
 // как рендерить ошибку валидации см шаблон post-user-2
 
-
+// если есть ошибка то после не должен редиректить никуда, а должен ост введенные новые данные и показ ошибку под ними
 
 
 module.exports = {
@@ -38,9 +38,14 @@ module.exports = {
 
       const validationError = errorData ? JSON.parse(errorData) : ``;
 
+      // здесь и в отправке новой публикации - нужно при ошибке валидации возвр весь объект введен данных + объект ошибок (см как что кодировать)
+      // и отобр их
+      // подумать, как быть с articleData, если возвр ошибку валидации
 
-      console.log('VVVVVVVVVVVVVVV~~~~~~~~~~~~~', validationError);
 
+      console.log('FFF', validationError);
+
+      // ошибка редактирования публикации
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
@@ -54,22 +59,46 @@ module.exports = {
       });
     });
 
-    articlesRouter.post(`/edit/:id`, upload.single(`upload`), updatePublicationMiddleware(api), (req, res) =>
+    articlesRouter.post(`/edit/:id`, upload.single(`upload`), checkPublicationMiddleware(api), (req, res) =>
       res.redirect(`/articles/edit/${req.params.id}?errorData=${req.errorData}`));
 
 
 
 
+
+
+
+
+
+
+
+    
     articlesRouter.get(`/add`, (req, res) => {
-      const {query: {postData}} = req;
+      const {query: {postData, errorData}} = req;
+
+      const validationError = errorData ? JSON.parse(errorData) : ``;
+
+      console.log('VVVVVVVVVVVVV~~~~~~~~~~~', validationError);
+
+
 
       res.render(`post/post`, {
         ...(postData ? JSON.parse(postData) : {}),
         pageTitle: `Новая публикация`,
+        validationError,
       });
     });
 
-    articlesRouter.post(`/add`, upload.single(`upload`), setNewPostMiddleware(api), (_, res) => res.redirect(`/my`));
+    articlesRouter.post(`/add`,
+        upload.single(`upload`),
+
+
+
+        setNewPostMiddleware(api),
+
+
+        (req, res) => res.redirect(`/my?errorData=${req.errorData}`)
+    );
 
 
 
@@ -78,7 +107,10 @@ module.exports = {
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorData}} = req;
 
-      const validationError = errorData ? JSON.parse(errorData) : ``;
+      const validationError = errorData ? JSON.parse(decodeURIComponent(errorData)) : ``;
+      // разделить на данные и встроит их в шаблон
+
+      // ошибка комментов
 
       const pageData = {
         id,
