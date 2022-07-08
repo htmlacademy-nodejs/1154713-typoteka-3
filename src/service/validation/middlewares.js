@@ -32,11 +32,13 @@ module.exports = {
   paramsValidatorMiddleware: (scheme) => async (req, res, next) => {
     const {params} = req;
 
-
-    console.log('PPPPPPPPPPPPPPPPPPPP', params);
-
+    try {
+      await scheme.validateAsync(Object.values(params));
+    } catch ({details}) {
+      res.status(ARGUMENT_ERROR).json(details);
+      return;
+    }
 
     next();
-
   },
 };

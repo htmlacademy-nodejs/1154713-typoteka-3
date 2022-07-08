@@ -1,16 +1,15 @@
 'use strict';
 
-/*const Joi = require(`joi`);
+const Joi = require(`joi`);
 
-const {COMMENT_LENGTH_ERROR, COMMENT_EMPTY_ERROR} = require(`../consts`);
+const {PARAMS_ERROR} = require(`../consts`);
 
-module.exports = Joi.object({
-  message: Joi
+module.exports = Joi
+.array()
+  .items(Joi
     .string()
-    .min(20)
-    .required()
+    .custom((value) => isNaN(Number(value)))
     .messages({
-      [`string.min`]: COMMENT_LENGTH_ERROR,
-      [`string.empty`]: COMMENT_EMPTY_ERROR,
-    }),
-});*/
+      [`string.base`]: PARAMS_ERROR,
+    })
+  );

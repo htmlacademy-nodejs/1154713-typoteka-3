@@ -14,4 +14,5 @@ module.exports = {
   ANNOUNCE_MAX_LENGTH_ERROR: `Анонс должен быть не более 250 символов`,
   ANNOUNCE_EMPTY: `Анонс не должен быть пустым`,
   FULL_TEXT_MAX: `Текст не должен превышать 1000 символов`,
+  PARAMS_ERROR: `Параметр в url запроса, должен быть числом`,
 };

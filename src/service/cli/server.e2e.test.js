@@ -111,7 +111,7 @@ describe(`Test server REST API`, () => {
 
     const {body: {publicationsData}} = await request(serverInstance).get(`/api/articles`);
 
-    const newPublication = publicationsData.find(({title}) => title === `Тест`);
+    const newPublication = publicationsData.find(({title}) => title === NEW_PUBLICATION.title);
     const {id, publication_date, categories, comments, publication_owner} = newPublication;
 
     const updatedPublication = {
@@ -127,13 +127,16 @@ describe(`Test server REST API`, () => {
   });
 
   it(`should return status 200 & updated publication for put request /api/articles/:articleId`, async () => {
-    const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({title: `Test`});
+    const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({
+      ...NEW_PUBLICATION,
+      title: `NEWPUBLICATIONNEWPUBLICATIONNEWPUBLICATION`
+    });
 
     expect(statusCode).toBe(200);
 
     const {body: {publication: {title}}} = await request(serverInstance).get(`/api/articles/1`);
 
-    expect(title).toEqual(`Test`);
+    expect(title).toEqual(`NEWPUBLICATIONNEWPUBLICATIONNEWPUBLICATION`);
   });
 
   it(`should return status 200 & delete publication for delete request /api/articles/:articleId`, async () => {
@@ -174,14 +177,14 @@ describe(`Test server REST API`, () => {
   it(`should return status 200 & add new comment of publication for post request api/articles/:articleId/comments`, async () => {
 
     const {statusCode} = await request(serverInstance).post(`/api/articles/1/comments`).send({
-      message: 'Test'
+      message: NEW_PUBLICATION.title
     });
 
     expect(statusCode).toBe(200);
 
     const {body: publicationComments} = await request(serverInstance).get(`/api/articles/1/comments`);
 
-    const searchedNewPublicationText = Boolean(publicationComments.find(({comment_text}) => comment_text === `Test`));
+    const searchedNewPublicationText = Boolean(publicationComments.find(({comment_text}) => comment_text === NEW_PUBLICATION.title));
 
     expect(searchedNewPublicationText).toEqual(true);
   });
@@ -202,4 +205,10 @@ describe(`Test server REST API`, () => {
     const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({});
     expect(statusCode).toBe(400);
   });
+
+
+
+
+
+  // тесты для проверки всех существ схем валидации
 });

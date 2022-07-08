@@ -200,10 +200,10 @@ const USED_CATEGORIES_FIRST_PUBLICATION_BY_ID = [
 
 const NEW_PUBLICATION = {
   [`user_id`]: 1,
-  title: `Тест`,
+  title: `ТестТестТестТестТестТестТестТестТестТест`,
   picture: null,
   categories: [`IT`, `Без рамки`],
-  announce: `Анонс`,
+  announce: `АнонсАнонсАнонсАнонсАнонсАнонсАнонсАнонс`,
   [`full_text`]: `Полный текст`,
   [`publication_date`]: `2020-10-21`,
 };

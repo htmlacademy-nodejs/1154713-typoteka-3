@@ -14,15 +14,16 @@ const {
   addNewCommentMiddleware,
   getSearchedMiddleware,
   getCategoryDataById,
-  paramsValidatorMiddleware,
 } = require(`../common/middlewares`);
 
 const commentValidationScheme = require(`../validation/schemes/comment-validator`);
 const publicationValidationScheme = require(`../validation/schemes/publication-validator`);
+const paramsValidationScheme = require(`../validation/schemes/params-validatior`);
 
 const {
   commentValidationMiddleware,
   publicationValidationMiddleware,
+  paramsValidatorMiddleware,
 } = require(`../validation/middlewares`);
 
 const {getLogger} = require(`../lib/logger`);
@@ -42,19 +43,16 @@ const mainApi = (app, mainService) => {
     res.status(200).json(allPublications);
   });
 
+  apiRouter.get(`/articles/:articleId`,
+      paramsValidatorMiddleware(paramsValidationScheme),
+      getPublicationByIdMiddleware(mainService),
+      (req, res) => {
+        const {publicationById} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
 
-
-
-  apiRouter.get(`/articles/:articleId`, paramsValidatorMiddleware({}), getPublicationByIdMiddleware(mainService), (req, res) => {
-    const {publicationById} = req;
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    logger.info(`Status code is 200`);
-    return res.status(200).json(publicationById);
-  });
-
-
-
+        logger.info(`Status code is 200`);
+        return res.status(200).json(publicationById);
+      });
 
   apiRouter.get(`/categories`, getAllCategoriesMiddleware(mainService), (req, res) => {
     const {allCategories} = req;
@@ -75,12 +73,8 @@ const mainApi = (app, mainService) => {
         return res.status(200).json(newPublication);
       });
 
-
-
-
-
   apiRouter.put(`/articles/:articleId`,
-      paramsValidatorMiddleware({}),
+      paramsValidatorMiddleware(paramsValidationScheme),
       publicationValidationMiddleware(publicationValidationScheme),
       updatePublicationMiddleware(mainService),
       (req, res) => {
@@ -92,38 +86,30 @@ const mainApi = (app, mainService) => {
       }
   );
 
+  apiRouter.delete(`/articles/:articleId`,
+      paramsValidatorMiddleware(paramsValidationScheme),
+      deletePublicationMiddleware(mainService),
+      (req, res) => {
+        const {deleteResult} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
 
+        logger.info(`Status code is 200`);
+        return res.status(200).json(deleteResult);
+      });
 
+  apiRouter.get(`/articles/:articleId/comments`,
+      paramsValidatorMiddleware(paramsValidationScheme),
+      getCommentsPublicationMiddleware(mainService),
+      (req, res) => {
+        const {commentsPublication} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
 
-
-  apiRouter.delete(`/articles/:articleId`, paramsValidatorMiddleware({}), deletePublicationMiddleware(mainService), (req, res) => {
-    const {deleteResult} = req;
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    logger.info(`Status code is 200`);
-    return res.status(200).json(deleteResult);
-  });
-
-
-
-
-
-
-  apiRouter.get(`/articles/:articleId/comments`, paramsValidatorMiddleware({}), getCommentsPublicationMiddleware(mainService), (req, res) => {
-    const {commentsPublication} = req;
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    logger.info(`Status code is 200`);
-    return res.status(200).json(commentsPublication);
-  });
-
-
-
-
-
+        logger.info(`Status code is 200`);
+        return res.status(200).json(commentsPublication);
+      });
 
   apiRouter.post(`/articles/:articleId/comments`,
-      paramsValidatorMiddleware({}),
+      paramsValidatorMiddleware(paramsValidationScheme),
       commentValidationMiddleware(commentValidationScheme),
       addNewCommentMiddleware(mainService),
       (req, res) => {
@@ -135,31 +121,27 @@ const mainApi = (app, mainService) => {
       }
   );
 
+  apiRouter.delete(`/articles/:articleId/comments/:commentId`,
+      paramsValidatorMiddleware(paramsValidationScheme),
+      deleteCommentMiddleware(mainService),
+      (req, res) => {
+        const {deleteResult} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
 
+        logger.info(`Status code is 200`);
+        return res.status(200).json(deleteResult);
+      });
 
+  apiRouter.get(`/articles/category/:categoryId`,
+      paramsValidatorMiddleware(paramsValidationScheme),
+      getCategoryDataById(mainService),
+      (req, res) => {
+        const {categoryData} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
 
-
-  apiRouter.delete(`/articles/:articleId/comments/:commentId`, paramsValidatorMiddleware({}), deleteCommentMiddleware(mainService), (req, res) => {
-    const {deleteResult} = req;
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    logger.info(`Status code is 200`);
-    return res.status(200).json(deleteResult);
-  });
-
-
-
-
-  apiRouter.get(`/articles/category/:categoryId`, paramsValidatorMiddleware({}), getCategoryDataById(mainService), (req, res) => {
-    const {categoryData} = req;
-    logger.debug(`Request on route ${req.originalUrl}`);
-
-    logger.info(`Status code is 200`);
-    return res.status(200).json(categoryData);
-  });
-
-
-
+        logger.info(`Status code is 200`);
+        return res.status(200).json(categoryData);
+      });
 
   apiRouter.get(`/search`, getSearchedMiddleware(mainService), (req, res) => {
     const {searchResult} = req;
