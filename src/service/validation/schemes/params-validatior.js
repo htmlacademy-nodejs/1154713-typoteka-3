@@ -8,8 +8,14 @@ module.exports = Joi
 .array()
   .items(Joi
     .string()
-    .custom((value) => isNaN(Number(value)))
+    .custom((value, helper) => {
+      if (isNaN(Number(value))) {
+        return helper.error(`string.invalid`);
+      }
+
+      return value;
+    })
     .messages({
-      [`string.base`]: PARAMS_ERROR,
+      [`string.invalid`]: PARAMS_ERROR,
     })
   );

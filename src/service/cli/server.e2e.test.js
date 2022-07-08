@@ -206,9 +206,57 @@ describe(`Test server REST API`, () => {
     expect(statusCode).toBe(400);
   });
 
+  it(`should return 400 status for params fails for get /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).get(`/api/articles/fff`);
+    expect(statusCode).toBe(400);
+  });
 
+  it(`should return 400 status for body fails for post /api/articles/`, async () => {
+    const {statusCode} = await request(serverInstance).post(`/api/articles`).send({
+      ...NEW_PUBLICATION,
+      title: '',
+    });
+    expect(statusCode).toBe(400);
+  });
 
+  it(`should return 400 status for params fails for put /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).put(`/api/articles/fff`).send({
+      ...NEW_PUBLICATION,
+      title: `NEWPUBLICATIONNEWPUBLICATIONNEWPUBLICATION`
+    });
+    expect(statusCode).toBe(400);
+  });
 
+  it(`should return 400 status for body fails for put /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).put(`/api/articles/1`).send({
+      ...NEW_PUBLICATION,
+      title: '',
+    });
+    expect(statusCode).toBe(400);
+  });
 
-  // тесты для проверки всех существ схем валидации
+  it(`should return 400 status for params fails for delete /api/articles/:articleId`, async () => {
+    const {statusCode} = await request(serverInstance).delete(`/api/articles/fff`);
+    expect(statusCode).toBe(400);
+  });
+
+  it(`should return 400 status for params fails for get /api/articles/:articleId/comments`, async () => {
+    const {statusCode} = await request(serverInstance).get(`/api/articles/fff/comments`);
+    expect(statusCode).toBe(400);
+  });
+
+  it(`should return 400 status for body fails for post /api/articles/:articleId/comments`, async () => {
+    const {statusCode} = await request(serverInstance).post(`/api/articles/1/comments`).send({
+      message: ``,
+    });
+    expect(statusCode).toBe(400);
+  });
+
+  it(`should return 400 status for params fails for delete /api/articles/:articleId/comments/:commentId`, async () => {
+    const {statusCode: articleParamStatusCode} = await request(serverInstance).delete(`/api/articles/fff/comments/1`);
+    expect(articleParamStatusCode).toBe(400);
+
+    const {statusCode: commentParamStatusCode} = await request(serverInstance).delete(`/api/articles/1/comments/fff`);
+    expect(commentParamStatusCode).toBe(400);
+  });
 });
