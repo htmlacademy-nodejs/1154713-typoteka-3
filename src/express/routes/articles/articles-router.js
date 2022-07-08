@@ -10,7 +10,7 @@ const {
   getAllCategoriesMiddleware,
   getDataByCategoryMiddleware,
   setNewCommentMiddleware,
-  checkPublicationMiddleware,
+  editPublicationMiddleware,
 } = require(`../../common/middlewares`);
 const {getExistThemes, getCardData} = require(`../../common/utils`);
 
@@ -30,22 +30,14 @@ module.exports = {
   articlesRouter: (api) => {
     const articlesRouter = new Router();
 
-
-
-    
     articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication}, params: {id}, query: {errorData}} = req;
 
       const validationError = errorData ? JSON.parse(errorData) : ``;
 
-      // здесь и в отправке новой публикации - нужно при ошибке валидации возвр весь объект введен данных + объект ошибок (см как что кодировать)
-      // и отобр их
-      // подумать, как быть с articleData, если возвр ошибку валидации
 
+      console.log('ошибки редактирования~~~~~~~~~~~', validationError);
 
-      console.log('FFF', validationError);
-
-      // ошибка редактирования публикации
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
@@ -59,7 +51,7 @@ module.exports = {
       });
     });
 
-    articlesRouter.post(`/edit/:id`, upload.single(`upload`), checkPublicationMiddleware(api), (req, res) =>
+    articlesRouter.post(`/edit/:id`, upload.single(`upload`), editPublicationMiddleware(api), (req, res) =>
       res.redirect(`/articles/edit/${req.params.id}?errorData=${req.errorData}`));
 
 
@@ -78,7 +70,9 @@ module.exports = {
 
       const validationError = errorData ? JSON.parse(errorData) : ``;
 
-      console.log('VVVVVVVVVVVVV~~~~~~~~~~~', validationError);
+
+
+      console.log('ошибки добавления~~~~~~~~~~~', validationError);
 
 
 
@@ -91,13 +85,7 @@ module.exports = {
 
     articlesRouter.post(`/add`,
         upload.single(`upload`),
-
-
-
-        setNewPostMiddleware(api),
-
-
-        (req, res) => res.redirect(`/my?errorData=${req.errorData}`)
+        setNewPostMiddleware(api)
     );
 
 
@@ -108,9 +96,11 @@ module.exports = {
       const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorData}} = req;
 
       const validationError = errorData ? JSON.parse(decodeURIComponent(errorData)) : ``;
-      // разделить на данные и встроит их в шаблон
 
-      // ошибка комментов
+
+
+      console.log('ошибки комментов~~~~~~~~~~~', validationError);
+
 
       const pageData = {
         id,

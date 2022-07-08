@@ -77,4 +77,49 @@ module.exports = {
 
     return result;
   },
+  getPostMiddlewareAction: async (req, res, api, newPostFlag = false, editFlag = false) => {
+    const {body, file, params: {id}} = req;
+
+    const offerData = {
+      // пока хардкод user
+      [`user_id`]: 1,
+      title: body.title,
+      picture: file ? file.filename : null,
+      // пока хардкод категорий
+      categories: [`IT`, `Без рамки`],
+      announce: body.announce,
+      [`full_text`]: body[`full-text`],
+      [`publication_date`]: body.date,
+    };
+
+    try {
+      if (newPostFlag) {
+        await api.setNewPost(offerData);
+        req.errorData = ``;
+        res.redirect(`/my`);
+      }
+
+      if (editFlag) {
+        await api.updatePublication(id, offerData);
+        req.errorData = ``;
+      }
+    } catch ({response: {data}}) {
+      const errorsMessageData = data.map(({message, context: {key}}) => ({
+        key,
+        message,
+      }));
+
+      const error = {
+        errorsMessageData,
+        body,
+      };
+
+      const errorData = encodeURIComponent(JSON.stringify(error));
+      req.errorData = errorData;
+
+      if (newPostFlag) {
+        res.redirect(`/articles/add?errorData=${errorData}`);
+      }
+    }
+  },
 };

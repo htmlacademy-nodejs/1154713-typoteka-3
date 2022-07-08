@@ -1,5 +1,7 @@
 'use strict';
 
+const {getPostMiddlewareAction} = require(`./utils`);
+
 module.exports = {
   getAllArticlesMiddleware: (api) => async (req, res, next) => {
     const {query: {pageNumber}} = req;
@@ -19,67 +21,7 @@ module.exports = {
     next();
   },
   setNewPostMiddleware: (api) => async (req, res, next) => {
-    const {body, file} = req;
-
-    /*const offerData = {
-      // пока хардкод user
-      [`user_id`]: 1,
-      title: body.title,
-      picture: file ? file.filename : null,
-      // пока хардкод категорий
-      categories: [`IT`, `Без рамки`],
-      announce: body.announce,
-      [`full_text`]: body[`full-text`],
-      [`publication_date`]: body.date,
-    };*/
-
-
-
-    const offerData = {
-      // пока хардкод user
-      [`user_id`]: 1,
-      title: '',
-      picture: 'sss.ff',
-      // пока хардкод категорий
-      categories: [],
-      announce: '',
-      [`full_text`]: '',
-      [`publication_date`]: '',
-    };
-
-
-    /*try {
-      await api.updatePublication(id, offerData);
-      req.errorData = ``;
-    } catch ({response: {data}}) {
-
-      const errorsMessageData = data.map(({message, context: {key}}) => ({
-        key,
-        message,
-      }));
-
-      const errorData = encodeURIComponent(JSON.stringify(errorsMessageData));
-
-      req.errorData = errorData;
-    }*/
-
-
-
-
-    try {
-      await api.setNewPost(offerData);
-      req.errorData = ``;
-    } catch {
-
-
-      // обраб ошибку joi
-
-
-      const postData = encodeURIComponent(JSON.stringify(offerData));
-      res.redirect(`/articles/add?postData=${postData}`);
-    }
-
-
+    await getPostMiddlewareAction(req, res, api, true);
     next();
   },
   getSearchDataMiddleware: (api) => async (req, res, next) => {
@@ -98,9 +40,6 @@ module.exports = {
     req.selectionByCategory = await api.getCategoryDataById(id);
     next();
   },
-
-
-
   setNewCommentMiddleware: (api) => async (req, res, next) => {
     const {params: {id}, body} = req;
 
@@ -120,61 +59,8 @@ module.exports = {
     next();
   },
 
-
-
-
-  checkPublicationMiddleware: (api) => async (req, res, next) => {
-    const {params: {id}, body, file} = req;
-
-
-
-    const offerData = {
-      // пока хардкод user
-      [`user_id`]: 1,
-      title: body.title,
-      picture: file ? file.filename : null,
-      // пока хардкод категорий
-      categories: [`IT`, `Без рамки`],
-      announce: body.announce,
-      [`full_text`]: body[`full-text`],
-      [`publication_date`]: body.date,
-    };
-
-
-
-    /*const offerData = {
-      // пока хардкод user
-      [`user_id`]: 1,
-      title: '',
-      picture: 'sss.ff',
-      // пока хардкод категорий
-      categories: [],
-      announce: '',
-      [`full_text`]: '',
-      [`publication_date`]: '',
-    };*/
-
-
-
-    console.log('FFFF~~~~~~~~~~~~', file);
-    console.log('BBBBB~~~~~~~~~~~~~~', body);
-    console.log('IDIDIDI~~~~~~~~~~~~~~', id);
-
-
-    try {
-      await api.updatePublication(id, offerData);
-      req.errorData = ``;
-    } catch ({response: {data}}) {
-
-      const errorsMessageData = data.map(({message, context: {key}}) => ({
-        key,
-        message,
-      }));
-
-      const errorData = encodeURIComponent(JSON.stringify(errorsMessageData));
-      req.errorData = errorData;
-    }
-
+  editPublicationMiddleware: (api) => async (req, res, next) => {
+    await getPostMiddlewareAction(req, res, api, false, true);
     next();
   },
 };

@@ -28,4 +28,15 @@ module.exports = {
 
     next();
   },
+
+  paramsValidatorMiddleware: (scheme) => async (req, res, next) => {
+    const {params} = req;
+
+
+    console.log('PPPPPPPPPPPPPPPPPPPP', params);
+
+
+    next();
+
+  },
 };

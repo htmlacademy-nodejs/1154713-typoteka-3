@@ -14,6 +14,7 @@ const {
   addNewCommentMiddleware,
   getSearchedMiddleware,
   getCategoryDataById,
+  paramsValidatorMiddleware,
 } = require(`../common/middlewares`);
 
 const commentValidationScheme = require(`../validation/schemes/comment-validator`);
@@ -41,13 +42,19 @@ const mainApi = (app, mainService) => {
     res.status(200).json(allPublications);
   });
 
-  apiRouter.get(`/articles/:articleId`, getPublicationByIdMiddleware(mainService), (req, res) => {
+
+
+
+  apiRouter.get(`/articles/:articleId`, paramsValidatorMiddleware({}), getPublicationByIdMiddleware(mainService), (req, res) => {
     const {publicationById} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
     logger.info(`Status code is 200`);
     return res.status(200).json(publicationById);
   });
+
+
+
 
   apiRouter.get(`/categories`, getAllCategoriesMiddleware(mainService), (req, res) => {
     const {allCategories} = req;
@@ -57,17 +64,9 @@ const mainApi = (app, mainService) => {
     res.status(200).json(allCategories);
   });
 
-
-
-
-
   apiRouter.post(`/articles`,
-
-
-
-
+      publicationValidationMiddleware(publicationValidationScheme),
       setNewPublicationMiddleware(mainService),
-
       (req, res) => {
         const {newPublication} = req;
         logger.debug(`Request on route ${req.originalUrl}`);
@@ -79,16 +78,10 @@ const mainApi = (app, mainService) => {
 
 
 
+
   apiRouter.put(`/articles/:articleId`,
-
-
-
-
+      paramsValidatorMiddleware({}),
       publicationValidationMiddleware(publicationValidationScheme),
-
-
-
-
       updatePublicationMiddleware(mainService),
       (req, res) => {
         const {updatedPublication} = req;
@@ -103,7 +96,7 @@ const mainApi = (app, mainService) => {
 
 
 
-  apiRouter.delete(`/articles/:articleId`, deletePublicationMiddleware(mainService), (req, res) => {
+  apiRouter.delete(`/articles/:articleId`, paramsValidatorMiddleware({}), deletePublicationMiddleware(mainService), (req, res) => {
     const {deleteResult} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
@@ -111,7 +104,12 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(deleteResult);
   });
 
-  apiRouter.get(`/articles/:articleId/comments`, getCommentsPublicationMiddleware(mainService), (req, res) => {
+
+
+
+
+
+  apiRouter.get(`/articles/:articleId/comments`, paramsValidatorMiddleware({}), getCommentsPublicationMiddleware(mainService), (req, res) => {
     const {commentsPublication} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
@@ -122,7 +120,10 @@ const mainApi = (app, mainService) => {
 
 
 
+
+
   apiRouter.post(`/articles/:articleId/comments`,
+      paramsValidatorMiddleware({}),
       commentValidationMiddleware(commentValidationScheme),
       addNewCommentMiddleware(mainService),
       (req, res) => {
@@ -138,7 +139,7 @@ const mainApi = (app, mainService) => {
 
 
 
-  apiRouter.delete(`/articles/:articleId/comments/:commentId`, deleteCommentMiddleware(mainService), (req, res) => {
+  apiRouter.delete(`/articles/:articleId/comments/:commentId`, paramsValidatorMiddleware({}), deleteCommentMiddleware(mainService), (req, res) => {
     const {deleteResult} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
@@ -146,13 +147,19 @@ const mainApi = (app, mainService) => {
     return res.status(200).json(deleteResult);
   });
 
-  apiRouter.get(`/articles/category/:categoryId`, getCategoryDataById(mainService), (req, res) => {
+
+
+
+  apiRouter.get(`/articles/category/:categoryId`, paramsValidatorMiddleware({}), getCategoryDataById(mainService), (req, res) => {
     const {categoryData} = req;
     logger.debug(`Request on route ${req.originalUrl}`);
 
     logger.info(`Status code is 200`);
     return res.status(200).json(categoryData);
   });
+
+
+
 
   apiRouter.get(`/search`, getSearchedMiddleware(mainService), (req, res) => {
     const {searchResult} = req;
