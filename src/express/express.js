@@ -2,6 +2,7 @@
 
 const {resolve} = require(`path`);
 const express = require(`express`);
+const helmet = require(`helmet`);
 
 const {myRouter} = require(`./routes/my/my-router`);
 const {articlesRouter} = require(`./routes/articles/articles-router`);
@@ -18,6 +19,15 @@ app.set(`views`, resolve(__dirname, `templates`));
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(resolve(__dirname, `public`)));
 app.use(express.static(resolve(__dirname, `upload`)));
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      scriptSrc: [`'self'`, `'unsafe-eval'`],
+    }
+  },
+  xssFilter: true,
+}));
 
 app.use(`/`, mainRouter(axiosApi));
 app.use(`/my`, myRouter(axiosApi));

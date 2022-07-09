@@ -16,12 +16,6 @@ const {getExistThemes, getCardData} = require(`../../common/utils`);
 
 const upload = multer({storage});
 
-
-
-
-// в комментах выводится кривое время
-
-
 module.exports = {
   articlesRouter: (api) => {
     const articlesRouter = new Router();
@@ -30,11 +24,6 @@ module.exports = {
       const {articleData: {publication}, params: {id}, query: {errorData}} = req;
 
       const validationError = errorData ? JSON.parse(errorData) : ``;
-
-
-      console.log('ошибки редактирования~~~~~~~~~~~', validationError);
-
-
 
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
@@ -46,37 +35,15 @@ module.exports = {
         id,
         validationError: validationError?.errorsMessageData ?? ``,
       });
-
-
-
     });
 
     articlesRouter.post(`/edit/:id`, upload.single(`upload`), editPublicationMiddleware(api), (req, res) =>
       res.redirect(`/articles/edit/${req.params.id}?errorData=${req.errorData}`));
 
-
-
-
-
-
-
-
-
-
-
-    
     articlesRouter.get(`/add`, (req, res) => {
       const {query: {errorData}} = req;
 
-
-
-
       const validationError = errorData ? JSON.parse(errorData) : ``;
-
-
-
-      console.log('ошибки добавления~~~~~~~~~~~', validationError);
-
 
       res.render(`post/post`, {
         // временно без категории
@@ -93,19 +60,10 @@ module.exports = {
         setNewPostMiddleware(api)
     );
 
-
-
-    
-
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, query: {errorData}} = req;
 
       const validationError = errorData ? JSON.parse(decodeURIComponent(errorData)) : ``;
-
-
-
-      console.log('ошибки комментов~~~~~~~~~~~', validationError);
-
 
       const pageData = {
         id,
@@ -127,11 +85,6 @@ module.exports = {
 
     articlesRouter.post(`/:id/comments`, setNewCommentMiddleware(api), (req, res) =>
       res.redirect(`/articles/${req.params.id}?errorData=${req.errorData}`));
-
-
-
-
-
 
     articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}} = req;
