@@ -35,16 +35,20 @@ module.exports = {
       console.log('ошибки редактирования~~~~~~~~~~~', validationError);
 
 
+
       res.render(`post/post`, {
         pageTitle: `Редактирование публикации`,
-        title: publication.title,
-        announce: publication.announce,
-        [`full_text`]: publication.full_text,
+        title: validationError?.body?.title ?? publication.title,
+        announce: validationError?.body?.announce ?? publication.announce,
+        [`full_text`]: validationError?.body?.[`full-text`] ?? publication.full_text,
         categories: publication.categories,
         isEditPage: true,
         id,
-        validationError,
+        validationError: validationError?.errorsMessageData ?? ``,
       });
+
+
+
     });
 
     articlesRouter.post(`/edit/:id`, upload.single(`upload`), editPublicationMiddleware(api), (req, res) =>
@@ -62,7 +66,10 @@ module.exports = {
 
     
     articlesRouter.get(`/add`, (req, res) => {
-      const {query: {postData, errorData}} = req;
+      const {query: {errorData}} = req;
+
+
+
 
       const validationError = errorData ? JSON.parse(errorData) : ``;
 
@@ -71,11 +78,13 @@ module.exports = {
       console.log('ошибки добавления~~~~~~~~~~~', validationError);
 
 
-
       res.render(`post/post`, {
-        ...(postData ? JSON.parse(postData) : {}),
+        // временно без категории
         pageTitle: `Новая публикация`,
-        validationError,
+        title: validationError?.body?.title ?? ``,
+        announce: validationError?.body?.announce ?? ``,
+        [`full_text`]: validationError?.body?.[`full-text`] ?? ``,
+        validationError: validationError?.errorsMessageData ?? ``,
       });
     });
 
@@ -106,8 +115,11 @@ module.exports = {
         categories: usedCategoriesData,
         picture: publication.picture,
         fullText: publication.full_text,
+
+        // TODO: формат дат в гггг-мм-дд
         comments: publicationComments,
-        validationError,
+        commentMessage: validationError?.bodyMessage ?? ``,
+        errorMessage: validationError?.errorMessage,
       };
 
       res.render(`post/post-detail`, pageData);

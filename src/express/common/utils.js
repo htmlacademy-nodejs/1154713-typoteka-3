@@ -104,10 +104,10 @@ module.exports = {
         req.errorData = ``;
       }
     } catch ({response: {data}}) {
-      const errorsMessageData = data.map(({message, context: {key}}) => ({
-        key,
-        message,
-      }));
+      const errorsMessageData = data.reduce((result, {message, context: {key}}) => ({
+        ...result,
+        [key]: message,
+      }), {});
 
       const error = {
         errorsMessageData,

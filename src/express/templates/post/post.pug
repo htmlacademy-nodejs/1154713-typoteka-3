@@ -39,6 +39,8 @@ block page
                   .form__field
                     label
                       input(type='text', name='title', placeholder='Заголовок', value=title)
+                      if validationError
+                        p.comments__error(style=`padding-left: 0`) #{validationError.title}
                   .form__field.form__field--post-image
                     label
                       input#image-name-field(type='text', name='photo', value=photo placeholder='Фотография', readonly)
@@ -57,6 +59,8 @@ block page
                   .form__field.form__field--publication-text
                     label
                       textarea(rows='5', name='announce', placeholder='Анонс публикации') #{announce}
+                      if validationError
+                        p.comments__error(style=`padding-left: 0`) #{validationError.announce}
                   .form__field.form__field--publication-text
                     label
                       textarea(rows='10', name='full-text', placeholder='Полный текст публикации') #{full_text}
