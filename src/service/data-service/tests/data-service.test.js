@@ -16,8 +16,10 @@ const {
   USED_CATEGORIES_FIRST_PUBLICATION_BY_ID,
   NEW_PUBLICATION,
   FINDED_COMMENTS_PUBLICATION,
+  NEW_USER_DATA,
 } = require(`./mock-data`);
 const { getUpdatedData } = require("./test-utils");
+const { expectCt } = require("helmet");
 
 describe(`Check service methods`, () => {
   let serverInstance;
@@ -98,7 +100,7 @@ describe(`Check service methods`, () => {
 
     const {publicationsData} = await mainService.getAllPublications();
 
-    const newPublication = publicationsData.find(({title}) => title === `Тест`);
+    const newPublication = publicationsData.find(({title}) => title === `ТестТестТестТестТестТестТестТестТестТест`);
     const {id, publication_date, categories, comments, publication_owner} = newPublication;
 
     const updatedPublication = {
@@ -163,5 +165,15 @@ describe(`Check service methods`, () => {
     const searchedNewPublicationText = Boolean(publicationComments.find(({comment_text}) => comment_text === `Test`));
 
     expect(searchedNewPublicationText).toEqual(true);
+  });
+
+  it(`should add new user`, async () => {
+    await mainService.setNewUser(NEW_USER_DATA);
+
+    const allUsers = await mainService.getAllUsers();
+
+    const hasNewUser = Boolean(allUsers.find(({email}) => email === NEW_USER_DATA.email));
+
+    expect(hasNewUser).toBe(true);
   });
 });

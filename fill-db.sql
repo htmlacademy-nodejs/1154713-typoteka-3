@@ -31,7 +31,7 @@ INSERT INTO categories(category_name) VALUES
 
 --заполнение таблицы users
 INSERT INTO users(email, user_name, user_surname, user_password, avatar, role_id) VALUES
-  ('vasya@mail.ru', 'Vasya', 'Vasya', 'Password', null, 1),
+  ('vasya@mail.ru', 'Vasya', 'Vasya', 'Password', null, 2),
   ('petya@mail.ru', 'Petya', 'Petya', 'Password', null, 2),
   ('grisha@mail.ru', 'Grisha', 'Grisha', 'Password', null, 3);
 

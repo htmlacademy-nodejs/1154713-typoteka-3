@@ -42,10 +42,19 @@ module.exports = {
       });
     });
 
-    // демо страниц авторизации\аутентификации
+    
+
+
+
+
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));
     mainRouter.get(`/login`, (_, res) => res.render(`auth/login`));
 
+
+
+
+
+    
     mainRouter.get(`/search`, getSearchDataMiddleware(api), (req, res) => {
       const {query: {search}, result} = req;
 

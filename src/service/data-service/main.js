@@ -3,6 +3,7 @@
 const {DB_TYPE} = process.env;
 
 const sequelize = require(`sequelize`);
+const {ADMIN_USER_ROLE_ID, READER_USER_ROLE_ID} = require(`../common/consts`);
 
 const BaseUtils = require(`./base-utils`);
 
@@ -257,6 +258,39 @@ class MainService extends BaseUtils {
     return {
       categoryName,
     };
+  }
+
+  async getAllUsers() {
+    const allUsers = await this._user.findAll({raw: true});
+    return allUsers;
+  }
+
+  async setNewUser(userData) {
+    // eslint-disable-next-line no-unused-vars
+    const {retry_password: _, ...mainData} = userData;
+
+    const isSameEmailUserExist = Boolean(await this._user.findOne({
+      where: {
+        email: mainData.email,
+      }
+    }));
+
+    const hasAdminUser = Boolean(await this._user.findOne({
+      where: {
+        [`role_id`]: ADMIN_USER_ROLE_ID,
+      },
+    }));
+
+    if (isSameEmailUserExist) {
+      return {isSameEmailUserExist};
+    }
+
+    const result = await this._user.create({
+      ...mainData,
+      [`role_id`]: hasAdminUser ? READER_USER_ROLE_ID : ADMIN_USER_ROLE_ID,
+    });
+
+    return result;
   }
 }
 

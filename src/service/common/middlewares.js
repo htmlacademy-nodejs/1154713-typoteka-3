@@ -1,6 +1,8 @@
 'use strict';
 
-const {SERVER_SERVICE_ERROR, ANSWER_ERROR} = require(`./consts`);
+const {hash} = require(`bcrypt`);
+
+const {SERVER_SERVICE_ERROR, ANSWER_ERROR, SALT_ROUNDS} = require(`./consts`);
 
 module.exports = {
   getAllPublicationsMiddleware: (service) => async (req, res, next) => {
@@ -91,8 +93,7 @@ module.exports = {
       [`publication_id`]: articleId,
       // хардкод
       [`user_id`]: 1,
-      // хардкод
-      [`data_comment`]: `2022-11-01`,
+      [`data_comment`]: (new Date()).toLocaleDateString(),
     };
 
     try {
@@ -125,6 +126,24 @@ module.exports = {
       const categoryData = await service.getCategoryDataById(categoryId);
 
       req.categoryData = categoryData;
+      next();
+    } catch {
+      next(new Error(SERVER_SERVICE_ERROR));
+    }
+  },
+  setNewUser: (service) => async (req, res, next) => {
+    const {body} = req;
+
+    const encryptedPassword = await hash(body[`user_password`], SALT_ROUNDS);
+    body[`user_password`] = encryptedPassword;
+
+    try {
+      const result = await service.setNewUser(body);
+
+      if (result.isSameEmailUserExist) {
+        req.sameUserError = `Пользователь с таким email уже существует`;
+      }
+
       next();
     } catch {
       next(new Error(SERVER_SERVICE_ERROR));

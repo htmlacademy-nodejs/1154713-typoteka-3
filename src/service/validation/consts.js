@@ -15,4 +15,13 @@ module.exports = {
   ANNOUNCE_EMPTY: `Анонс не должен быть пустым`,
   FULL_TEXT_MAX: `Текст не должен превышать 1000 символов`,
   PARAMS_ERROR: `Параметр в url запроса, должен быть числом`,
+  EMAIL_EMPTY_ERROR: `Ввведите email`,
+  EMIAL_INCORRECT_ERROR: `Email в некорректном формате`,
+  USER_NAME_EMPTY_ERROR: `Введите имя`,
+  INCORRECT_USER_NAME: `В имени присутствуют недопустимые символы`,
+  INCORRECT_USER_SURNAME: `В фамилии присутствуют недопустимые символы`,
+  PASSWORD_EMPTY: `Введите пароль`,
+  PASSWORD_MIN_LENGTH_ERROR: `Минимальная длинна пароля 6 символов`,
+  RETRY_PASSWORD_EMPTY: `Повторите ввод пароля`,
+  IDENTITY_RETRY_PASSWORD_ERROR: `Пароли не совпадают`,
 };

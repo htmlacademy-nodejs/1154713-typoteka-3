@@ -14,16 +14,19 @@ const {
   addNewCommentMiddleware,
   getSearchedMiddleware,
   getCategoryDataById,
+  setNewUser,
 } = require(`../common/middlewares`);
 
 const commentValidationScheme = require(`../validation/schemes/comment-validator`);
 const publicationValidationScheme = require(`../validation/schemes/publication-validator`);
 const paramsValidationScheme = require(`../validation/schemes/params-validatior`);
+const newUserValidationScheme = require(`../validation/schemes/new-user-validator`);
 
 const {
   commentValidationMiddleware,
   publicationValidationMiddleware,
   paramsValidatorMiddleware,
+  newUserDataValidationMiddleware,
 } = require(`../validation/middlewares`);
 
 const {getLogger} = require(`../lib/logger`);
@@ -150,6 +153,22 @@ const mainApi = (app, mainService) => {
     logger.info(`Status code is 200`);
     return res.status(200).json(searchResult);
   });
+
+
+
+
+
+
+  apiRouter.post(`/user`,
+      newUserDataValidationMiddleware(newUserValidationScheme),
+      setNewUser(mainService),
+      (req, res) => {
+        const {sameUserError} = req;
+        logger.debug(`Request on route ${req.originalUrl}`);
+
+        logger.info(`Status code is 200`);
+        return res.status(!sameUserError ? 200 : 400).json({sameUserError});
+      });
 };
 
 module.exports = mainApi;

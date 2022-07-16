@@ -225,6 +225,32 @@ const FINDED_COMMENTS_PUBLICATION = [
   }
 ];
 
+const ERROR_USER_DATA = {
+  email: `sss@ddd.u`,
+  [`user_name`]: `Им1я`,
+  [`user_surname`]: `Фами8)лия.`,
+  [`user_password`]: ``,
+  [`retry_password`]: `password1`,
+  avatar: null,
+};
+
+const POST_USER_ERRORS = [
+  `Email в некорректном формате`,
+  `В имени присутствуют недопустимые символы`,
+  `В фамилии присутствуют недопустимые символы`,
+  `Введите пароль`,
+  `Пароли не совпадают`
+];
+
+const NEW_USER_DATA = {
+  email: `gggggg@mail.ru`,
+  [`user_name`]: `name`,
+  [`user_surname`]: `surrname`,
+  [`user_password`]: `password111`,
+  [`retry_password`]: `password111`,
+  avatar: null
+};
+
 module.exports = {
   CATAGORIES_MOCK,
   PUBLICATIONS_MOCK,
@@ -238,4 +264,7 @@ module.exports = {
   USED_CATEGORIES_FIRST_PUBLICATION_BY_ID,
   NEW_PUBLICATION,
   FINDED_COMMENTS_PUBLICATION,
+  ERROR_USER_DATA,
+  POST_USER_ERRORS,
+  NEW_USER_DATA,
 };

@@ -41,4 +41,17 @@ module.exports = {
 
     next();
   },
+
+  newUserDataValidationMiddleware: (scheme) => async (req, res, next) => {
+    const {body} = req;
+
+    try {
+      await scheme.validateAsync(body, {abortEarly: false});
+    } catch ({details}) {
+      res.status(ARGUMENT_ERROR).json(details);
+      return;
+    }
+
+    next();
+  },
 };
