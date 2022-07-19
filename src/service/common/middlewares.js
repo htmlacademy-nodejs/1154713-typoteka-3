@@ -93,13 +93,13 @@ module.exports = {
       [`publication_id`]: articleId,
       // хардкод
       [`user_id`]: 1,
-      [`data_comment`]: (new Date()).toLocaleDateString(),
+      [`data_comment`]: (new Date()).toISOString(),
     };
 
     try {
       req.newComment = await service.addNewComment(commentData);
       next();
-    } catch {
+    } catch (e) {
       next(new Error(SERVER_SERVICE_ERROR));
     }
   },

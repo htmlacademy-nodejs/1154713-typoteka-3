@@ -52,7 +52,7 @@ describe(`Test server REST API`, () => {
     await serverInstance.close();
   });
 
-  /*it(`should return status 200 & data for get request /api/articles`, async () => {
+  it(`should return status 200 & data for get request /api/articles`, async () => {
     const {
       body: {publicationsCount, publicationsData, paginationData, lastCommentsData},
       statusCode
@@ -261,22 +261,22 @@ describe(`Test server REST API`, () => {
 
     const {statusCode: commentParamStatusCode} = await request(serverInstance).delete(`/api/articles/1/comments/fff`);
     expect(commentParamStatusCode).toBe(400);
-  });*/
+  });
 
-  /*it(`should return errors for wrong user data for post /api/user`, async () => {
+  it(`should return errors for wrong user data for post /api/user`, async () => {
     const {statusCode, body} = await request(serverInstance).post(`/api/user`).send(ERROR_USER_DATA);
 
     const requestErrors = body.map(({message}) => message);
 
     expect(statusCode).toBe(400);
     expect(requestErrors).toEqual(POST_USER_ERRORS);
-  });*/
+  });
 
-  /*it(`should return 200 status by adding new user`, async () => {
+  it(`should return 200 status by adding new user`, async () => {
     const {statusCode} = await request(serverInstance).post(`/api/user`).send(NEW_USER_DATA);
 
     expect(statusCode).toBe(200);
-  });*/
+  });
 
   it(`should return 400 status by adding new user and email error message`, async () => {
     const {statusCode, body} = await request(serverInstance).post(`/api/user`).send({

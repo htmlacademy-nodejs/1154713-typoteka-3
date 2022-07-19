@@ -116,10 +116,6 @@ module.exports = {
 
       const errorData = encodeURIComponent(JSON.stringify(error));
       req.errorData = errorData;
-
-      if (newPostFlag) {
-        res.redirect(`/articles/add?errorData=${errorData}`);
-      }
     }
   },
 };
