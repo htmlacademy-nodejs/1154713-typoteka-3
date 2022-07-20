@@ -8,9 +8,9 @@
     "test:data-service": "jest ./src/service/data-service/tests/data-service.test.js",
     "test:e2e": "jest ./src/service/cli/server.e2e.test.js",
     "eslint": "eslint --ext .js src/",
-    "start": "cross-env LOG_LEVEL=error nodemon -r dotenv/config ./src/service/service.js --server",
-    "start:develop-mode": "cross-env LOG_LEVEL=info nodemon -r dotenv/config ./src/service/service.js --server",
-    "start:front": "nodemon ./src/express/express.js"
+    "start:service": "cross-env LOG_LEVEL=error nodemon -r dotenv/config ./src/service/service.js --server",
+    "start:service-dev-mode": "cross-env LOG_LEVEL=info nodemon -r dotenv/config ./src/service/service.js --server",
+    "start:app": "nodemon ./src/express/express.js"
   },
   "repository": {
     "type": "git",

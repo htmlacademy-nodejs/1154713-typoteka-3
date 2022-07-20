@@ -61,6 +61,13 @@ class AxiosApi {
       data,
     });
   }
+
+  setNewUser(data) {
+    return this._load(`/api/user`, {
+      method: `POST`,
+      data,
+    });
+  }
 }
 
 module.exports = AxiosApi;

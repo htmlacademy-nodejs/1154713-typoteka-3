@@ -11,7 +11,17 @@ const {
   getPages,
 } = require(`../../common/utils`);
 
-const {getAllArticlesMiddleware, getAllCategoriesMiddleware, getSearchDataMiddleware} = require(`../../common/middlewares`);
+const {
+  getAllArticlesMiddleware,
+  getAllCategoriesMiddleware,
+  getSearchDataMiddleware,
+  setNewUserMiddleware,
+} = require(`../../common/middlewares`);
+
+const multer = require(`multer`);
+const storage = require(`../../common/multer-storage`);
+
+const upload = multer({storage});
 
 module.exports = {
   mainRouter: (api) => {
@@ -51,7 +61,36 @@ module.exports = {
 
 
     
-    mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`));
+    mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`, {
+      email: ``,
+      [`user_name`]: ``,
+      [`user_surname`]: ``,
+      [`user_password`]: ``,
+      [`retry_password`]: ``,
+      errorData: undefined,
+    }));
+
+
+    // если ошибка брать введен данные из объекта с ошибками для полей
+    mainRouter.post(`/register`, upload.single(`avatar`), setNewUserMiddleware(api), (req, res) => {
+      const {errorData} = req;
+
+      if (errorData) {
+        const {body, errorMessages} = JSON.parse(decodeURIComponent(errorData));
+
+        res.render(`auth/sign-up`, {
+
+        });
+      } else {
+
+      }
+
+      
+    });
+
+
+
+
 
 
 

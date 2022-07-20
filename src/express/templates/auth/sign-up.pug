@@ -20,32 +20,33 @@ block page
           a.popup__button.button.button--popup-close(aria-label='Закрыть окно') Закрыть окно
           h2.popup__title Регистрация
           .popup__form.popup__form--active.form.form--register
-            form(action='#', method='get')
+            form(action='/register', method='post', enctype='multipart/form-data')
               .form__field
                 label
-                  input(type='email', name='email', placeholder='Электронная почта', required)
+                  input(type='text', name='email', value=email placeholder='Электронная почта')
               .form__field
                 label
-                  input(type='text', name='name', placeholder='Имя', required)
+                  input(type='text', name='user_name', value=user_name placeholder='Имя')
               .form__field
                 label
-                  input(type='text', name='surname', placeholder='Фамилия')
+                  input(type='text', name='user_surname', value=user_surname placeholder='Фамилия')
               .form__field
                 label
-                  input(type='password', name='password', placeholder='Пароль', required)
+                  input(type='password', name='user_password', value=user_password placeholder='Пароль')
               .form__field
                 label
-                  input(type='password', name='repeat-password', placeholder='Повтор пароля', required)
-              .form__validation-error
-                p.form__error-message При регистрации произошли ошибки:
-                ul.form__errors
-                  li.form__error Пароль не может состоять из двух букв
-                  li.form__error Фамилия не должна быть смешной
+                  input(type='password', name='retry_password', value=retry_password placeholder='Повтор пароля')
+              if errorData
+                .form__validation-error
+                  p.form__error-message При регистрации произошли ошибки:
+                  ul.form__errors
+                    li.form__error Пароль не может состоять из двух букв
+                    li.form__error Фамилия не должна быть смешной
               .form__image-loader
                 a.form__avatar.avatar
                   img(src='/img/icons/smile.svg', alt='аватар пользователя')
                 label
-                  input.visually-hidden(type='file', name='upload')
+                  input.visually-hidden(type='file', name='avatar')
                   | Загрузить фото профиля
               button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit') Зарегистрироваться
     include ../partials/footer-page.pug

@@ -63,4 +63,27 @@ module.exports = {
     await getPostMiddlewareAction(req, res, api, false, true);
     next();
   },
+
+  setNewUserMiddleware: (api) => async (req, res, next) => {
+    const {body, file} = req;
+
+    const updatedBody = {
+      ...body,
+      avatar: file ? file.filename : null,
+    };
+
+    try {
+      await api.setNewUser(updatedBody);
+      req.errorData = ``;
+    } catch ({response: {data: errorMessages}}) {
+      const preparedErrorData = {
+        body,
+        errorMessages: errorMessages.map(({message}) => message),
+      };
+
+      req.errorData = encodeURIComponent(JSON.stringify(preparedErrorData));
+    }
+
+    next();
+  },
 };
