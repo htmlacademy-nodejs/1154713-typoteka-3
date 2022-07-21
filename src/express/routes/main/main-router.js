@@ -52,15 +52,6 @@ module.exports = {
       });
     });
 
-    
-
-
-
-    // провер получ ошибок от валидатора + ошибки о почте
-    // ошибки в req на ур-е мидлы express см setNewCommentMiddleware
-
-
-    
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`, {
       email: ``,
       [`user_name`]: ``,
@@ -70,7 +61,6 @@ module.exports = {
       errorData: undefined,
     }));
 
-
     // если ошибка брать введен данные из объекта с ошибками для полей
     mainRouter.post(`/register`, upload.single(`avatar`), setNewUserMiddleware(api), (req, res) => {
       const {errorData} = req;
@@ -79,28 +69,15 @@ module.exports = {
         const {body, errorMessages} = JSON.parse(decodeURIComponent(errorData));
 
         res.render(`auth/sign-up`, {
-
+          ...body,
+          errorData: errorMessages,
         });
       } else {
-
+        res.redirect(`/login`);
       }
-
-      
     });
 
-
-
-
-
-
-
-
     mainRouter.get(`/login`, (_, res) => res.render(`auth/login`));
-
-
-
-
-
 
     mainRouter.get(`/search`, getSearchDataMiddleware(api), (req, res) => {
       const {query: {search}, result} = req;

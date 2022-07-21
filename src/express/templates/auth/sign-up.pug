@@ -23,25 +23,25 @@ block page
             form(action='/register', method='post', enctype='multipart/form-data')
               .form__field
                 label
-                  input(type='text', name='email', value=email placeholder='Электронная почта')
+                  input(type='text', name='email', value=email, placeholder='Электронная почта')
               .form__field
                 label
-                  input(type='text', name='user_name', value=user_name placeholder='Имя')
+                  input(type='text', name='user_name', value=user_name, placeholder='Имя')
               .form__field
                 label
-                  input(type='text', name='user_surname', value=user_surname placeholder='Фамилия')
+                  input(type='text', name='user_surname', value=user_surname, placeholder='Фамилия')
               .form__field
                 label
-                  input(type='password', name='user_password', value=user_password placeholder='Пароль')
+                  input(type='password', name='user_password', value=user_password, placeholder='Пароль')
               .form__field
                 label
-                  input(type='password', name='retry_password', value=retry_password placeholder='Повтор пароля')
+                  input(type='password', name='retry_password', value=retry_password, placeholder='Повтор пароля')
               if errorData
                 .form__validation-error
                   p.form__error-message При регистрации произошли ошибки:
                   ul.form__errors
-                    li.form__error Пароль не может состоять из двух букв
-                    li.form__error Фамилия не должна быть смешной
+                    each error in errorData
+                      li.form__error #{error}
               .form__image-loader
                 a.form__avatar.avatar
                   img(src='/img/icons/smile.svg', alt='аватар пользователя')
