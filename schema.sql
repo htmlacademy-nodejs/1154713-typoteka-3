@@ -23,7 +23,7 @@ CREATE TABLE users
   email VARCHAR(255) UNIQUE NOT NULL,
   user_name VARCHAR(255) NOT NULL,
   user_surname VARCHAR(255) NOT NULL,
-  user_password VARCHAR(255) NOT NULL,
+  user_password TEXT NOT NULL,
   avatar TEXT,
   role_id INTEGER,
   FOREIGN KEY (role_id) REFERENCES roles (id)

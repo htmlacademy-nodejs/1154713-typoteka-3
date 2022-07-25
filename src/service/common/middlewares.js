@@ -1,6 +1,6 @@
 'use strict';
 
-const {hash} = require(`bcrypt`);
+const {hash, compare} = require(`bcrypt`);
 
 const {SERVER_SERVICE_ERROR, ANSWER_ERROR, SALT_ROUNDS} = require(`./consts`);
 
@@ -148,5 +148,43 @@ module.exports = {
     } catch {
       next(new Error(SERVER_SERVICE_ERROR));
     }
+  },
+
+
+
+
+  checkAuthentification: (service) => async (req, res, next) => {
+    const {body} = req;
+
+    const userInDB = await service.findUserEmail(body.email);
+
+
+    console.log('US_DB~~~~~~~~~~~', userInDB);
+
+
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$', {
+      bb: body[`user_password`],
+      ff: userInDB[`user_password`],
+    });
+
+
+    if (!userInDB) {
+      req.errorEmail = `Пользователя с таким email не существует`;
+
+      return next();
+    }
+
+    // pass compare )
+    const isPasswordCompare = await compare(body[`user_password`], userInDB[`user_password`]);
+
+
+    console.log('COMP~~~~~~~~~~~~~', isPasswordCompare);
+
+
+    //console.log('ALLL!!!!OK~~~~~~~~~~~~~~~');
+
+
+    return next();
+    
   },
 };

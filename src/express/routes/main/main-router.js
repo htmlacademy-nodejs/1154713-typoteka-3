@@ -27,6 +27,7 @@ module.exports = {
   mainRouter: (api) => {
     const mainRouter = new Router();
 
+    // TODO: на гл стр не обрезается длинный title в карточке
     // главная страница
     mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
       const {
@@ -61,7 +62,6 @@ module.exports = {
       errorData: undefined,
     }));
 
-    // если ошибка брать введен данные из объекта с ошибками для полей
     mainRouter.post(`/register`, upload.single(`avatar`), setNewUserMiddleware(api), (req, res) => {
       const {errorData} = req;
 
@@ -77,7 +77,19 @@ module.exports = {
       }
     });
 
+
+
+
+
     mainRouter.get(`/login`, (_, res) => res.render(`auth/login`));
+
+
+    //mainRouter.post(`/login`, (_, res) => );
+
+
+
+
+
 
     mainRouter.get(`/search`, getSearchDataMiddleware(api), (req, res) => {
       const {query: {search}, result} = req;

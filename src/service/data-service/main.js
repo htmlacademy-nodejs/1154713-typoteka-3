@@ -292,6 +292,23 @@ class MainService extends BaseUtils {
 
     return result;
   }
+
+
+
+
+  async findUserEmail(email) {
+    const userInDB = await this._user.findOne({
+      where: {
+        email,
+      }
+    });
+
+    return userInDB;
+  }
+
+
+
+
 }
 
 module.exports = MainService;
