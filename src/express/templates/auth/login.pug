@@ -23,10 +23,11 @@ block page
             form(action='/login', method='post')
               .form__field
                 label
-                  input(type='email', name='email', placeholder='Электронная почта')
+                  input(type='email', name='email', value=email, placeholder='Электронная почта', required)
               .form__field
                 label
-                  input(type='password', name='user_password', placeholder='Пароль')
-              p.form__error-message Некоторая ошибка произошла, беда!
+                  input(type='password', name='user_password', value=user_password, placeholder='Пароль', required)
+              if errorMessage
+                p.form__error-message #{errorMessage}
               button.form__submit-btn.form__submit-btn--log-in.button.button--colored(type='submit') Войти
     include ../partials/footer-page.pug

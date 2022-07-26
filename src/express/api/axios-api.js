@@ -68,6 +68,13 @@ class AxiosApi {
       data,
     });
   }
+
+  checkAuthentification(data) {
+    return this._load(`/api/authentification`, {
+      method: `POST`,
+      data,
+    });
+  }
 }
 
 module.exports = AxiosApi;

@@ -86,4 +86,11 @@ module.exports = {
 
     next();
   },
+
+  checkAuthentificationData: (api) => async (req, res, next) => {
+    const {body} = req;
+
+    req.errorMessage = await api.checkAuthentification(body);
+    next();
+  },
 };

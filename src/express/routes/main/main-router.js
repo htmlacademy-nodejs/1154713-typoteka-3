@@ -16,6 +16,7 @@ const {
   getAllCategoriesMiddleware,
   getSearchDataMiddleware,
   setNewUserMiddleware,
+  checkAuthentificationData,
 } = require(`../../common/middlewares`);
 
 const multer = require(`multer`);
@@ -81,10 +82,28 @@ module.exports = {
 
 
 
-    mainRouter.get(`/login`, (_, res) => res.render(`auth/login`));
+    mainRouter.get(`/login`, (_, res) =>
+      res.render(`auth/login`, {
+        email: ``,
+        [`user_password`]: ``,
+        errorMessage: ``,
+      }));
 
 
-    //mainRouter.post(`/login`, (_, res) => );
+
+    mainRouter.post(`/login`, checkAuthentificationData(api), (req, res) => {
+      const {errorMessage, body} = req;
+
+      if (errorMessage) {
+        res.render(`auth/login`, {
+          email: body.email,
+          [`user_password`]: body[`user_password`],
+          errorMessage,
+        });
+      } else {
+        res.redirect(`/`);
+      }
+    });
 
 
 

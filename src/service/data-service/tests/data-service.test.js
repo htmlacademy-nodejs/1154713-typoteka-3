@@ -171,9 +171,20 @@ describe(`Check service methods`, () => {
     await mainService.setNewUser(NEW_USER_DATA);
 
     const allUsers = await mainService.getAllUsers();
-
     const hasNewUser = Boolean(allUsers.find(({email}) => email === NEW_USER_DATA.email));
 
     expect(hasNewUser).toBe(true);
+  });
+
+  it(`should not find unnecessary email`, async () => {
+    const hasUserInDB = Boolean(await mainService.findUserEmail(`hhhhh@mail.ru`));
+
+    expect(hasUserInDB).toBe(false);
+  });
+
+  it(`should find user email`, async () => {
+    const hasUserInDB = Boolean(await mainService.findUserEmail(USERS_MOCK[0].email));
+
+    expect(hasUserInDB).toBe(true);
   });
 });

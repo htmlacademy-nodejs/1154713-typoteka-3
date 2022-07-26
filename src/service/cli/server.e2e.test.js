@@ -23,6 +23,7 @@ const {
 } = require(`../data-service/tests/mock-data`);
 
 const {getUpdatedData} = require(`../data-service/tests/test-utils`);
+const { expectCt } = require("helmet");
 
 describe(`Test server REST API`, () => {
   let serverInstance;
@@ -286,5 +287,34 @@ describe(`Test server REST API`, () => {
   
     expect(statusCode).toBe(400);
     expect(body.sameUserError).toBe(`Пользователь с таким email уже существует`);
+  });
+
+  it(`should return email & pass errors for incorrect login auth`, async () => {
+    const {text: emailErrorText} = await request(serverInstance).post(`/api/authentification`).send({
+      email: `hhhhhh@mail.ru`,
+      [`user_password`]: `Password1!!!`,
+    });
+
+    expect(emailErrorText).toBe(`Пользователя с таким email не существует`);
+
+    await request(serverInstance).post(`/api/user`).send(NEW_USER_DATA);
+    
+    const {text: passwordErrorText} = await request(serverInstance).post(`/api/authentification`).send({
+      email: `gggggg@mail.ru`,
+      [`user_password`]: `pazwrd`,
+    });
+
+    expect(passwordErrorText).toBe(`Неверный пароль`);
+  });
+
+  it(`should return 200 status for auth`, async () => {
+    await request(serverInstance).post(`/api/user`).send(NEW_USER_DATA);
+
+    const {statusCode} = await request(serverInstance).post(`/api/authentification`).send({
+      email: `gggggg@mail.ru`,
+      [`user_password`]: `password111`,
+    });
+
+    expect(statusCode).toBe(200);
   });
 });

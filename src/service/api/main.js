@@ -166,22 +166,14 @@ const mainApi = (app, mainService) => {
         return res.status(!sameUserError ? 200 : 400).json({sameUserError});
       });
 
-
-
   apiRouter.post(`/authentification`,
       checkAuthentification(mainService),
       (req, res) => {
-        const {errorEmail} = req;
         logger.debug(`Request on route ${req.originalUrl}`);
 
         logger.info(`Status code is 200`);
-        return res.status(!errorEmail ? 200 : 400).json({errorEmail});
+        return res.status(200).send(undefined);
       });
-
-
-
-
-
 };
 
 module.exports = mainApi;
