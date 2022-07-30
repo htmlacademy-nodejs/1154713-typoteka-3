@@ -21,6 +21,11 @@ module.exports = {
   articlesRouter: (api) => {
     const articlesRouter = new Router();
 
+
+
+
+    // только автору блога
+    // в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication}, params: {id}, errorData} = req;
 
@@ -43,6 +48,11 @@ module.exports = {
       });
     });
 
+
+
+
+    // только автору блога
+    // в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     articlesRouter.get(`/add`, (req, res) => {
       const {errorData} = req;
 
@@ -67,6 +77,12 @@ module.exports = {
         }
     );
 
+
+
+    // доступна всем
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // комменты могут добавлять только авторизов пользаки
+    // Для читателей в шапке отображается кнопка новая публикация, аватар пользователя, имя, фамилия и ссылка «Выход»;
     articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, errorData} = req;
 
@@ -77,6 +93,10 @@ module.exports = {
         usedCategoriesData,
         publicationComments,
         res,
+
+
+
+
       });
     });
 
@@ -97,6 +117,11 @@ module.exports = {
       }
     });
 
+
+
+
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}} = req;
 
@@ -114,6 +139,9 @@ module.exports = {
         categoryName,
         themesData: getExistThemes(allCategories, publicationsData),
         cardData: filteredCardData,
+
+
+        isAuthorized: true,
       };
 
       res.render(`main/articles-by-category`, pageData);

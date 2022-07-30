@@ -5,8 +5,7 @@ block page
     header.header
       a.header__logo.logo(href='#')
         img(src='/img/icons/logo.svg', alt='логотип Тайпотеки')
-      a.header__registration(href='#') Регистрация
-      a.header__enter(href='#') Вход с паролем
+      include ../partials/header-buttons.pug
       a.header__search.button.button--search(href='#', aria-label='поиск по сайту')
     main.articles-category
       h1 #{categoryName}

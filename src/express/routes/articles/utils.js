@@ -24,6 +24,11 @@ module.exports = {
       comments: publicationComments,
       commentMessage: validationError?.bodyMessage ?? ``,
       errorMessage: validationError?.errorMessage,
+
+
+
+
+      //isAuthorized: true,
     };
 
     res.render(`post/post-detail`, pageData);

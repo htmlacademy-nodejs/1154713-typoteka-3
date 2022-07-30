@@ -28,8 +28,21 @@ module.exports = {
   mainRouter: (api) => {
     const mainRouter = new Router();
 
+
+
+    // обернуть закрытые роуты в мидл и проверять есть ли jwt и нужно ли обновлять ?
+    // isAuthorized flag в шаблоне кнопок хедера
+    
+
     // TODO: на гл стр не обрезается длинный title в карточке
-    // главная страница
+
+
+
+
+
+    // доступна всем
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
       const {
         allArticles: {
@@ -51,9 +64,20 @@ module.exports = {
         cardData: getCardData(paginationData),
         pages: getPages(publicationsCount),
         currentPage: pageNumber ?? 1,
+
+
+
+        //isAuthorized: true,
       });
     });
 
+
+
+
+
+    // доступна всем
+    // у всех в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // стр недоступна, если уже вошел
     mainRouter.get(`/register`, (_, res) => res.render(`auth/sign-up`, {
       email: ``,
       [`user_name`]: ``,
@@ -81,7 +105,9 @@ module.exports = {
 
 
 
-
+    // доступна всем
+    // у всех в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // стр недоступна, если уже вошел
     mainRouter.get(`/login`, (_, res) =>
       res.render(`auth/login`, {
         email: ``,
@@ -109,18 +135,31 @@ module.exports = {
 
 
 
-
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     mainRouter.get(`/search`, getSearchDataMiddleware(api), (req, res) => {
       const {query: {search}, result} = req;
 
       res.render(`search/search`, {
         searchData: getResultData(search, result),
         searchValue: search,
+
+
+        isAuthorized: true,
+
       });
     });
 
-    // демо страниц с ошибками
+
+
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     mainRouter.get(`/404`, (_, res) => res.render(`errors/404`));
+
+
+
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     mainRouter.get(`/500`, (_, res) => res.render(`errors/500`));
 
     return mainRouter;

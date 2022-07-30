@@ -9,6 +9,10 @@ module.exports = {
   myRouter: (api) => {
     const myRouter = new Router();
 
+
+
+    // только автору блога
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     myRouter.get(`/`, getAllArticlesMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}} = req;
       res.render(`admin/my`, {
@@ -16,6 +20,10 @@ module.exports = {
       });
     });
 
+
+
+    // только автору блога
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     myRouter.get(`/comments`, getAllArticlesMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}} = req;
       res.render(`admin/comments`, {
@@ -23,6 +31,11 @@ module.exports = {
       });
     });
 
+
+
+
+    // только автору блога
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
     myRouter.get(`/categories`, getAllCategoriesMiddleware(api), (req, res) => {
       const {allCategories} = req;
       res.render(`admin/all-categories`, {
