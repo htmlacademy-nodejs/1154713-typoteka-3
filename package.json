@@ -4,13 +4,12 @@
   "description": "Типотека",
   "main": "./src/service/service.js",
   "scripts": {
-    "test": "jest",
     "test:service": "jest ./src/service/data-service/tests/data-service.test.js",
     "test:e2e": "jest ./src/service/cli/server.e2e.test.js",
     "eslint": "eslint --ext .js src/",
     "start:service": "cross-env LOG_LEVEL=error nodemon -r dotenv/config ./src/service/service.js --server",
     "start:service-dev-mode": "cross-env LOG_LEVEL=info nodemon -r dotenv/config ./src/service/service.js --server",
-    "start:app": "nodemon ./src/express/express.js"
+    "start:app": "nodemon -r dotenv/config ./src/express/express.js"
   },
   "repository": {
     "type": "git",
@@ -37,11 +36,13 @@
     "axios": "0.26.1",
     "bcrypt": "5.0.1",
     "chalk": "4.1.2",
+    "cookie-parser": "^1.4.6",
     "cross-env": "7.0.3",
     "dotenv": "16.0.1",
     "express": "4.17.3",
     "helmet": "5.1.0",
     "joi": "17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "multer": "1.4.4",
     "pg": "8.7.3",
     "pino": "7.9.1",

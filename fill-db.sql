@@ -4,12 +4,14 @@ DELETE FROM roles;
 DELETE FROM categories;
 DELETE FROM comments;
 DELETE FROM publications_categories;
+DELETE FROM refresh_tokens;
 
 ALTER SEQUENCE roles_id_seq RESTART WITH 1;
 ALTER SEQUENCE categories_id_seq RESTART WITH 1;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE publications_id_seq RESTART WITH 1;
 ALTER SEQUENCE comments_id_seq RESTART WITH 1;
+ALTER SEQUENCE refresh_tokens_id_seq RESTART WITH 1;
 
 --заполнение таблицы roles
 INSERT INTO roles(user_role) VALUES

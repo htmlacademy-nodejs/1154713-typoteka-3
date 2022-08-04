@@ -90,7 +90,11 @@ module.exports = {
   checkAuthentificationData: (api) => async (req, res, next) => {
     const {body} = req;
 
-    req.errorMessage = await api.checkAuthentification(body);
+    req.authData = await api.checkAuthentification(body);
+
+    // cookie-parser + sameSite, httpOnly - сохр jwt в куки
+
+
     next();
   },
 };

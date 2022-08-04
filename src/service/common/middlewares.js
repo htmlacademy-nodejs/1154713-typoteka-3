@@ -1,5 +1,7 @@
 'use strict';
 
+const jwt = require(`jsonwebtoken`);
+
 const {hash, compare} = require(`bcrypt`);
 
 const {SERVER_SERVICE_ERROR, ANSWER_ERROR, SALT_ROUNDS} = require(`./consts`);
@@ -153,19 +155,44 @@ module.exports = {
   checkAuthentification: (service) => async (req, res, next) => {
     const {body} = req;
 
+    const data = {
+      errorMessage: ``,
+      jwt: null,
+    };
+
     const userInDB = await service.findUserEmail(body.email);
 
     if (!userInDB) {
-      res.status(200).send(`Пользователя с таким email не существует`);
+      res.status(200).json({
+        ...data,
+        errorMessage: `Пользователя с таким email не существует`,
+      });
+
       return;
     }
 
     const isPasswordCompare = await compare(body[`user_password`], userInDB[`user_password`]);
 
     if (!isPasswordCompare) {
-      res.status(200).send(`Неверный пароль`);
+      res.status(200).json({
+        ...data,
+        errorMessage: `Неверный пароль`,
+      });
+
       return;
     }
+
+    const tokens = {
+      accessToken: jwt.sign(userInDB.dataValues, process.env.JWT_ACCESS_SECRET),
+      refreshToken: jwt.sign(userInDB.dataValues, process.env.JWT_REFRESH_SECRET),
+    };
+
+    await service.addRefreshToken(tokens.refreshToken);
+
+    req.authData = {
+      ...data,
+      jwt: tokens,
+    };
 
     next();
   },

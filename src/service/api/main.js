@@ -172,7 +172,7 @@ const mainApi = (app, mainService) => {
         logger.debug(`Request on route ${req.originalUrl}`);
 
         logger.info(`Status code is 200`);
-        return res.status(200).send(undefined);
+        return res.status(200).json(req.authData);
       });
 };
 

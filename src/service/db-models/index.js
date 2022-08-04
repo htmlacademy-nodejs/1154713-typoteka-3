@@ -7,6 +7,7 @@ const {defineComment} = require(`./comment`);
 const {definePublication} = require(`./publication`);
 const {defineRole} = require(`./role`);
 const {defineUser} = require(`./user`);
+const {defineRefreshTokens} = require(`./refresh-tokens`);
 
 class PublicationsCategories extends Model {}
 
@@ -17,6 +18,7 @@ module.exports = {
     const Publication = definePublication(instanceDB);
     const Role = defineRole(instanceDB);
     const User = defineUser(instanceDB);
+    const RefreshTokens = defineRefreshTokens(instanceDB);
 
     PublicationsCategories.init({}, {
       sequelize: instanceDB,
@@ -49,6 +51,7 @@ module.exports = {
       Role,
       User,
       PublicationsCategories,
+      RefreshTokens,
     };
   },
 };

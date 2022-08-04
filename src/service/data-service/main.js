@@ -11,13 +11,14 @@ class MainService extends BaseUtils {
   constructor(dbModels) {
     super();
 
-    const {Publication, Category, Comment, User, PublicationsCategories} = dbModels;
+    const {Publication, Category, Comment, User, PublicationsCategories, RefreshTokens} = dbModels;
 
     this._publications = Publication;
     this._categories = Category;
     this._comments = Comment;
     this._user = User;
     this._publicationsCategories = PublicationsCategories;
+    this._refreshTokens = RefreshTokens;
   }
 
   async getAllPublications(pageNumber = 0) {
@@ -301,6 +302,20 @@ class MainService extends BaseUtils {
     });
 
     return userInDB;
+  }
+
+  async addRefreshToken(refreshToken) {
+    return await this._refreshTokens.create({
+      [`refresh_token`]: refreshToken,
+    });
+  }
+
+  async findRefreshToken(refreshToken) {
+    return await this._refreshTokens.findOne({
+      where: {
+        [`refresh_token`]: refreshToken,
+      }
+    });
   }
 }
 

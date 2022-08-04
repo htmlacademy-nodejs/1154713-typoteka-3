@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS publications;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS refresh_tokens;
 
 CREATE TABLE roles
 (
@@ -73,6 +74,12 @@ CREATE TABLE publications_categories
     ON UPDATE CASCADE
 );
 
+CREATE TABLE refresh_tokens
+(
+  id SERIAL PRIMARY KEY,
+  refresh_token TEXT NOT NULL
+);
+
 CREATE INDEX ON publications(title);
 
 ALTER TABLE comments OWNER to yurj;
@@ -81,3 +88,4 @@ ALTER TABLE publications OWNER to yurj;
 ALTER TABLE users OWNER to yurj;
 ALTER TABLE roles OWNER to yurj;
 ALTER TABLE categories OWNER to yurj;
+ALTER TABLE refresh_tokens OWNER to yurj;

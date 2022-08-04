@@ -2,6 +2,8 @@
 
 const {Router} = require(`express`);
 
+const jwt = require(`jsonwebtoken`);
+
 const {
   getExistThemes,
   getMostCommentedItems,
@@ -32,47 +34,16 @@ module.exports = {
 
     // обернуть закрытые роуты в мидл и проверять есть ли jwt и нужно ли обновлять ?
     // isAuthorized flag в шаблоне кнопок хедера
+    // fix tests with jwt logic ?
+
+
+    // проверить тесты
+    // тесты для методов рефрештокена ?
+
+    // пройтись по всем роутам - проверить на юзера
     
 
     // TODO: на гл стр не обрезается длинный title в карточке
-
-
-
-
-
-    // доступна всем
-    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
-    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), (req, res) => {
-      const {
-        allArticles: {
-          publicationsData,
-          lastCommentsData,
-          publicationsCount,
-          paginationData,
-        },
-        allCategories,
-        query: {
-          pageNumber,
-        },
-      } = req;
-
-      res.render(`main/main`, {
-        themesData: getExistThemes(allCategories, publicationsData),
-        mostCommented: getMostCommentedItems(publicationsData),
-        lastComments: getLastComments(lastCommentsData),
-        cardData: getCardData(paginationData),
-        pages: getPages(publicationsCount),
-        currentPage: pageNumber ?? 1,
-
-
-
-        //isAuthorized: true,
-      });
-    });
-
-
-
 
 
     // доступна всем
@@ -108,7 +79,14 @@ module.exports = {
     // доступна всем
     // у всех в шапке страницы отображается ссылки «Регистрация» и «Вход»;
     // стр недоступна, если уже вошел
-    mainRouter.get(`/login`, (_, res) =>
+
+
+    // в мидлу проверку на уже вошел
+    mainRouter.get(`/login`, (req, res) => {
+      if (req.cookies.auth) {
+        res.redirect(`/`);
+      }
+    }, (_, res) =>
       res.render(`auth/login`, {
         email: ``,
         [`user_password`]: ``,
@@ -118,18 +96,80 @@ module.exports = {
 
 
     mainRouter.post(`/login`, checkAuthentificationData(api), (req, res) => {
-      const {errorMessage, body} = req;
+      const {authData, body} = req;
 
-      if (errorMessage) {
+      if (authData.errorMessage) {
         res.render(`auth/login`, {
           email: body.email,
           [`user_password`]: body[`user_password`],
-          errorMessage,
+          errorMessage: authData.errorMessage,
         });
       } else {
+        res.cookie(`auth`, authData.jwt, {httpOnly: true, sameSite: true});
         res.redirect(`/`);
       }
     });
+
+
+
+
+    // доступна всем
+    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
+    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
+    mainRouter.get(`/`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), async (req, res) => {
+      const {
+        allArticles: {
+          publicationsData,
+          lastCommentsData,
+          publicationsCount,
+          paginationData,
+        },
+        allCategories,
+        query: {
+          pageNumber,
+        },
+        cookies,
+      } = req;
+
+
+
+      console.log('~~~~~~~~~~~~~~~~~', process.env.JWT_ACCESS_SECRET);
+
+      // вернет закодир в токене данные (verify)
+
+      // сдел мидлу - проверка куков + возврат verify данных и по ним отрисовка
+
+      // при созд токена в табл заносим оба токена
+      console.log('SSSSSSSSSSSSSSSSSSSSSSS~~~~~~~~~~~~~~~~~~~~', await jwt.verify(cookies.auth.accessToken, process.env.JWT_ACCESS_SECRET));
+
+
+
+
+
+      res.render(`main/main`, {
+        themesData: getExistThemes(allCategories, publicationsData),
+        mostCommented: getMostCommentedItems(publicationsData),
+        lastComments: getLastComments(lastCommentsData),
+        cardData: getCardData(paginationData),
+        pages: getPages(publicationsCount),
+        currentPage: pageNumber ?? 1,
+
+
+        // ф-я проверки авторизации
+        //isAuthorized: true,
+      });
+    });
+
+
+
+
+
+    
+
+
+
+
+    
 
 
 

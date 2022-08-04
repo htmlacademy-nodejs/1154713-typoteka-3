@@ -2,6 +2,7 @@
 
 const {resolve} = require(`path`);
 const express = require(`express`);
+const cookies = require(`cookie-parser`);
 const helmet = require(`helmet`);
 
 const {myRouter} = require(`./routes/my/my-router`);
@@ -16,6 +17,7 @@ const app = express();
 app.set(`view engine`, `pug`);
 app.set(`views`, resolve(__dirname, `templates`));
 
+app.use(cookies());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(resolve(__dirname, `public`)));
 app.use(express.static(resolve(__dirname, `upload`)));
