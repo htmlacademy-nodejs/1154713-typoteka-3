@@ -1,5 +1,7 @@
 'use strict';
 
+const jwt = require(`jsonwebtoken`);
+
 const {getPostMiddlewareAction} = require(`./utils`);
 
 module.exports = {
@@ -91,9 +93,19 @@ module.exports = {
     const {body} = req;
 
     req.authData = await api.checkAuthentification(body);
+    next();
+  },
 
-    // cookie-parser + sameSite, httpOnly - сохр jwt в куки
+  checkCookiesData: async (req, res, next) => {
+    const accessSecret = process.env.JWT_ACCESS_SECRET;
 
+    const {cookies: {auth: authCookie}} = req;
+
+    if (!authCookie) {
+      req.authorizedData = {};
+    } else {
+      req.authorizedData = await jwt.verify(authCookie.accessToken, accessSecret);
+    }
 
     next();
   },

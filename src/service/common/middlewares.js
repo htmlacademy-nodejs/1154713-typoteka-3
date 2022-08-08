@@ -182,9 +182,15 @@ module.exports = {
       return;
     }
 
+    const userData = {
+      [`user_name`]: userInDB.dataValues[`user_name`],
+      [`user_surname`]: userInDB.dataValues[`user_surname`],
+      avatar: userInDB.dataValues.avatar,
+    };
+
     const tokens = {
-      accessToken: jwt.sign(userInDB.dataValues, process.env.JWT_ACCESS_SECRET),
-      refreshToken: jwt.sign(userInDB.dataValues, process.env.JWT_REFRESH_SECRET),
+      accessToken: jwt.sign(userData, process.env.JWT_ACCESS_SECRET),
+      refreshToken: jwt.sign(userData, process.env.JWT_REFRESH_SECRET),
     };
 
     await service.addRefreshToken(tokens.refreshToken);

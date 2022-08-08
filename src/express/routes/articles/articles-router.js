@@ -11,6 +11,7 @@ const {
   getDataByCategoryMiddleware,
   setNewCommentMiddleware,
   editPublicationMiddleware,
+  checkCookiesData,
 } = require(`../../common/middlewares`);
 const {getExistThemes, getCardData} = require(`../../common/utils`);
 const {renderPostDetailPage, renderPostEditPage, renderAddPostPage} = require(`./utils`);
@@ -21,70 +22,67 @@ module.exports = {
   articlesRouter: (api) => {
     const articlesRouter = new Router();
 
-
-
-
-    // только автору блога
-    // в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    articlesRouter.get(`/edit/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication}, params: {id}, errorData} = req;
+    articlesRouter.get(`/edit/:id`, checkCookiesData, getArticleMiddleware(api), (req, res) => {
+      const {articleData: {publication}, params: {id}, errorData, authorizedData} = req;
 
       renderPostEditPage({
         errorData,
         publication,
         id,
         res,
+        authorizedData,
       });
     });
 
-    articlesRouter.post(`/edit/:id`, upload.single(`upload`), editPublicationMiddleware(api), getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication}, params: {id}, errorData} = req;
+    articlesRouter.post(`/edit/:id`,
+        checkCookiesData,
+        upload.single(`upload`),
+        editPublicationMiddleware(api),
+        getArticleMiddleware(api),
+        (req, res) => {
+          const {articleData: {publication}, params: {id}, errorData, authorizedData} = req;
 
-      renderPostEditPage({
-        errorData,
-        publication,
-        id,
-        res,
-      });
-    });
+          renderPostEditPage({
+            errorData,
+            publication,
+            id,
+            res,
+            authorizedData,
+          });
+        });
 
-
-
-
-    // только автору блога
-    // в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    articlesRouter.get(`/add`, (req, res) => {
-      const {errorData} = req;
+    articlesRouter.get(`/add`, checkCookiesData, (req, res) => {
+      const {errorData, authorizedData} = req;
 
       renderAddPostPage({
         errorData,
         res,
+        authorizedData,
       });
     });
 
     articlesRouter.post(`/add`,
+        checkCookiesData,
         upload.single(`upload`),
         setNewPostMiddleware(api),
         (req, res) => {
-          const {errorData} = req;
+          const {errorData, authorizedData} = req;
 
           if (errorData) {
             renderAddPostPage({
               errorData,
               res,
+              authorizedData,
             });
           }
         }
     );
 
+    articlesRouter.get(`/:id`, checkCookiesData, getArticleMiddleware(api), (req, res) => {
+      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, errorData, authorizedData} = req;
 
+      console.log('AAAA~~~~~~~~~~~~~', authorizedData);
 
-    // доступна всем
-    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
-    // комменты могут добавлять только авторизов пользаки
-    // Для читателей в шапке отображается кнопка новая публикация, аватар пользователя, имя, фамилия и ссылка «Выход»;
-    articlesRouter.get(`/:id`, getArticleMiddleware(api), (req, res) => {
-      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, errorData} = req;
 
       renderPostDetailPage({
         id,
@@ -93,15 +91,13 @@ module.exports = {
         usedCategoriesData,
         publicationComments,
         res,
-
-
-
-
+        isAuthorized: !!Object.keys(authorizedData).length,
+        authorizedData,
       });
     });
 
-    articlesRouter.post(`/:id/comments`, getArticleMiddleware(api), setNewCommentMiddleware(api), (req, res) => {
-      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, errorData} = req;
+    articlesRouter.post(`/:id/comments`, checkCookiesData, getArticleMiddleware(api), setNewCommentMiddleware(api), (req, res) => {
+      const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, errorData, authorizedData} = req;
 
       if (errorData) {
         renderPostDetailPage({
@@ -111,19 +107,16 @@ module.exports = {
           usedCategoriesData,
           publicationComments,
           res,
+          isAuthorized: !!Object.keys(authorizedData).length,
+          authorizedData,
         });
       } else {
         res.redirect(`/articles/${req.params.id}`);
       }
     });
 
-
-
-
-    // Для гостей в шапке страницы отображается ссылки «Регистрация» и «Вход»;
-    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    articlesRouter.get(`/category/:id`, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
-      const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}} = req;
+    articlesRouter.get(`/category/:id`, checkCookiesData, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
+      const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}, authorizedData} = req;
 
       const filteredCardData = getCardData(publicationsData).reduce((result, data) => {
         const searchedCategory = data.categories.find((item) => item === categoryName);
@@ -139,9 +132,8 @@ module.exports = {
         categoryName,
         themesData: getExistThemes(allCategories, publicationsData),
         cardData: filteredCardData,
-
-
-        isAuthorized: true,
+        isAuthorized: !!Object.keys(authorizedData).length,
+        authorizedData,
       };
 
       res.render(`main/articles-by-category`, pageData);

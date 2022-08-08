@@ -4,7 +4,7 @@ nav.header__nav
   ul.header__nav-list
     if isAuthorized
       li.header__list-item
-        p Пес Ссаный
+        p #{authorizedData.user_name} #{authorizedData.user_surname}
       li.header__list-item
         a.header__exit(href='#') Выйти
     else

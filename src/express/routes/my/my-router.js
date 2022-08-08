@@ -3,43 +3,33 @@
 const {Router} = require(`express`);
 
 const {getUsersRecordData, getUpdatedCommentsData} = require(`../../common/utils`);
-const {getAllArticlesMiddleware, getAllCategoriesMiddleware} = require(`../../common/middlewares`);
+const {getAllArticlesMiddleware, getAllCategoriesMiddleware, checkCookiesData} = require(`../../common/middlewares`);
 
 module.exports = {
   myRouter: (api) => {
     const myRouter = new Router();
 
-
-
-    // только автору блога
-    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    myRouter.get(`/`, getAllArticlesMiddleware(api), (req, res) => {
-      const {allArticles: {publicationsData}} = req;
+    myRouter.get(`/`, checkCookiesData, getAllArticlesMiddleware(api), (req, res) => {
+      const {allArticles: {publicationsData}, authorizedData} = req;
       res.render(`admin/my`, {
         myData: getUsersRecordData(publicationsData),
+        authorizedData,
       });
     });
 
-
-
-    // только автору блога
-    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    myRouter.get(`/comments`, getAllArticlesMiddleware(api), (req, res) => {
-      const {allArticles: {publicationsData}} = req;
+    myRouter.get(`/comments`, checkCookiesData, getAllArticlesMiddleware(api), (req, res) => {
+      const {allArticles: {publicationsData}, authorizedData} = req;
       res.render(`admin/comments`, {
         allPublicationCommentsData: getUpdatedCommentsData(publicationsData),
+        authorizedData,
       });
     });
 
-
-
-
-    // только автору блога
-    // Для читателей в шапке отображается кнопка новая публикация аватар пользователя, имя, фамилия и ссылка «Выход»;
-    myRouter.get(`/categories`, getAllCategoriesMiddleware(api), (req, res) => {
-      const {allCategories} = req;
+    myRouter.get(`/categories`, checkCookiesData, getAllCategoriesMiddleware(api), (req, res) => {
+      const {allCategories, authorizedData} = req;
       res.render(`admin/all-categories`, {
         allCategories,
+        authorizedData,
       });
     });
 

@@ -8,6 +8,8 @@ module.exports = {
     usedCategoriesData,
     publicationComments,
     res,
+    isAuthorized,
+    authorizedData,
   }) => {
     const validationError = errorData ? JSON.parse(decodeURIComponent(errorData)) : ``;
 
@@ -24,11 +26,8 @@ module.exports = {
       comments: publicationComments,
       commentMessage: validationError?.bodyMessage ?? ``,
       errorMessage: validationError?.errorMessage,
-
-
-
-
-      //isAuthorized: true,
+      isAuthorized,
+      authorizedData,
     };
 
     res.render(`post/post-detail`, pageData);
@@ -39,6 +38,7 @@ module.exports = {
     publication,
     id,
     res,
+    authorizedData,
   }) => {
     const validationError = errorData ? JSON.parse(decodeURIComponent(errorData)) : ``;
 
@@ -51,12 +51,14 @@ module.exports = {
       isEditPage: true,
       id,
       validationError: validationError?.errorsMessageData ?? ``,
+      authorizedData,
     });
   },
 
   renderAddPostPage: ({
     errorData,
     res,
+    authorizedData,
   }) => {
     const validationError = errorData ? JSON.parse(decodeURIComponent(errorData)) : ``;
 
@@ -67,6 +69,7 @@ module.exports = {
       announce: validationError?.body?.announce ?? ``,
       [`full_text`]: validationError?.body?.[`full-text`] ?? ``,
       validationError: validationError?.errorsMessageData ?? ``,
+      authorizedData,
     });
   },
 };
