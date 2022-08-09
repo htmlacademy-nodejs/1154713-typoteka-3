@@ -29,15 +29,6 @@ module.exports = {
   mainRouter: (api) => {
     const mainRouter = new Router();
 
-
-
-    // проверить тесты
-    // тесты для методов рефрештокена ?
-    // пройтись по всем роутам поправить отобр фио, когда не авторизован + сделать редирект с закрытых роутов на логин
-    
-
-    // TODO: на гл стр не обрезается длинный title в карточке
-
     mainRouter.get(`/register`, (req, res) => {
       if (req.cookies.auth) {
         res.redirect(`/`);
@@ -90,7 +81,7 @@ module.exports = {
           errorMessage: authData.errorMessage,
         });
       } else {
-        res.cookie(`auth`, authData.jwt, {httpOnly: true, sameSite: true});
+        res.cookie(`auth`, authData.jwt, {httpOnly: true, sameSite: `strict`});
         res.redirect(`/`);
       }
     });
@@ -138,6 +129,11 @@ module.exports = {
 
     mainRouter.get(`/404`, (_, res) => res.render(`errors/404`));
     mainRouter.get(`/500`, (_, res) => res.render(`errors/500`));
+
+    mainRouter.get(`/logout`, (_, res) => {
+      res.clearCookie(`auth`);
+      res.redirect(`/login`);
+    });
 
     return mainRouter;
   },

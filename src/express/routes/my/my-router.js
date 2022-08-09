@@ -11,26 +11,46 @@ module.exports = {
 
     myRouter.get(`/`, checkCookiesData, getAllArticlesMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}, authorizedData} = req;
-      res.render(`admin/my`, {
-        myData: getUsersRecordData(publicationsData),
-        authorizedData,
-      });
+
+      if (!Object.keys(authorizedData).length) {
+        res.redirect(`/login`);
+      } else {
+        res.render(`admin/my`, {
+          myData: getUsersRecordData(publicationsData),
+          authorizedData,
+        });
+      }
     });
 
     myRouter.get(`/comments`, checkCookiesData, getAllArticlesMiddleware(api), (req, res) => {
       const {allArticles: {publicationsData}, authorizedData} = req;
-      res.render(`admin/comments`, {
-        allPublicationCommentsData: getUpdatedCommentsData(publicationsData),
-        authorizedData,
-      });
+
+      if (!Object.keys(authorizedData).length) {
+        res.redirect(`/login`);
+      } else {
+        res.render(`admin/comments`, {
+          allPublicationCommentsData: getUpdatedCommentsData(publicationsData),
+          authorizedData,
+        });
+      }
     });
 
     myRouter.get(`/categories`, checkCookiesData, getAllCategoriesMiddleware(api), (req, res) => {
       const {allCategories, authorizedData} = req;
-      res.render(`admin/all-categories`, {
-        allCategories,
-        authorizedData,
-      });
+
+      if (!Object.keys(authorizedData).length) {
+        res.redirect(`/login`);
+      } else {
+        res.render(`admin/all-categories`, {
+          allCategories,
+          authorizedData,
+        });
+      }
+    });
+
+    myRouter.get(`/logout`, (_, res) => {
+      res.clearCookie(`auth`);
+      res.redirect(`/login`);
     });
 
     return myRouter;

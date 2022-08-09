@@ -25,13 +25,17 @@ module.exports = {
     articlesRouter.get(`/edit/:id`, checkCookiesData, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication}, params: {id}, errorData, authorizedData} = req;
 
-      renderPostEditPage({
-        errorData,
-        publication,
-        id,
-        res,
-        authorizedData,
-      });
+      if (!Object.keys(authorizedData).length) {
+        res.redirect(`/login`);
+      } else {
+        renderPostEditPage({
+          errorData,
+          publication,
+          id,
+          res,
+          authorizedData,
+        });
+      }
     });
 
     articlesRouter.post(`/edit/:id`,
@@ -54,11 +58,15 @@ module.exports = {
     articlesRouter.get(`/add`, checkCookiesData, (req, res) => {
       const {errorData, authorizedData} = req;
 
-      renderAddPostPage({
-        errorData,
-        res,
-        authorizedData,
-      });
+      if (!Object.keys(authorizedData).length) {
+        res.redirect(`/login`);
+      } else {
+        renderAddPostPage({
+          errorData,
+          res,
+          authorizedData,
+        });
+      }
     });
 
     articlesRouter.post(`/add`,
@@ -80,9 +88,6 @@ module.exports = {
 
     articlesRouter.get(`/:id`, checkCookiesData, getArticleMiddleware(api), (req, res) => {
       const {articleData: {publication, publicationComments, usedCategoriesData}, params: {id}, errorData, authorizedData} = req;
-
-      console.log('AAAA~~~~~~~~~~~~~', authorizedData);
-
 
       renderPostDetailPage({
         id,
@@ -115,28 +120,38 @@ module.exports = {
       }
     });
 
-    articlesRouter.get(`/category/:id`, checkCookiesData, getAllArticlesMiddleware(api), getAllCategoriesMiddleware(api), getDataByCategoryMiddleware(api), (req, res) => {
-      const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}, authorizedData} = req;
+    articlesRouter.get(`/category/:id`,
+        checkCookiesData,
+        getAllArticlesMiddleware(api),
+        getAllCategoriesMiddleware(api),
+        getDataByCategoryMiddleware(api),
+        (req, res) => {
+          const {allArticles: {publicationsData}, allCategories, selectionByCategory: {categoryName}, authorizedData} = req;
 
-      const filteredCardData = getCardData(publicationsData).reduce((result, data) => {
-        const searchedCategory = data.categories.find((item) => item === categoryName);
+          const filteredCardData = getCardData(publicationsData).reduce((result, data) => {
+            const searchedCategory = data.categories.find((item) => item === categoryName);
 
-        if (searchedCategory) {
-          result.push(data);
-        }
+            if (searchedCategory) {
+              result.push(data);
+            }
 
-        return result;
-      }, []);
+            return result;
+          }, []);
 
-      const pageData = {
-        categoryName,
-        themesData: getExistThemes(allCategories, publicationsData),
-        cardData: filteredCardData,
-        isAuthorized: !!Object.keys(authorizedData).length,
-        authorizedData,
-      };
+          const pageData = {
+            categoryName,
+            themesData: getExistThemes(allCategories, publicationsData),
+            cardData: filteredCardData,
+            isAuthorized: !!Object.keys(authorizedData).length,
+            authorizedData,
+          };
 
-      res.render(`main/articles-by-category`, pageData);
+          res.render(`main/articles-by-category`, pageData);
+        });
+
+    articlesRouter.get(`/logout`, (_, res) => {
+      res.clearCookie(`auth`);
+      res.redirect(`/login`);
     });
 
     return articlesRouter;
